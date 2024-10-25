@@ -3,6 +3,8 @@
 import { Line, OrbitControls, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
+import * as THREE from 'three';
+import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 
 export default function Earth({ countryData }) {
@@ -72,12 +74,12 @@ export default function Earth({ countryData }) {
       <mesh rotation={[0, Math.PI / 2, 0]}>
         {countryData.features.map(({ geometry, properties }) => {
           return (
-            <lineSegments
+            <mesh
               key={`country-${properties.NAME}`}
-              geometry={new GeoJsonGeometry(geometry, 2.005)}
+              geometry={new ConicPolygonGeometry(geometry.coordinates, 0, 2.1)}
             >
-              <lineBasicMaterial color="black" />
-            </lineSegments>
+              <meshBasicMaterial color="blue" />
+            </mesh>
           );
         })}
       </mesh>
@@ -85,3 +87,17 @@ export default function Earth({ countryData }) {
     </mesh>
   );
 }
+
+//  <mesh
+//             key={`country-${properties.NAME}`}
+//             geometry={new ConicPolygonGeometry(geometry)}
+//           >
+//             <meshBasicMaterial color="blue" />
+//           </mesh>
+
+/* <lineSegments
+              key={`country-${properties.NAME}`}
+              geometry={new GeoJsonGeometry(geometry, 2.005)}
+            >
+              <lineBasicMaterial color="black" />
+            </lineSegments> */
