@@ -8,6 +8,13 @@ import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 
 export default function Earth({ countryData }) {
+  const sphereRadius = 2;
+  const sphereResolution = 500;
+  const borderLineRadius = 2.02;
+  const borderLineColor = 'black';
+  const countryPolygonRadiusMin = 2;
+  const countryPolygonRadiusMax = 2.02;
+  const countryPolygonColor = '#f0d897';
   const ref = useRef();
   const earthTexture = useTexture('./textures/texture_earth_map_10k.jpg');
 
@@ -29,6 +36,8 @@ export default function Earth({ countryData }) {
   // state.scene.add(line);
 
   console.log(countryData);
+  const france = countryData.features[55];
+  console.log(france);
 
   useFrame((state, delta, frame) => {
     // console.log(countries);
@@ -43,7 +52,9 @@ export default function Earth({ countryData }) {
           console.log(event.intersections[0]);
         }}
       >
-        <sphereGeometry args={[2, 500, 500]} />
+        <sphereGeometry
+          args={[sphereRadius, sphereResolution, sphereResolution]}
+        />
         <meshStandardMaterial map={earthTexture} />
         {/* <meshStandardMaterial color="black" /> */}
         <Line
@@ -72,13 +83,64 @@ export default function Earth({ countryData }) {
         />
       </mesh>
       <mesh rotation={[0, Math.PI / 2, 0]}>
+        {/* <mesh
+          geometry={
+            new ConicPolygonGeometry(
+              france.geometry.coordinates[0],
+              1.995,
+              2.005,
+            )
+          }
+        >
+          <meshBasicMaterial color="purple" />
+        </mesh> */}
+
         {countryData.features.map(({ geometry, properties }) => {
+          if (geometry.type === 'MultiPolygon') {
+            return (
+              <mesh key={`country-${properties.NAME}`}>
+                {geometry.coordinates.map((coordinate, index) => {
+                  return (
+                    <mesh
+                      key={`country-multi-polygon-${properties.NAME}-${index}`}
+                      geometry={
+                        new ConicPolygonGeometry(
+                          coordinate,
+                          countryPolygonRadiusMin,
+                          countryPolygonRadiusMax,
+                        )
+                      }
+                    >
+                      <meshBasicMaterial color={countryPolygonColor} />
+                    </mesh>
+                  );
+                })}
+                <lineSegments
+                  geometry={new GeoJsonGeometry(geometry, borderLineRadius)}
+                >
+                  <lineBasicMaterial color={borderLineColor} />
+                </lineSegments>
+              </mesh>
+            );
+          }
+
           return (
             <mesh
               key={`country-${properties.NAME}`}
-              geometry={new ConicPolygonGeometry(geometry.coordinates, 0, 2.1)}
+              geometry={
+                new ConicPolygonGeometry(
+                  geometry.coordinates,
+                  countryPolygonRadiusMin,
+                  countryPolygonRadiusMax,
+                )
+              }
             >
-              <meshBasicMaterial color="blue" />
+              <meshBasicMaterial color={countryPolygonColor} />
+              <lineSegments
+                geometry={new GeoJsonGeometry(geometry, borderLineRadius)}
+              >
+                <lineBasicMaterial color={borderLineColor} />
+              </lineSegments>
             </mesh>
           );
         })}
@@ -94,10 +156,3 @@ export default function Earth({ countryData }) {
 //           >
 //             <meshBasicMaterial color="blue" />
 //           </mesh>
-
-/* <lineSegments
-              key={`country-${properties.NAME}`}
-              geometry={new GeoJsonGeometry(geometry, 2.005)}
-            >
-              <lineBasicMaterial color="black" />
-            </lineSegments> */
