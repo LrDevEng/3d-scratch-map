@@ -2,15 +2,10 @@
 
 'use client';
 
-import {
-  Html,
-  Line,
-  OrbitControls,
-  Shadow,
-  useTexture,
-} from '@react-three/drei';
+import { Line, OrbitControls, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Color } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
@@ -33,29 +28,31 @@ export default function Earth({
   countryPolygonColor = '#f0d897',
   countryElevatedColor = 'red',
   countryElevatedRadius = 2.1,
-  orbitControlsMaxDist = 8,
+  orbitControlsMaxDist = 20,
   orbitControlsMinDist = 2.5,
-  texturePath = './textures/texture_earth_map_10k.jpg',
+  texture = './textures/texture_earth_map_10k.jpg',
   renderCountryPolygons = true,
   renderCountryBorders = true,
+  rotate = true,
+  onMounted = () => {
+    console.log('Earth mounted.');
+  },
 }) {
-  const ref = useRef();
-  const earthTexture = useTexture(texturePath);
-
+  const refGlobe = useRef();
+  const refCountries = useRef([]);
+  const earthTexture = useTexture(texture);
   const [selectedCountry, setSelectedCountry] = useState('');
 
-  // console.log(countryData);
-  // const france = countryData.features[55];
-  // console.log(france);
-
   useFrame((state, delta, frame) => {
-    // console.log(delta);
-    ref.current.rotation.y += delta * 0.05;
-    // ref.current.position.z = Math.sin(state.clock.elapsedTime * 4);
+    if (rotate) refGlobe.current.rotation.y += delta * 0.05;
   });
 
+  useEffect(() => {
+    onMounted();
+  }, [onMounted]);
+
   return (
-    <mesh position={[0, 0, 0]} ref={ref}>
+    <mesh position={[0, 0, 0]} ref={refGlobe}>
       {/* Coordinate system */}
       {showCoordinateSystem && (
         <mesh>
@@ -93,23 +90,19 @@ export default function Earth({
           event.stopPropagation();
           setSelectedCountry('');
         }}
+        onPointerMissed={() => {
+          setSelectedCountry('');
+        }}
       >
         <sphereGeometry
           args={[sphereRadius, sphereResolution, sphereResolution]}
-        >
-          <Shadow
-            color="blue"
-            colorStop={1}
-            opacity={0.5}
-            fog={false} // Reacts to fog (default=false)
-          />
-        </sphereGeometry>
+        />
         <meshStandardMaterial map={earthTexture} />
       </mesh>
 
       {/* Country polygons */}
       {renderCountryPolygons &&
-        countryData.features.map(({ geometry, properties }) => {
+        countryData.features.map(({ geometry, properties }, index) => {
           const radiusMax =
             selectedCountry === properties.NAME
               ? countryElevatedRadius
@@ -129,23 +122,52 @@ export default function Earth({
                     radiusMax,
                   )
                 }
+                ref={(currentRef) => (refCountries.current[index] = currentRef)}
                 onDoubleClick={(event) => {
                   event.stopPropagation();
                   setSelectedCountry(properties.NAME);
-                  console.log(event, properties.NAME);
+                }}
+                onPointerEnter={(event) => {
+                  event.stopPropagation();
+                  refCountries.current[index].material.color.r = 0;
+                  refCountries.current[index].material.color.g = 1;
+                  refCountries.current[index].material.color.b = 0;
+                }}
+                onPointerLeave={(event) => {
+                  event.stopPropagation();
+                  refCountries.current[index].material.color = new Color(
+                    countryColor,
+                  );
                 }}
               >
                 <meshBasicMaterial
+                  attachArray="material"
                   color={countryColor}
                   transparent="true"
                   opacity={countryPolygonOpacity}
                 />
-                <Html>{properties.NAME}</Html>
               </mesh>
             );
           } else if (geometry.type === 'MultiPolygon') {
             return (
-              <mesh key={`country-${properties.NAME}`}>
+              <mesh
+                key={`country-${properties.NAME}`}
+                ref={(currentRef) => (refCountries.current[index] = currentRef)}
+                onPointerEnter={(event) => {
+                  event.stopPropagation();
+                  refCountries.current[index].children.forEach((child) => {
+                    child.material.color.r = 0;
+                    child.material.color.g = 1;
+                    child.material.color.b = 0;
+                  });
+                }}
+                onPointerLeave={(event) => {
+                  event.stopPropagation();
+                  refCountries.current[index].children.forEach((child) => {
+                    child.material.color = new Color(countryColor);
+                  });
+                }}
+              >
                 {geometry.coordinates.map((coordinate) => {
                   return (
                     <mesh
@@ -160,7 +182,6 @@ export default function Earth({
                       onDoubleClick={(event) => {
                         event.stopPropagation();
                         setSelectedCountry(properties.NAME);
-                        console.log(event, properties.NAME);
                       }}
                     >
                       <meshBasicMaterial
