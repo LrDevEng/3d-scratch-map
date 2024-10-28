@@ -3,37 +3,27 @@
 import { Line, OrbitControls, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
-import * as THREE from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
+import { v4 as uuid } from 'uuid';
 
-export default function Earth({ countryData }) {
+export default function Earth({ countryData, showAxis = true }) {
   const sphereRadius = 2;
   const sphereResolution = 500;
-  const borderLineRadius = 2.02;
+  const borderLineRadius = 2.025;
   const borderLineColor = 'black';
   const countryPolygonRadiusMin = 2;
   const countryPolygonRadiusMax = 2.02;
   const countryPolygonColor = '#f0d897';
+  const axisStart = 0;
+  const axisEnd = 4;
+  const axisColorX = 'red';
+  const axisColorY = 'blue';
+  const axisColorZ = 'green';
+  const orbitControlsMinDist = 2.2;
+  const orbitControlsMaxDist = 8;
   const ref = useRef();
   const earthTexture = useTexture('./textures/texture_earth_map_10k.jpg');
-
-  // useEffect(() => {
-  //   fetch('../data/ne_110m_admin_0_countries.geojson')
-  //     .then((res) => res.json())
-  //     .then(setCountries)
-  //     .catch((error) => console.log(error));
-  // }, []);
-  // const line = new THREE.Line(
-  //   new GeoJsonGeometry(countryData),
-  //   new THREE.LineBasicMaterial({ color: 'red' }),
-  // );
-
-  // const raycaster = new THREE.Raycaster();
-  // const pointerPos = new THREE.Vector2();
-  // const globeUV = new THREE.Vector2();
-
-  // state.scene.add(line);
 
   console.log(countryData);
   const france = countryData.features[55];
@@ -41,8 +31,8 @@ export default function Earth({ countryData }) {
 
   useFrame((state, delta, frame) => {
     // console.log(countries);
-    // ref.current.rotation.y += delta * 0.05;
-    //ref.current.position.z = Math.sin(state.clock.elapsedTime * 4);
+    ref.current.rotation.y += delta * 0.05;
+    // ref.current.position.z = Math.sin(state.clock.elapsedTime * 4);
   });
 
   return (
@@ -57,44 +47,36 @@ export default function Earth({ countryData }) {
         />
         <meshStandardMaterial map={earthTexture} />
         {/* <meshStandardMaterial color="black" /> */}
-        <Line
-          points={[
-            [0, 0, 0],
-            [5, 0, 0],
-          ]}
-          segments
-          color="red"
-        />
-        <Line
-          points={[
-            [0, 0, 0],
-            [0, 5, 0],
-          ]}
-          segments
-          color="blue"
-        />
-        <Line
-          points={[
-            [0, 0, 0],
-            [0, 0, 5],
-          ]}
-          segments
-          color="green"
-        />
+        {showAxis && (
+          <>
+            <Line
+              points={[
+                [axisStart, 0, 0],
+                [axisEnd, 0, 0],
+              ]}
+              segments
+              color={axisColorX}
+            />
+            <Line
+              points={[
+                [0, axisStart, 0],
+                [0, axisEnd, 0],
+              ]}
+              segments
+              color={axisColorY}
+            />
+            <Line
+              points={[
+                [0, 0, axisStart],
+                [0, 0, axisEnd],
+              ]}
+              segments
+              color={axisColorZ}
+            />
+          </>
+        )}
       </mesh>
       <mesh rotation={[0, Math.PI / 2, 0]}>
-        {/* <mesh
-          geometry={
-            new ConicPolygonGeometry(
-              france.geometry.coordinates[0],
-              1.995,
-              2.005,
-            )
-          }
-        >
-          <meshBasicMaterial color="purple" />
-        </mesh> */}
-
         {countryData.features.map(({ geometry, properties }) => {
           if (geometry.type === 'MultiPolygon') {
             return (
@@ -102,7 +84,7 @@ export default function Earth({ countryData }) {
                 {geometry.coordinates.map((coordinate, index) => {
                   return (
                     <mesh
-                      key={`country-multi-polygon-${properties.NAME}-${index}`}
+                      key={`country-multi-polygon-${properties.NAME}-${uuid()}`}
                       geometry={
                         new ConicPolygonGeometry(
                           coordinate,
@@ -111,7 +93,11 @@ export default function Earth({ countryData }) {
                         )
                       }
                     >
-                      <meshBasicMaterial color={countryPolygonColor} />
+                      <meshBasicMaterial
+                        color={countryPolygonColor}
+                        transparent="true"
+                        opacity={0.75}
+                      />
                     </mesh>
                   );
                 })}
@@ -135,7 +121,11 @@ export default function Earth({ countryData }) {
                 )
               }
             >
-              <meshBasicMaterial color={countryPolygonColor} />
+              <meshBasicMaterial
+                color={countryPolygonColor}
+                transparent="true"
+                opacity={0.75}
+              />
               <lineSegments
                 geometry={new GeoJsonGeometry(geometry, borderLineRadius)}
               >
@@ -145,14 +135,10 @@ export default function Earth({ countryData }) {
           );
         })}
       </mesh>
-      <OrbitControls />
+      <OrbitControls
+        minDistance={orbitControlsMinDist}
+        maxDistance={orbitControlsMaxDist}
+      />
     </mesh>
   );
 }
-
-//  <mesh
-//             key={`country-${properties.NAME}`}
-//             geometry={new ConicPolygonGeometry(geometry)}
-//           >
-//             <meshBasicMaterial color="blue" />
-//           </mesh>
