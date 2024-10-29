@@ -4,6 +4,7 @@
 
 // To fix drei import errors it may be necessary to convert back to version 9.96.4
 import {
+  Bvh,
   Line,
   OrbitControls,
   Text,
@@ -106,21 +107,26 @@ export default function Earth({
       )}
 
       {/* Globe sphere */}
-      <mesh
-        rotation={[0, -Math.PI / 2, 0]}
-        onDoubleClick={(event) => {
-          event.stopPropagation();
-          setSelectedCountry('');
-        }}
-        onPointerMissed={() => {
-          setSelectedCountry('');
-        }}
-      >
-        <sphereGeometry
-          args={[sphereRadius, sphereResolution, sphereResolution]}
-        />
-        <meshStandardMaterial map={earthTexture} />
-      </mesh>
+      <Bvh firstHitOnly>
+        <mesh
+          rotation={[0, -Math.PI / 2, 0]}
+          onDoubleClick={(event) => {
+            event.stopPropagation();
+            setSelectedCountry('');
+          }}
+          onPointerMissed={() => {
+            setSelectedCountry('');
+          }}
+          onPointerEnter={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <sphereGeometry
+            args={[sphereRadius, sphereResolution, sphereResolution]}
+          />
+          <meshStandardMaterial map={earthTexture} />
+        </mesh>
+      </Bvh>
 
       {/* Country polygons */}
       {renderCountryPolygons &&
