@@ -1,18 +1,28 @@
-/* eslint-disable react/no-unknown-property */
-
 'use client';
 
-import { Line, OrbitControls, useTexture } from '@react-three/drei';
+// To fix drei import errors it may be necessary to convert back to version 9.96.4
+import {
+  Decal,
+  Html,
+  Line,
+  OrbitControls,
+  PerspectiveCamera,
+  RenderTexture,
+  Text,
+  Text3D,
+  useTexture,
+} from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import { Color } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
+import TextTexture from './TextTexture';
 
 export default function Earth({
   countryData,
-  showCoordinateSystem = true,
+  showCoordinateSystem = false,
   axisStart = 0,
   axisEnd = 4,
   axisColorX = 'red',
@@ -39,9 +49,14 @@ export default function Earth({
   },
 }) {
   const refGlobe = useRef();
+  const refH1 = useRef();
+  const refHtml = useRef();
+  const refText = useRef();
   const refCountries = useRef([]);
   const earthTexture = useTexture(texture);
   const [selectedCountry, setSelectedCountry] = useState('');
+
+  const [hoveredCountry, setHoveredCountry] = useState('');
 
   useFrame((state, delta, frame) => {
     if (rotate) refGlobe.current.rotation.y += delta * 0.05;
@@ -53,6 +68,12 @@ export default function Earth({
 
   return (
     <mesh position={[0, 0, 0]} ref={refGlobe}>
+      {/* <Text position={[2, 2, 2]} ref={refText}>
+        {hoveredCountry}
+      </Text>
+      <Html name="html" ref={refHtml}>
+        <h1 ref={refH1}>Hello</h1>
+      </Html> */}
       {/* Coordinate system */}
       {showCoordinateSystem && (
         <mesh>
@@ -132,6 +153,14 @@ export default function Earth({
                   refCountries.current[index].material.color.r = 0;
                   refCountries.current[index].material.color.g = 1;
                   refCountries.current[index].material.color.b = 0;
+                  // console.log(refText.current.__r3f.props.text);
+                  // setHoveredCountry(properties.NAME);
+                  // refText.current.__r3f.props.text = properties.NAME;
+                  // refHtml.current = (
+                  //   <div style={{ position: 'absolute', transform: 'none' }}>
+                  //     <h1>{properties.NAME}</h1>
+                  //   </div>
+                  // );
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
