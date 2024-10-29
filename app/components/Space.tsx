@@ -5,6 +5,7 @@ import {
   AdaptiveEvents,
   Bvh,
   Preload,
+  Sparkles,
   Stars,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
@@ -15,7 +16,11 @@ const Earth = dynamic(() => import('./Earth'), {
   ssr: false,
 });
 
-export default function Space({ countryData }) {
+type Props = {
+  countryData: any;
+};
+
+export default function Space({ countryData }: Props) {
   const starRadius = 15;
 
   return (
@@ -34,6 +39,14 @@ export default function Space({ countryData }) {
             saturation={0}
             fade={false}
             speed={0.2}
+          />
+          <Sparkles
+            count={50}
+            size={3}
+            speed={0.1}
+            opacity={0.7}
+            scale={starRadius}
+            color="#fff3b0"
           />
           <Preload all />
         </Bvh>

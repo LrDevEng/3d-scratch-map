@@ -1,13 +1,11 @@
+/* eslint-disable react/no-unknown-property */
+
 'use client';
 
 // To fix drei import errors it may be necessary to convert back to version 9.96.4
 import {
-  Decal,
-  Html,
   Line,
   OrbitControls,
-  PerspectiveCamera,
-  RenderTexture,
   Text,
   Text3D,
   useTexture,
@@ -17,12 +15,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Color } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
+import { FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
 import { v4 as uuid } from 'uuid';
-import TextTexture from './TextTexture';
+import quicksand from '../../fonts/quicksand-semi-bold.json';
 
 export default function Earth({
   countryData,
-  showCoordinateSystem = false,
+  showCoordinateSystem = true,
   axisStart = 0,
   axisEnd = 4,
   axisColorX = 'red',
@@ -49,17 +48,16 @@ export default function Earth({
   },
 }) {
   const refGlobe = useRef();
-  const refH1 = useRef();
-  const refHtml = useRef();
   const refText = useRef();
+  // const refText3D = useRef();
   const refCountries = useRef([]);
   const earthTexture = useTexture(texture);
   const [selectedCountry, setSelectedCountry] = useState('');
 
-  const [hoveredCountry, setHoveredCountry] = useState('');
-
-  useFrame((state, delta, frame) => {
+  useFrame((state, delta) => {
     if (rotate) refGlobe.current.rotation.y += delta * 0.05;
+    refText.current.lookAt(state.camera.position);
+    // refText3D.current.lookAt(state.camera.position);
   });
 
   useEffect(() => {
@@ -68,13 +66,16 @@ export default function Earth({
 
   return (
     <mesh position={[0, 0, 0]} ref={refGlobe}>
-      {/* <Text position={[2, 2, 2]} ref={refText}>
-        {hoveredCountry}
+      {/* Text 2D */}
+      <Text ref={refText} position={[0, 3, 0]} fontSize={0.5}>
+        {' '}
       </Text>
-      <Html name="html" ref={refHtml}>
-        <h1 ref={refH1}>Hello</h1>
-      </Html> */}
-      {/* Coordinate system */}
+
+      {/* Text 3D
+      <Text3D ref={refText3D} position={[0, 3, 0]} font={quicksand}>
+        Hello
+      </Text3D> */}
+
       {showCoordinateSystem && (
         <mesh>
           <Line
@@ -153,13 +154,19 @@ export default function Earth({
                   refCountries.current[index].material.color.r = 0;
                   refCountries.current[index].material.color.g = 1;
                   refCountries.current[index].material.color.b = 0;
-                  // console.log(refText.current.__r3f.props.text);
-                  // setHoveredCountry(properties.NAME);
-                  // refText.current.__r3f.props.text = properties.NAME;
-                  // refHtml.current = (
-                  //   <div style={{ position: 'absolute', transform: 'none' }}>
-                  //     <h1>{properties.NAME}</h1>
-                  //   </div>
+
+                  // Text 2D
+                  refText.current.text = properties.NAME;
+
+                  // Text 3D
+                  // refText3D.current.geometry.dispose();
+                  // refText3D.current.geometry = new TextGeometry(
+                  //   properties.NAME,
+                  //   {
+                  //     font: new FontLoader().parse(quicksand),
+                  //     size: 1,
+                  //     depth: 0.5,
+                  //   },
                   // );
                 }}
                 onPointerLeave={(event) => {
@@ -167,6 +174,17 @@ export default function Earth({
                   refCountries.current[index].material.color = new Color(
                     countryColor,
                   );
+
+                  // Text 2D
+                  refText.current.text = '';
+
+                  // Text 3D
+                  // refText3D.current.geometry.dispose();
+                  // refText3D.current.geometry = new TextGeometry('', {
+                  //   font: new FontLoader().parse(quicksand),
+                  //   size: 1,
+                  //   depth: 0.5,
+                  // });
                 }}
               >
                 <meshBasicMaterial
@@ -189,12 +207,16 @@ export default function Earth({
                     child.material.color.g = 1;
                     child.material.color.b = 0;
                   });
+                  // Text 2D
+                  refText.current.text = properties.NAME;
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
                   refCountries.current[index].children.forEach((child) => {
                     child.material.color = new Color(countryColor);
                   });
+                  // Text 2D
+                  refText.current.text = '';
                 }}
               >
                 {geometry.coordinates.map((coordinate) => {
