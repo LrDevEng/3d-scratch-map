@@ -34,3 +34,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 3D Technologies
+
+- [three.js](https://threejs.org/)
+- [react-three/fiber](https://docs.pmnd.rs/) (r3f)
+- [react-three/drei](https://docs.pmnd.rs/)
+- [three-conic-polygon-geometry](https://github.com/vasturiano/three-conic-polygon-geometry)
+- [three-geojson-geometry](https://github.com/vasturiano/three-geojson-geometry)
