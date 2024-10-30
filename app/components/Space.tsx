@@ -33,7 +33,7 @@ export default function Space({ countryData }: Props) {
         <Earth
           countryData={countryData}
           orbitControlsMaxDist={starRadius}
-          rotate={false}
+          rotate={true}
         />
         <Stars
           radius={starRadius}

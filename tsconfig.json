@@ -7,6 +7,9 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "jsx": "preserve"
   },
   "include": [
