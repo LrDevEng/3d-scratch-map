@@ -3,6 +3,7 @@
 import {
   AdaptiveDpr,
   AdaptiveEvents,
+  Html,
   Preload,
   Sparkles,
   Stars,
@@ -12,6 +13,7 @@ import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent, Suspense } from 'react';
 import { type Props as EarthProps } from './Earth';
+import HeroText from './HeroText';
 
 const Earth = dynamic(() => import('./Earth'), {
   ssr: false,
@@ -26,15 +28,40 @@ export default function Space({ countryData }: Props) {
 
   return (
     <Canvas>
-      <Suspense fallback={<div>Loading ...</div>}>
+      <Suspense
+        fallback={
+          <Html>
+            <h1>Loading ...</h1>
+          </Html>
+        }
+      >
         <AdaptiveEvents />
         <AdaptiveDpr pixelated />
         <ambientLight intensity={3} />
-        <Earth
-          countryData={countryData}
-          orbitControlsMaxDist={starRadius}
-          rotate={true}
+        <Preload all />
+        <HeroText
+          text="Terra Scratch"
+          position={[-2.25, 0.5, 2.5]}
+          fontSize={0.5}
         />
+        <HeroText
+          text="start your journey today"
+          position={[-2, -0.6, 2.5]}
+          fontSize={0.25}
+        />
+        <Suspense
+          fallback={
+            <Html>
+              <h1>...</h1>
+            </Html>
+          }
+        >
+          <Earth
+            countryData={countryData}
+            orbitControlsMaxDist={starRadius}
+            rotate={true}
+          />
+        </Suspense>
         <Stars
           radius={starRadius}
           depth={50}
@@ -52,7 +79,6 @@ export default function Space({ countryData }: Props) {
           scale={starRadius}
           color="#fff3b0"
         />
-        <Preload all />
       </Suspense>
     </Canvas>
   );

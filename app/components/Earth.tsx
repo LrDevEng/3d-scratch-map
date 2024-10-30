@@ -41,7 +41,7 @@ export type Props = {
 
 export default function Earth({
   countryData,
-  showCoordinateSystem = true,
+  showCoordinateSystem = false,
   axisStart = 0,
   axisEnd = 4,
   axisColorX = 'red',
@@ -105,6 +105,7 @@ export default function Earth({
 
   useEffect(() => {
     onMounted();
+    if (refGlobe.current) refGlobe.current.visible = true;
   }, [onMounted]);
 
   function updateText(text: string) {
@@ -115,7 +116,7 @@ export default function Earth({
   }
 
   return (
-    <mesh position={[0, 0, 0]} ref={refGlobe}>
+    <mesh position={[0, 0, 0]} ref={refGlobe} visible={false}>
       {/* Text 2D */}
       <Text ref={refText} position={[0, 3, 0]} fontSize={0.5}>
         {' '}
