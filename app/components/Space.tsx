@@ -8,16 +8,17 @@ import {
   Stars,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import type { GeoJSON } from 'geojson';
+import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+import { type FunctionComponent, Suspense } from 'react';
+import { type Props as EarthProps } from './Earth';
 
 const Earth = dynamic(() => import('./Earth'), {
   ssr: false,
-});
+}) as FunctionComponent<EarthProps>;
 
 type Props = {
-  countryData: GeoJSON;
+  countryData: FeatureCollection;
 };
 
 export default function Space({ countryData }: Props) {
@@ -29,7 +30,11 @@ export default function Space({ countryData }: Props) {
         <AdaptiveEvents />
         <AdaptiveDpr pixelated />
         <ambientLight intensity={3} />
-        <Earth countryData={countryData} orbitControlsMaxDist={starRadius} />
+        <Earth
+          countryData={countryData}
+          orbitControlsMaxDist={starRadius}
+          rotate={false}
+        />
         <Stars
           radius={starRadius}
           depth={50}

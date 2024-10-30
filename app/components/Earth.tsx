@@ -1,24 +1,43 @@
-/* eslint-disable react/no-unknown-property */
-
 'use client';
 
 // To fix drei import errors it may be necessary to convert back to version 9.96.4
-import {
-  Bvh,
-  Line,
-  OrbitControls,
-  Text,
-  Text3D,
-  useTexture,
-} from '@react-three/drei';
+import { Bvh, Line, OrbitControls, Text, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useEffect, useRef, useState } from 'react';
-import { Color } from 'three';
+import type { FeatureCollection } from 'geojson';
+import { useEffect, useRef } from 'react';
+import { Mesh, MeshBasicMaterial } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
-import { FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
 import { v4 as uuid } from 'uuid';
-import quicksand from '../../fonts/quicksand-semi-bold.json';
+import { useSelectedCountry } from '../stores/useCountry';
+
+export type Props = {
+  countryData: FeatureCollection;
+  showCoordinateSystem?: boolean;
+  axisStart?: number;
+  axisEnd?: number;
+  axisColorX?: string;
+  axisColorY?: string;
+  axisColorZ?: string;
+  sphereRadius?: number;
+  sphereResolution?: number;
+  borderLineRadius?: number;
+  borderLineColor?: string;
+  countryPolygonRadiusMin?: number;
+  countryPolygonRadiusMax?: number;
+  countryPolygonOpacity?: number;
+  countryPolygonColor?: string;
+  countryHoveredColor?: string;
+  countryElevatedColor?: string;
+  countryElevatedRadius?: number;
+  orbitControlsMaxDist?: number;
+  orbitControlsMinDist?: number;
+  texture?: string;
+  renderCountryPolygons?: boolean;
+  renderCountryBorders?: boolean;
+  rotate?: boolean;
+  onMounted?: () => void;
+};
 
 export default function Earth({
   countryData,
@@ -36,7 +55,8 @@ export default function Earth({
   countryPolygonRadiusMax = 2.02,
   countryPolygonOpacity = 0.75,
   countryPolygonColor = '#f0d897',
-  countryElevatedColor = 'red',
+  countryHoveredColor = '#00ff00',
+  countryElevatedColor = '#ff0000',
   countryElevatedRadius = 2.1,
   orbitControlsMaxDist = 20,
   orbitControlsMinDist = 2.5,
@@ -47,23 +67,52 @@ export default function Earth({
   onMounted = () => {
     console.log('Earth mounted.');
   },
-}) {
-  const refGlobe = useRef();
-  const refText = useRef();
-  // const refText3D = useRef();
-  const refCountries = useRef([]);
+}: Props) {
+  const refGlobe = useRef<Mesh>();
+  const refText = useRef<Mesh>();
+  const refCountries = useRef<Mesh[]>([]);
   const earthTexture = useTexture(texture);
-  const [selectedCountry, setSelectedCountry] = useState('');
+
+  // State
+  const selectedCountry = useSelectedCountry((state) => state.country);
+  const updateSelectedCountry = useSelectedCountry((state) => state.update);
+
+  // Country materials
+  const countryMaterialHovered = new MeshBasicMaterial({
+    color: countryHoveredColor,
+    transparent: true,
+    opacity: countryPolygonOpacity,
+  });
+  const countryMaterialNotHovered = new MeshBasicMaterial({
+    color: countryPolygonColor,
+    transparent: true,
+    opacity: countryPolygonOpacity,
+  });
+  const countryMaterialSelected = new MeshBasicMaterial({
+    color: countryElevatedColor,
+    transparent: true,
+    opacity: countryPolygonOpacity,
+  });
 
   useFrame((state, delta) => {
-    if (rotate) refGlobe.current.rotation.y += delta * 0.05;
-    refText.current.lookAt(state.camera.position);
-    // refText3D.current.lookAt(state.camera.position);
+    if (refGlobe.current && rotate) {
+      refGlobe.current.rotation.y += delta * 0.05;
+    }
+    if (refText.current) {
+      refText.current.lookAt(state.camera.position);
+    }
   });
 
   useEffect(() => {
     onMounted();
   }, [onMounted]);
+
+  function updateText(text: string) {
+    if (refText.current) {
+      // @ts-expect-error
+      refText.current.text = text;
+    }
+  }
 
   return (
     <mesh position={[0, 0, 0]} ref={refGlobe}>
@@ -71,11 +120,6 @@ export default function Earth({
       <Text ref={refText} position={[0, 3, 0]} fontSize={0.5}>
         {' '}
       </Text>
-
-      {/* Text 3D
-      <Text3D ref={refText3D} position={[0, 3, 0]} font={quicksand}>
-        Hello
-      </Text3D> */}
 
       {showCoordinateSystem && (
         <mesh>
@@ -112,10 +156,10 @@ export default function Earth({
           rotation={[0, -Math.PI / 2, 0]}
           onDoubleClick={(event) => {
             event.stopPropagation();
-            setSelectedCountry('');
+            updateSelectedCountry('');
           }}
           onPointerMissed={() => {
-            setSelectedCountry('');
+            updateSelectedCountry('');
           }}
           onPointerEnter={(event) => {
             event.stopPropagation();
@@ -131,18 +175,18 @@ export default function Earth({
       {/* Country polygons */}
       {renderCountryPolygons &&
         countryData.features.map(({ geometry, properties }, index) => {
-          const radiusMax =
-            selectedCountry === properties.NAME
-              ? countryElevatedRadius
-              : countryPolygonRadiusMax;
-          const countryColor =
-            selectedCountry === properties.NAME
-              ? countryElevatedColor
-              : countryPolygonColor;
+          const countryName = properties ? properties.NAME : '';
+          const isSelected = selectedCountry === countryName;
+          const radiusMax = isSelected
+            ? countryElevatedRadius
+            : countryPolygonRadiusMax;
+          const baseMaterial = isSelected
+            ? countryMaterialSelected
+            : countryMaterialNotHovered;
           if (geometry.type === 'Polygon') {
             return (
               <mesh
-                key={`country-${properties.NAME}`}
+                key={`country-${countryName}`}
                 geometry={
                   new ConicPolygonGeometry(
                     geometry.coordinates,
@@ -150,85 +194,71 @@ export default function Earth({
                     radiusMax,
                   )
                 }
-                ref={(currentRef) => (refCountries.current[index] = currentRef)}
+                material={baseMaterial}
+                ref={(currentRef) => {
+                  if (currentRef) refCountries.current[index] = currentRef;
+                }}
                 onDoubleClick={(event) => {
                   event.stopPropagation();
-                  setSelectedCountry(properties.NAME);
+                  updateSelectedCountry(countryName);
                 }}
                 onPointerEnter={(event) => {
                   event.stopPropagation();
-                  refCountries.current[index].material.color.r = 0;
-                  refCountries.current[index].material.color.g = 1;
-                  refCountries.current[index].material.color.b = 0;
+                  if (refCountries.current[index] && !isSelected) {
+                    refCountries.current[index].material =
+                      countryMaterialHovered;
+                  }
 
                   // Text 2D
-                  refText.current.text = properties.NAME;
-
-                  // Text 3D
-                  // refText3D.current.geometry.dispose();
-                  // refText3D.current.geometry = new TextGeometry(
-                  //   properties.NAME,
-                  //   {
-                  //     font: new FontLoader().parse(quicksand),
-                  //     size: 1,
-                  //     depth: 0.5,
-                  //   },
-                  // );
+                  updateText(countryName);
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
-                  refCountries.current[index].material.color = new Color(
-                    countryColor,
-                  );
+                  if (refCountries.current[index]) {
+                    refCountries.current[index].material = baseMaterial;
+                  }
 
                   // Text 2D
-                  refText.current.text = '';
-
-                  // Text 3D
-                  // refText3D.current.geometry.dispose();
-                  // refText3D.current.geometry = new TextGeometry('', {
-                  //   font: new FontLoader().parse(quicksand),
-                  //   size: 1,
-                  //   depth: 0.5,
-                  // });
+                  updateText('');
                 }}
-              >
-                <meshBasicMaterial
-                  attachArray="material"
-                  color={countryColor}
-                  transparent="true"
-                  opacity={countryPolygonOpacity}
-                />
-              </mesh>
+              />
             );
           } else if (geometry.type === 'MultiPolygon') {
             return (
               <mesh
-                key={`country-${properties.NAME}`}
-                ref={(currentRef) => (refCountries.current[index] = currentRef)}
+                key={`country-${countryName}`}
+                ref={(currentRef) => {
+                  if (currentRef) refCountries.current[index] = currentRef;
+                }}
                 onPointerEnter={(event) => {
                   event.stopPropagation();
-                  refCountries.current[index].children.forEach((child) => {
-                    child.material.color.r = 0;
-                    child.material.color.g = 1;
-                    child.material.color.b = 0;
-                  });
+                  if (refCountries.current[index] && !isSelected) {
+                    refCountries.current[index].children.forEach((child) => {
+                      if (child instanceof Mesh) {
+                        child.material = countryMaterialHovered;
+                      }
+                    });
+                  }
                   // Text 2D
-                  refText.current.text = properties.NAME;
+                  updateText(countryName);
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
-                  refCountries.current[index].children.forEach((child) => {
-                    child.material.color = new Color(countryColor);
-                  });
+                  if (refCountries.current[index]) {
+                    refCountries.current[index].children.forEach((child) => {
+                      if (child instanceof Mesh) {
+                        child.material = baseMaterial;
+                      }
+                    });
+                  }
                   // Text 2D
-                  refText.current.text = '';
+                  updateText('');
                 }}
               >
                 {geometry.coordinates.map((coordinate) => {
                   return (
                     <mesh
-                      key={`country-multi-polygon-${properties.NAME}-${uuid()}`}
+                      key={`country-multi-polygon-${countryName}-${uuid()}`}
                       geometry={
                         new ConicPolygonGeometry(
                           coordinate,
@@ -236,17 +266,12 @@ export default function Earth({
                           radiusMax,
                         )
                       }
+                      material={baseMaterial}
                       onDoubleClick={(event) => {
                         event.stopPropagation();
-                        setSelectedCountry(properties.NAME);
+                        updateSelectedCountry(countryName);
                       }}
-                    >
-                      <meshBasicMaterial
-                        color={countryColor}
-                        transparent="true"
-                        opacity={countryPolygonOpacity}
-                      />
-                    </mesh>
+                    />
                   );
                 })}
               </mesh>
@@ -260,23 +285,18 @@ export default function Earth({
       {renderCountryBorders && (
         <mesh>
           {countryData.features.map(({ geometry, properties }) => {
+            const countryName = properties ? properties.NAME : '';
             const lineRadius =
-              selectedCountry === properties.NAME
+              selectedCountry === countryName
                 ? countryElevatedRadius
                 : borderLineRadius;
-            if (geometry.type === 'Polygon') {
-              return (
-                <line
-                  key={`border-${properties.NAME}`}
-                  geometry={new GeoJsonGeometry(geometry, lineRadius)}
-                >
-                  <lineBasicMaterial color={borderLineColor} />
-                </line>
-              );
-            } else if (geometry.type === 'MultiPolygon') {
+            if (
+              geometry.type === 'Polygon' ||
+              geometry.type === 'MultiPolygon'
+            ) {
               return (
                 <lineSegments
-                  key={`border-${properties.NAME}`}
+                  key={`border-${countryName}`}
                   geometry={new GeoJsonGeometry(geometry, lineRadius)}
                 >
                   <lineBasicMaterial color={borderLineColor} />
