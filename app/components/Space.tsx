@@ -8,6 +8,7 @@ import {
   Stars,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
+import type { GeoJSON } from 'geojson';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
@@ -16,7 +17,7 @@ const Earth = dynamic(() => import('./Earth'), {
 });
 
 type Props = {
-  countryData: any;
+  countryData: GeoJSON;
 };
 
 export default function Space({ countryData }: Props) {

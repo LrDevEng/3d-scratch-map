@@ -27,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/geojson": "7946.0.14",
     "eslint": "^9.13.0",
     "eslint-config-upleveled": "^8.11.3",
     "postcss": "^8",

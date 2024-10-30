@@ -45,6 +45,9 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/react@18.3.12)(react@19.0.0-rc-69d4b800-20241021)(use-sync-external-store@1.2.2(react@19.0.0-rc-69d4b800-20241021))
     devDependencies:
+      '@types/geojson':
+        specifier: 7946.0.14
+        version: 7946.0.14
       '@types/node':
         specifier: ^20
         version: 20.17.0

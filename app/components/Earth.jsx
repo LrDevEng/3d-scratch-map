@@ -43,7 +43,7 @@ export default function Earth({
   texture = './textures/texture_earth_map_10k.jpg',
   renderCountryPolygons = true,
   renderCountryBorders = true,
-  rotate = false,
+  rotate = true,
   onMounted = () => {
     console.log('Earth mounted.');
   },
