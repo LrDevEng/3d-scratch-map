@@ -1,19 +1,13 @@
 'use client';
 
-import {
-  AdaptiveDpr,
-  AdaptiveEvents,
-  Html,
-  Preload,
-  Sparkles,
-  Stars,
-} from '@react-three/drei';
+import { AdaptiveDpr, AdaptiveEvents, Html, Preload } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent, Suspense } from 'react';
 import { type Props as EarthProps } from './Earth';
 import HeroText from './HeroText';
+import Starfield from './Starfield';
 
 const Earth = dynamic(() => import('./Earth'), {
   ssr: false,
@@ -41,12 +35,12 @@ export default function Space({ countryData }: Props) {
         <Preload all />
         <HeroText
           text="Terra Scratch"
-          position={[-2.25, 0.5, 2.5]}
+          position={[-2.25, 0.9, 2.5]}
           fontSize={0.5}
         />
         <HeroText
           text="start your journey today"
-          position={[-2, -0.6, 2.5]}
+          position={[-2, 0, 2.5]}
           fontSize={0.25}
         />
         <Suspense
@@ -59,26 +53,10 @@ export default function Space({ countryData }: Props) {
           <Earth
             countryData={countryData}
             orbitControlsMaxDist={starRadius}
-            rotate={true}
+            rotateSelf={true}
           />
         </Suspense>
-        <Stars
-          radius={starRadius}
-          depth={50}
-          count={3000}
-          factor={1}
-          saturation={0}
-          fade={false}
-          speed={0.2}
-        />
-        <Sparkles
-          count={50}
-          size={3}
-          speed={0.1}
-          opacity={0.7}
-          scale={starRadius}
-          color="#fff3b0"
-        />
+        <Starfield starRadius={starRadius} />
       </Suspense>
     </Canvas>
   );
