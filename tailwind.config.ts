@@ -1,6 +1,6 @@
 import daisyui from 'daisyui';
 import type { Config } from 'tailwindcss';
-import twAnimate from 'tailwindcss-animate';
+import * as twAnimate from 'tailwindcss-animate';
 
 const config: Config = {
   darkMode: ['class'],
