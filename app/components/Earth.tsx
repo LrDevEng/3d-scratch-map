@@ -129,7 +129,7 @@ export default function Earth({
     <mesh position={[0, 0, 0]} ref={refGlobe} visible={false}>
       {/* Text 2D */}
       {showCountryText && (
-        <Text ref={refText} position={[0, 3, 0]} fontSize={0.5}>
+        <Text ref={refText} position={[0, 2.5, 0]} fontSize={0.5}>
           {' '}
         </Text>
       )}

@@ -12,7 +12,7 @@ export default function NavBar() {
       <div className="h-full flex items-center">
         <Link
           className="px-8 hover:underline hover:-translate-y-1 transition-all duration-500"
-          href="/"
+          href="/my-globe"
         >
           about
         </Link>

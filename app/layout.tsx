@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Quicksand } from 'next/font/google';
+import NavBar from './components/NavBar';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={quicksand.className}>{children}</body>
+    <html data-theme="forest" className="dark" lang="en">
+      <body className={quicksand.className}>
+        <div className="h-screen flex flex-col">
+          <header>
+            <NavBar />
+          </header>
+          <main className="flex-grow">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }
