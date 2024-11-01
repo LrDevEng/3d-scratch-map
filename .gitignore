@@ -31,6 +31,7 @@ yarn-error.log*
 
 # env files (can opt-in for commiting if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -40,3 +41,10 @@ yarn-error.log*
 next-env.d.ts
 
 .eslintcache
+node_modules/
+/test-results/
+playwright/test-results/
+/playwright-report/
+/playwright/report/
+/blob-report/
+/playwright/.cache/

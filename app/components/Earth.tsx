@@ -32,16 +32,21 @@ export type Props = {
   countryElevatedRadius?: number;
   orbitControlsMaxDist?: number;
   orbitControlsMinDist?: number;
+  orbitControlsAutoRotate?: boolean;
+  orbitControlsEnableZoom?: boolean;
+  orbitControlsEnableRotate?: boolean;
   texture?: string;
   renderCountryPolygons?: boolean;
   renderCountryBorders?: boolean;
-  rotate?: boolean;
+  rotateSelf?: boolean;
+  showCountryText?: boolean;
+  enableCountryInteraction?: boolean;
   onMounted?: () => void;
 };
 
 export default function Earth({
   countryData,
-  showCoordinateSystem = true,
+  showCoordinateSystem = false,
   axisStart = 0,
   axisEnd = 4,
   axisColorX = 'red',
@@ -60,10 +65,15 @@ export default function Earth({
   countryElevatedRadius = 2.1,
   orbitControlsMaxDist = 20,
   orbitControlsMinDist = 2.5,
+  orbitControlsAutoRotate = false,
+  orbitControlsEnableZoom = false,
+  orbitControlsEnableRotate = false,
   texture = './textures/texture_earth_map_10k.jpg',
   renderCountryPolygons = true,
   renderCountryBorders = true,
-  rotate = true,
+  rotateSelf = true,
+  showCountryText = false,
+  enableCountryInteraction = false,
   onMounted = () => {
     console.log('Earth mounted.');
   },
@@ -95,8 +105,8 @@ export default function Earth({
   });
 
   useFrame((state, delta) => {
-    if (refGlobe.current && rotate) {
-      refGlobe.current.rotation.y += delta * 0.05;
+    if (refGlobe.current && rotateSelf) {
+      refGlobe.current.rotation.y += delta * 0.02;
     }
     if (refText.current) {
       refText.current.lookAt(state.camera.position);
@@ -105,6 +115,7 @@ export default function Earth({
 
   useEffect(() => {
     onMounted();
+    if (refGlobe.current) refGlobe.current.visible = true;
   }, [onMounted]);
 
   function updateText(text: string) {
@@ -115,11 +126,13 @@ export default function Earth({
   }
 
   return (
-    <mesh position={[0, 0, 0]} ref={refGlobe}>
+    <mesh position={[0, 0, 0]} ref={refGlobe} visible={false}>
       {/* Text 2D */}
-      <Text ref={refText} position={[0, 3, 0]} fontSize={0.5}>
-        {' '}
-      </Text>
+      {showCountryText && (
+        <Text ref={refText} position={[0, 2.5, 0]} fontSize={0.5}>
+          {' '}
+        </Text>
+      )}
 
       {showCoordinateSystem && (
         <mesh>
@@ -200,11 +213,17 @@ export default function Earth({
                 }}
                 onDoubleClick={(event) => {
                   event.stopPropagation();
-                  updateSelectedCountry(countryName);
+                  if (enableCountryInteraction) {
+                    updateSelectedCountry(countryName);
+                  }
                 }}
                 onPointerEnter={(event) => {
                   event.stopPropagation();
-                  if (refCountries.current[index] && !isSelected) {
+                  if (
+                    refCountries.current[index] &&
+                    !isSelected &&
+                    enableCountryInteraction
+                  ) {
                     refCountries.current[index].material =
                       countryMaterialHovered;
                   }
@@ -214,7 +233,7 @@ export default function Earth({
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
-                  if (refCountries.current[index]) {
+                  if (refCountries.current[index] && enableCountryInteraction) {
                     refCountries.current[index].material = baseMaterial;
                   }
 
@@ -232,7 +251,11 @@ export default function Earth({
                 }}
                 onPointerEnter={(event) => {
                   event.stopPropagation();
-                  if (refCountries.current[index] && !isSelected) {
+                  if (
+                    refCountries.current[index] &&
+                    !isSelected &&
+                    enableCountryInteraction
+                  ) {
                     refCountries.current[index].children.forEach((child) => {
                       if (child instanceof Mesh) {
                         child.material = countryMaterialHovered;
@@ -244,7 +267,7 @@ export default function Earth({
                 }}
                 onPointerLeave={(event) => {
                   event.stopPropagation();
-                  if (refCountries.current[index]) {
+                  if (refCountries.current[index] && enableCountryInteraction) {
                     refCountries.current[index].children.forEach((child) => {
                       if (child instanceof Mesh) {
                         child.material = baseMaterial;
@@ -269,7 +292,9 @@ export default function Earth({
                       material={baseMaterial}
                       onDoubleClick={(event) => {
                         event.stopPropagation();
-                        updateSelectedCountry(countryName);
+                        if (enableCountryInteraction) {
+                          updateSelectedCountry(countryName);
+                        }
                       }}
                     />
                   );
@@ -309,6 +334,14 @@ export default function Earth({
         </mesh>
       )}
       <OrbitControls
+        autoRotate={orbitControlsAutoRotate}
+        enableZoom={orbitControlsEnableZoom}
+        enableRotate={orbitControlsEnableRotate}
+        autoRotateSpeed={0.1}
+        enablePan={false}
+        zoomSpeed={0.6}
+        maxPolarAngle={Math.PI * 0.9}
+        minPolarAngle={Math.PI * 0.1}
         minDistance={orbitControlsMinDist}
         maxDistance={orbitControlsMaxDist}
       />

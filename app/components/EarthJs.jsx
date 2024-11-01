@@ -18,7 +18,6 @@ import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { FontLoader, TextGeometry } from 'three/examples/jsm/Addons.js';
 import { v4 as uuid } from 'uuid';
-import quicksand from '../../fonts/quicksand-semi-bold.json';
 
 export default function Earth({
   countryData,
