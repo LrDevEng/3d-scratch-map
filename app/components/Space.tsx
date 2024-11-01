@@ -21,7 +21,7 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
   const starRadius = 15;
 
   return (
-    <Canvas>
+    <Canvas className="cursor-pointer">
       <Suspense
         fallback={
           <Html>
