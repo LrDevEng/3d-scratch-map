@@ -1,11 +1,17 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 type Props = {
   isLogIn?: boolean;
 };
 
 export default function RegisterLogIn({ isLogIn = false }: Props) {
+  const router = useRouter();
   const title = isLogIn ? 'log in' : 'register';
   const redirectText = isLogIn ? 'create account?' : 'already have an account?';
   const redirectButtonText = isLogIn ? 'register' : 'log in';
+  const redirectRoute = isLogIn ? '/register' : '/log-in';
 
   return (
     <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
@@ -98,7 +104,12 @@ export default function RegisterLogIn({ isLogIn = false }: Props) {
         </form>
         <div className="text-sm">
           <p className="inline">{redirectText}</p>
-          <button className="btn btn-link">{redirectButtonText}</button>
+          <button
+            className="btn btn-link"
+            onClick={() => router.push(redirectRoute)}
+          >
+            {redirectButtonText}
+          </button>
         </div>
       </div>
     </div>
