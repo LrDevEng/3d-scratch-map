@@ -81,6 +81,8 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
     router.refresh();
   }
 
+  // w3 svg icon overview: https://iconsvg.xyz/
+
   return (
     <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
       <div className="card-body items-center text-center">
