@@ -12,7 +12,7 @@ export const getUserInsecure = cache(async (email: User['email']) => {
       id,
       email,
       given_name,
-      family_name,
+      family_name
     FROM
       users
     WHERE
@@ -21,6 +21,21 @@ export const getUserInsecure = cache(async (email: User['email']) => {
 
   return user;
 });
+
+export const getUserWithPasswordHashInsecure = cache(
+  async (email: User['email']) => {
+    const [user] = await sql<UserWithPasswordHash[]>`
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        email = ${email}
+    `;
+
+    return user;
+  },
+);
 
 export const createUserInsecure = cache(
   async (

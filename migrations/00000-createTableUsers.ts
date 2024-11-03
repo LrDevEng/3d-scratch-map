@@ -1,11 +1,16 @@
 import type { Sql } from 'postgres';
 import { z } from 'zod';
 
-export const userSchema = z.object({
+export const userSchemaRegister = z.object({
   email: z.string().min(3).max(100),
   password: z.string().min(8),
   givenName: z.string().min(1),
   familyName: z.string().min(1),
+});
+
+export const userSchemaLogIn = z.object({
+  email: z.string().min(3).max(100),
+  password: z.string().min(8),
 });
 
 export type User = {
