@@ -78,7 +78,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
 
     router.push(getSafeReturnToPath(returnTo) || `/my-globe/${data.user.id}`);
 
-    // router.refresh();
+    router.refresh();
   }
 
   return (

@@ -14,4 +14,6 @@ export async function checkAuthorization(returnTo: string | undefined) {
   if (!user) {
     redirect(redirectionPath);
   }
+
+  return user;
 }
