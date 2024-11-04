@@ -36,7 +36,8 @@ export default function Workbench({ countryData }: Props) {
         <Space
           earthProps={{
             countryData: countryData,
-            rotateSelf: false,
+            visitedCountries: ['GER', 'RUS', 'FRA'],
+            rotateSelf: true,
             orbitControlsEnableZoom: true,
             orbitControlsEnableRotate: true,
             showCountryText: true,
@@ -70,6 +71,7 @@ export default function Workbench({ countryData }: Props) {
             <option>Greedo</option>
             <option>Germany</option>
             <option>Austria</option>
+            <option>France</option>
           </select>
         </div>
       </div>

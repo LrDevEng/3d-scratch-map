@@ -8,7 +8,7 @@ import { type Props as EarthProps } from './Earth';
 import HeroText from './HeroText';
 import Starfield from './Starfield';
 
-const Earth = dynamic(() => import('./Earth'), {
+const Earth = dynamic(() => import('./EarthOptimized'), {
   ssr: false,
 }) as FunctionComponent<EarthProps>;
 
@@ -21,7 +21,7 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
   const starRadius = 15;
 
   return (
-    <Canvas className="cursor-pointer">
+    <Canvas className="cursor-pointer select-none">
       <Suspense
         fallback={
           <Html>
