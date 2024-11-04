@@ -108,14 +108,14 @@ export default function Earth({
 
   // State
   const selectedCountry = useSelectedCountry((state) => state.country);
-  const selectedCountryPrev = useSelectedCountry((state) => state.countryPrev);
+  // const selectedCountryPrev = useSelectedCountry((state) => state.countryPrev);
   const updateSelectedCountry = useSelectedCountry((state) => state.update);
   const selectedRef = refCountries.current.find(
     (refCountry) => refCountry.name === selectedCountry,
   );
-  const selectedRefPrev = refCountries.current.find(
-    (refCountry) => refCountry.name === selectedCountryPrev,
-  );
+  // const selectedRefPrev = refCountries.current.find(
+  //   (refCountry) => refCountry.name === selectedCountryPrev,
+  // );
 
   // Texture
   const earthTexture = useTexture(texture);
@@ -150,6 +150,7 @@ export default function Earth({
           return {
             type: 'Polygon',
             countryName: properties ? properties.NAME : '',
+            isoA2: properties ? properties.ISO_A2 : '',
             adm0A3: properties ? properties.ADM0_A3 : undefined,
             conicPolygon: new ConicPolygonGeometry(
               geometry.coordinates,
@@ -172,6 +173,7 @@ export default function Earth({
             type: 'MultiPolygon',
             countryName: properties ? properties.NAME : '',
             adm0A3: properties ? properties.ADM0_A3 : undefined,
+            isoA2: properties ? properties.ISO_A2 : '',
             conicPolygons: conicPolygons,
             line: new GeoJsonGeometry(geometry, borderLineRadius),
           };
@@ -201,19 +203,12 @@ export default function Earth({
         selectedRef.material !== countryMaterialSelected
       ) {
         selectedRef.material = countryMaterialSelected;
-        // console.log('Render loop selected ref: ', selectedCountry, selectedRef);
-        // console.log(
-        //   'Render loop selected ref prev: ',
-        //   selectedCountryPrev,
-        //   selectedRefPrev,
-        // );
       } else if (selectedRef.children.length > 0) {
         selectedRef.children.forEach((child) => {
           if (
             child instanceof Mesh &&
             child.material !== countryMaterialSelected
           ) {
-            // console.log('MultiPolygon changed: ', selectedRef);
             child.material = countryMaterialSelected;
           }
         });
@@ -279,10 +274,10 @@ export default function Earth({
           rotation={[0, -Math.PI / 2, 0]}
           onDoubleClick={(event) => {
             event.stopPropagation();
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerMissed={() => {
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerEnter={(event) => {
             event.stopPropagation();
@@ -318,7 +313,11 @@ export default function Earth({
                   onDoubleClick={(event) => {
                     event.stopPropagation();
                     if (enableCountryInteraction) {
-                      updateSelectedCountry(country.countryName);
+                      updateSelectedCountry(
+                        country.countryName,
+                        country.isoA2,
+                        country.adm0A3,
+                      );
                     }
                   }}
                   onPointerEnter={(event) => {
@@ -399,7 +398,11 @@ export default function Earth({
                           onDoubleClick={(event) => {
                             event.stopPropagation();
                             if (enableCountryInteraction) {
-                              updateSelectedCountry(country.countryName);
+                              updateSelectedCountry(
+                                country.countryName,
+                                country.isoA2,
+                                country.adm0A3,
+                              );
                             }
                           }}
                         />

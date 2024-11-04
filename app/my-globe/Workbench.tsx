@@ -2,7 +2,9 @@
 
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { type FunctionComponent, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import CloseButton from '../components/CloseButton';
 import { type Props as SpaceProps } from '../components/Space';
 import { useSelectedCountry } from '../stores/useCountry';
@@ -16,10 +18,23 @@ type Props = {
 };
 
 export default function Workbench({ countryData }: Props) {
-  const selectedCountry = useSelectedCountry((state) => state.country);
+  // const selectedCountry = useSelectedCountry((state) => state.country);
+  // const selectedCountryIsoA2 = useSelectedCountry(
+  //   (state) => state.countryIsoA2,
+  // );
+  // const selectedCountryAdm0A3 = useSelectedCountry(
+  //   (state) => state.countryAdm0A3,
+  // );
+  const selectedCountry = useSelectedCountry(
+    useShallow((state) => ({
+      name: state.country,
+      isoA2: state.countryIsoA2,
+      adm0A3: state.countryAdm0A3,
+    })),
+  );
   const updateSelectedCountry = useSelectedCountry((state) => state.update);
   const [isLoading, setIsLoading] = useState(true);
-  const selected = selectedCountry !== '' && selectedCountry !== ' ';
+  const selected = selectedCountry.name !== '' && selectedCountry.name !== ' ';
 
   let spaceWidth = 'w-full';
   let dropDownWidth = 'w-[30vw]';
@@ -57,30 +72,58 @@ export default function Workbench({ countryData }: Props) {
       <div className="absolute right-0 top-0">
         <div className={`flex items-center justify-between ${dropDownWidth}`}>
           {selected && (
-            <CloseButton onClick={() => updateSelectedCountry('')} />
+            <CloseButton onClick={() => updateSelectedCountry('', '', '')} />
           )}
           <select
             className="select select-bordered mx-8 my-4 w-[25vw] min-w-fit"
-            value={selectedCountry}
-            onChange={(event) =>
-              updateSelectedCountry(event.currentTarget.value)
-            }
+            value={selectedCountry.name}
+            onChange={(event) => {
+              const dropDownCountry = countryData.features.find(
+                (country) =>
+                  country.properties?.NAME === event.currentTarget.value,
+              );
+              if (dropDownCountry && dropDownCountry.properties) {
+                updateSelectedCountry(
+                  dropDownCountry.properties.NAME,
+                  dropDownCountry.properties.ISO_A2,
+                  dropDownCountry.properties.ADM0_A3,
+                );
+              } else {
+                updateSelectedCountry('', '', '');
+              }
+              console.log('Country drop down change.');
+            }}
           >
-            <option>select country</option>
-            <option>Han Solo</option>
-            <option>Greedo</option>
-            <option>Germany</option>
-            <option>Austria</option>
-            <option>France</option>
+            <option className="text-gray-500">- select country -</option>
+            {countryData.features.map(({ properties }) => {
+              if (properties) {
+                return (
+                  <option key={`option-${properties.ADM0_A3}`}>
+                    {properties.NAME}
+                  </option>
+                );
+              } else {
+                return undefined;
+              }
+            })}
           </select>
         </div>
       </div>
       {selected && (
         <div>
-          <h1>{selectedCountry}</h1>
+          <h1>{selectedCountry.name}</h1>
           <p>Population:</p>
           <p>Size:</p>
           <h2>Trips</h2>
+          <div className="h-[64px] w-[64px]">
+            <Image
+              className="m-auto"
+              src={`https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png`}
+              width={64}
+              height={64}
+              alt="flag"
+            />
+          </div>
         </div>
       )}
     </div>

@@ -178,10 +178,10 @@ export default function Earth({
           rotation={[0, -Math.PI / 2, 0]}
           onDoubleClick={(event) => {
             event.stopPropagation();
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerMissed={() => {
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerEnter={(event) => {
             event.stopPropagation();
@@ -199,6 +199,8 @@ export default function Earth({
         countryData.features.map(({ geometry, properties }, index) => {
           const countryName = properties ? properties.NAME : '';
           const adm0A3 = properties ? properties.ADM0_A3 : undefined;
+          const adm0A3State = properties ? properties.ADM0_A3 : '';
+          const isoA2State = properties ? properties.ISO_A2 : '';
           const isSelected = selectedCountry === countryName;
           const hasVisit = visitedCountries.includes(adm0A3);
           const radiusMax = isSelected
@@ -229,7 +231,7 @@ export default function Earth({
                 onDoubleClick={(event) => {
                   event.stopPropagation();
                   if (enableCountryInteraction) {
-                    updateSelectedCountry(countryName);
+                    updateSelectedCountry(countryName, isoA2State, adm0A3State);
                   }
                 }}
                 onPointerEnter={(event) => {
@@ -308,7 +310,11 @@ export default function Earth({
                       onDoubleClick={(event) => {
                         event.stopPropagation();
                         if (enableCountryInteraction) {
-                          updateSelectedCountry(countryName);
+                          updateSelectedCountry(
+                            countryName,
+                            isoA2State,
+                            adm0A3State,
+                          );
                         }
                       }}
                     />
