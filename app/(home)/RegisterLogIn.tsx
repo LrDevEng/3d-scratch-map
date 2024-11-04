@@ -73,11 +73,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
       return;
     }
 
-    console.log('Return to:', returnTo);
-    console.log('Safe return to: ', getSafeReturnToPath(returnTo));
-
-    router.push(getSafeReturnToPath(returnTo) || `/my-globe/${data.user.id}`);
-
+    router.push(getSafeReturnToPath(returnTo) || '/my-globe');
     router.refresh();
   }
 

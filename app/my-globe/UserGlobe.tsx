@@ -17,7 +17,7 @@ type Props = {
   countryData: FeatureCollection;
 };
 
-export default function Workbench({ countryData }: Props) {
+export default function UserGlobe({ countryData }: Props) {
   // const selectedCountry = useSelectedCountry((state) => state.country);
   // const selectedCountryIsoA2 = useSelectedCountry(
   //   (state) => state.countryIsoA2,
@@ -58,6 +58,7 @@ export default function Workbench({ countryData }: Props) {
             showCountryText: true,
             enableCountryInteraction: true,
             onMounted: () => {
+              console.log('UserGlobe mounted');
               setIsLoading(false);
             },
           }}
@@ -114,7 +115,7 @@ export default function Workbench({ countryData }: Props) {
           <h1>{selectedCountry.name}</h1>
           <p>Population:</p>
           <p>Size:</p>
-          <h2>Trips</h2>
+
           <div className="h-[64px] w-[64px]">
             <Image
               className="m-auto"
@@ -124,6 +125,7 @@ export default function Workbench({ countryData }: Props) {
               alt="flag"
             />
           </div>
+          <h2>Trips</h2>
         </div>
       )}
     </div>

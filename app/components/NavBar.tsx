@@ -10,11 +10,14 @@ export default async function NavBar() {
   // 2. Get the current logged in user from the database using the sessionToken value
   const user = sessionTokenCookie && (await getUser(sessionTokenCookie.value));
 
+  // 3. Determine home route
+  const homeRoute = user ? '/my-globe' : '/';
+
   return (
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
       <Link
         className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-        href="/"
+        href={homeRoute}
       >
         <Image
           src="/images/logo-terra-scratch-4.png"
@@ -24,6 +27,14 @@ export default async function NavBar() {
         />
       </Link>
       <div className="flex h-full items-center">
+        {user && (
+          <Link
+            className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
+            href="/my-globe"
+          >
+            my globe
+          </Link>
+        )}
         {user && (
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
@@ -41,7 +52,7 @@ export default async function NavBar() {
         {user ? (
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-            href={`/profile/${user.id}`}
+            href="/profile"
           >
             profile
           </Link>

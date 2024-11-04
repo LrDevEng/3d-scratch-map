@@ -13,7 +13,8 @@ export const getUser = cache(async (sessionToken: Session['token']) => {
       users.id,
       users.email,
       users.given_name,
-      users.family_name
+      users.family_name,
+      users.image_url
     FROM
       users
       INNER JOIN sessions ON (
@@ -33,7 +34,8 @@ export const getUserInsecure = cache(async (email: User['email']) => {
       id,
       email,
       given_name,
-      family_name
+      family_name,
+      image_url
     FROM
       users
     WHERE
@@ -84,7 +86,8 @@ export const createUserInsecure = cache(
         users.id,
         users.email,
         users.given_name,
-        users.family_name
+        users.family_name,
+        users.image_url
     `;
 
     return user;

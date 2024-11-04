@@ -18,6 +18,7 @@ export type User = {
   email: string;
   givenName: string;
   familyName: string;
+  imageUrl: string | null;
 };
 
 export async function up(sql: Sql) {
@@ -27,6 +28,7 @@ export async function up(sql: Sql) {
       email varchar(80) NOT NULL UNIQUE,
       given_name varchar NOT NULL,
       family_name varchar NOT NULL,
+      image_url varchar,
       password_hash varchar(255) NOT NULL
     )
   `;

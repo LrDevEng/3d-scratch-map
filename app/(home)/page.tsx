@@ -1,7 +1,21 @@
+import { cookies } from 'next/headers';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import { getUser } from '../../database/users';
 import CreateAccount from './CreateAccount';
 
-export default function Home() {
+export default async function Home() {
+  // 1. Check if the sessionToken cookie exists
+  const sessionTokenCookie = (await cookies()).get('sessionToken');
+
+  // 2. Query the current user with the sessionToken
+  const user = sessionTokenCookie && (await getUser(sessionTokenCookie.value));
+
+  // 3. Redirect user if already authenticate
+  if (user) {
+    redirect('/my-globe');
+  }
+
   return (
     <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8">
       <div className="flex flex-col items-center text-center">

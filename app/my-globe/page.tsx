@@ -1,8 +1,11 @@
+import { checkAuthorization } from '../../util/auth';
 import { getCountries } from '../../util/localdata';
-import Workbench from './Workbench';
+import UserGlobe from './UserGlobe';
 
-export default async function MyGlobe() {
+export default async function Globe() {
   const countryData = await getCountries();
 
-  return <Workbench countryData={countryData} />;
+  await checkAuthorization('/my-globe');
+
+  return <UserGlobe countryData={countryData} />;
 }

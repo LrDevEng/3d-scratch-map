@@ -23,7 +23,7 @@ export default async function Register({ searchParams }: Props) {
 
   // 3. If the sessionToken cookie is valid, redirect to home
   if (session) {
-    redirect(getSafeReturnToPath(returnTo) || `/my-globe/${session.userId}`);
+    redirect(getSafeReturnToPath(returnTo) || '/my-globe');
   }
 
   return (

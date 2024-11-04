@@ -91,7 +91,7 @@ export default function Earth({
   orbitControlsAutoRotate = false,
   orbitControlsEnableZoom = false,
   orbitControlsEnableRotate = false,
-  texture = './textures/texture_earth_map_10k.jpg',
+  texture = '/textures/texture_earth_map_10k.jpg',
   renderCountryPolygons = true,
   renderCountryBorders = true,
   rotateSelf = true,
