@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const diarySchema = z.object({
   journeyId: z.number().int(),
   title: z.string().min(3).max(150),
-  startDate: z.coerce.date(),
+  dateStart: z.coerce.date(),
   thoughts: z.string(),
 });
 
@@ -12,7 +12,7 @@ export type Diary = {
   id: number;
   journeyId: number;
   title: string;
-  startDate: Date;
+  dateStart: Date;
   thoughts: string;
 };
 
