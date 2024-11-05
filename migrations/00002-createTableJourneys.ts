@@ -2,13 +2,12 @@ import type { Sql } from 'postgres';
 import { z } from 'zod';
 
 export const journeySchema = z.object({
-  userId: z.number().int(),
   countryAdm0A3: z.string().min(3).max(3),
   title: z.string().min(3).max(150),
   dateStart: z.coerce.date(),
   dateEnd: z.coerce.date(),
-  summary: z.string(),
-  imageUrl: z.string().nullable(),
+  summary: z.string().max(2000),
+  imageUrl: z.string().nullable().optional(),
 });
 
 export type Journey = {

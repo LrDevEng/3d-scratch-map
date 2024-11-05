@@ -1,8 +1,13 @@
+import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import AddButton from '../../components/AddButton';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import JourneyForm from './JourneyForm';
 
-export default function Journeys() {
+type Props = {
+  journeys: Journey[];
+};
+
+export default function Journeys({ journeys }: Props) {
   return (
     <div className="text-center">
       <h2>Journeys</h2>
@@ -14,6 +19,16 @@ export default function Journeys() {
       <div className="flex justify-center">
         <JourneyForm />
       </div>
+      {journeys.map((journey) => {
+        return (
+          <div key={`journey-${journey.id}`}>
+            <div>{journey.title}</div>
+            <div>{journey.dateStart.toDateString()}</div>
+            <div>{journey.dateEnd.toDateString()}</div>
+            <div>{journey.summary}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }

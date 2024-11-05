@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
+import type { Journey } from '../../../migrations/00002-createTableJourneys';
 import { useSelectedCountry } from '../../stores/useCountry';
 import CountryInfo from './CountryInfo';
 import Journeys from './Journeys';
@@ -12,11 +13,13 @@ import Journeys from './Journeys';
 type Props = {
   queriedCountryAdm0: string;
   countryData: FeatureCollection;
+  journeys: Journey[];
 };
 
 export default function CountryOverview({
   queriedCountryAdm0,
   countryData,
+  journeys,
 }: Props) {
   const selectedCountry = useSelectedCountry(
     useShallow((state) => ({
@@ -106,7 +109,11 @@ export default function CountryOverview({
           <h1 className="ml-8">{selectedCountry.name}</h1>
         </div>
         <CountryInfo countryIsoA2={selectedCountry.isoA2} />
-        <Journeys />
+        <Journeys
+          journeys={journeys.filter(
+            (journey) => journey.countryAdm0A3 === selectedCountry.adm0A3,
+          )}
+        />
       </div>
     </div>
   );
