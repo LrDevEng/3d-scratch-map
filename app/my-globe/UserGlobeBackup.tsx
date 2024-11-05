@@ -3,8 +3,7 @@
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { type FunctionComponent, useEffect, useState } from 'react';
+import { type FunctionComponent, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import CloseButton from '../components/CloseButton';
 import { type Props as SpaceProps } from '../components/Space';

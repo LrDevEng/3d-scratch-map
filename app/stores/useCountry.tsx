@@ -1,15 +1,5 @@
 import { create } from 'zustand';
 
-// interface Country {
-//   country: string;
-//   update: (newCountry: string) => void;
-// }
-
-// export const useHoveredCountry = create<Country>((set) => ({
-//   country: '',
-//   update: (newCountry) => set(() => ({ country: newCountry })),
-// }));
-
 interface Country {
   country: string;
   countryIsoA2: string;
@@ -30,4 +20,20 @@ export const useSelectedCountry = create<Country>((set) => ({
       countryAdm0A3: adm0A3,
       countryPrev: state.country,
     })),
+}));
+
+type CountryApiInfos = {
+  capital: string;
+  area: number;
+  population: number;
+};
+
+interface CountryInfos {
+  countryInfos: CountryApiInfos[];
+  update: (newCountryInfos: CountryApiInfos[]) => void;
+}
+
+export const useCountryInfos = create<CountryInfos>((set) => ({
+  countryInfos: [{ capital: '', area: 0, population: 0 }],
+  update: (newCountryInfos) => set(() => ({ countryInfos: newCountryInfos })),
 }));

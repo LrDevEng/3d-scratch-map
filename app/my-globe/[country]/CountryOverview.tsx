@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSelectedCountry } from '../../stores/useCountry';
+import CountryInfo from './CountryInfo';
 import Journeys from './Journeys';
 
 type Props = {
@@ -83,6 +84,10 @@ export default function CountryOverview({
     selectedCountry.adm0A3,
   ]);
 
+  // Flag apis
+  // https://flagcdn.com/fr.svg
+  // https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png
+
   return (
     <div className="mx-8 mt-24 w-full">
       <div className="flex items-center">
@@ -99,9 +104,7 @@ export default function CountryOverview({
         </div>
         <h1 className="ml-8">{selectedCountry.name}</h1>
       </div>
-      <p>Population:</p>
-      <p>Size:</p>
-      <p>Capital:</p>
+      <CountryInfo countryIsoA2={selectedCountry.isoA2} />
       <Journeys />
     </div>
   );
