@@ -1,5 +1,6 @@
 import AddButton from '../../components/AddButton';
 import HorizontalDivider from '../../components/HorizontalDivider';
+import JourneyForm from './JourneyForm';
 
 export default function Journeys() {
   return (
@@ -9,6 +10,9 @@ export default function Journeys() {
         <HorizontalDivider />
         <AddButton />
         <HorizontalDivider />
+      </div>
+      <div className="flex justify-center">
+        <JourneyForm />
       </div>
     </div>
   );

@@ -89,23 +89,25 @@ export default function CountryOverview({
   // https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png
 
   return (
-    <div className="mx-8 mt-24 w-full">
-      <div className="flex items-center">
-        <div className="h-[64px] w-[64px]">
-          {selectedCountry.isoA2.length === 2 && (
-            <Image
-              className="m-auto"
-              src={`https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png`}
-              width={64}
-              height={64}
-              alt="flag"
-            />
-          )}
+    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] w-full overflow-y-auto">
+      <div className="mx-8 mt-24 w-full">
+        <div className="flex items-center">
+          <div className="h-[64px] w-[64px]">
+            {selectedCountry.isoA2.length === 2 && (
+              <Image
+                className="m-auto"
+                src={`https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png`}
+                width={64}
+                height={64}
+                alt="flag"
+              />
+            )}
+          </div>
+          <h1 className="ml-8">{selectedCountry.name}</h1>
         </div>
-        <h1 className="ml-8">{selectedCountry.name}</h1>
+        <CountryInfo countryIsoA2={selectedCountry.isoA2} />
+        <Journeys />
       </div>
-      <CountryInfo countryIsoA2={selectedCountry.isoA2} />
-      <Journeys />
     </div>
   );
 }

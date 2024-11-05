@@ -44,7 +44,7 @@ export default function CountryInfo({ countryIsoA2 }: Props) {
             <td className="px-4">{countryInfos[0]?.population}</td>
           </tr>
           <tr>
-            <td>Size:</td>
+            <td>Area:</td>
             <td className="px-4">{countryInfos[0]?.area} km²</td>
           </tr>
         </tbody>

@@ -81,7 +81,7 @@ export default function UserGlobe({ countryData }: Props) {
           </div>
         )}
       </div>
-      <div className="absolute right-0 top-0">
+      <div className={`absolute right-0 top-0 ${selected ? 'bg-black' : ''}`}>
         <div className={`flex items-center ${dropDownWidth}`}>
           {selected && (
             <CloseButton
