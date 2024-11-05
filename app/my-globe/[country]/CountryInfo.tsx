@@ -32,20 +32,20 @@ export default function CountryInfo({ countryIsoA2 }: Props) {
   }, [countryIsoA2, updateCountryInfos]);
 
   return (
-    <div>
-      <table>
+    <div className="w-full">
+      <table className="table-fixed">
         <tbody>
           <tr>
             <td>Capital:</td>
-            <td>{countryInfos[0]?.capital}</td>
+            <td className="px-4">{countryInfos[0]?.capital}</td>
           </tr>
           <tr>
             <td>Population:</td>
-            <td>{countryInfos[0]?.population}</td>
+            <td className="px-4">{countryInfos[0]?.population}</td>
           </tr>
           <tr>
             <td>Size:</td>
-            <td>{countryInfos[0]?.area} km²</td>
+            <td className="px-4">{countryInfos[0]?.area} km²</td>
           </tr>
         </tbody>
       </table>
