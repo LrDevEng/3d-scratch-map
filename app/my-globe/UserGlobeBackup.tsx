@@ -2,12 +2,14 @@
 
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
-import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { type FunctionComponent, useEffect, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import CloseButton from '../components/CloseButton';
 import { type Props as SpaceProps } from '../components/Space';
 import { useSelectedCountry } from '../stores/useCountry';
+import Journeys from './[country]/Journeys';
 
 const Space = dynamic(() => import('../components/Space'), {
   ssr: false,
@@ -18,6 +20,14 @@ type Props = {
 };
 
 export default function UserGlobe({ countryData }: Props) {
+  // const selectedCountry = useSelectedCountry((state) => state.country);
+  // const selectedCountryIsoA2 = useSelectedCountry(
+  //   (state) => state.countryIsoA2,
+  // );
+  // const selectedCountryAdm0A3 = useSelectedCountry(
+  //   (state) => state.countryAdm0A3,
+  // );
+
   const selectedCountry = useSelectedCountry(
     useShallow((state) => ({
       name: state.country,
@@ -36,26 +46,33 @@ export default function UserGlobe({ countryData }: Props) {
     dropDownWidth = 'w-[50vw]';
   }
 
-  // Set url based on current country state
-  const router = useRouter();
-  useEffect(() => {
-    if (selectedCountry.name.length > 0) {
-      router.push(`/my-globe/${selectedCountry.adm0A3.toLowerCase()}`);
-    } else {
-      router.push('/my-globe');
-    }
-  }, [selectedCountry, router]);
+  // const searchParams = useSearchParams();
+  // const router = useRouter();
 
-  // Set country state based on url
-  const pathname = usePathname();
-  useEffect(() => {
-    if (pathname.endsWith('/my-globe')) {
-      updateSelectedCountry('', '', '');
-    }
-  }, [pathname, updateSelectedCountry]);
+  // useEffect(() => {
+  //   const searchParamCountry = searchParams.get('country');
+  //   if (searchParamCountry) {
+  //     const queriedCountry = countryData.features.find(
+  //       (country) => country.properties?.NAME === searchParamCountry,
+  //     );
+  //     updateSelectedCountry(
+  //       queriedCountry?.properties?.NAME,
+  //       queriedCountry?.properties?.ISO_A2,
+  //       queriedCountry?.properties?.ADM0_A3,
+  //     );
+  //   }
+  // }, [searchParams, updateSelectedCountry, countryData.features]);
+
+  // useEffect(() => {
+  //   if (selectedCountry.name.length > 0) {
+  //     const newParams = new URLSearchParams(searchParams);
+  //     newParams.set('country', selectedCountry.name);
+  //     router.push(`?${newParams.toString()}`);
+  //   }
+  // }, [router, searchParams, selectedCountry]);
 
   return (
-    <div className="flex h-full w-full">
+    <div className="relative flex h-full w-full">
       <div
         className={`h-[calc(100vh-5rem)] min-h-[300px] bg-[#0f0f0f] ${spaceWidth}`}
       >
@@ -76,7 +93,7 @@ export default function UserGlobe({ countryData }: Props) {
           showHeroText={false}
         />
         {isLoading && (
-          <div className="absolute left-1/4 top-1/2 z-50">
+          <div className="absolute left-1/2 top-1/2 z-50">
             <h1>Loading ...</h1>
           </div>
         )}
@@ -107,6 +124,7 @@ export default function UserGlobe({ countryData }: Props) {
                 } else {
                   updateSelectedCountry('', '', '');
                 }
+                console.log('Country drop down change.');
               }}
             >
               <option className="text-gray-500">- select country -</option>
@@ -125,6 +143,26 @@ export default function UserGlobe({ countryData }: Props) {
           </div>
         </div>
       </div>
+      {selected && (
+        <div className="mx-8 mt-24 w-full">
+          <div className="flex items-center">
+            <div className="h-[64px] w-[64px]">
+              <Image
+                className="m-auto"
+                src={`https://flagsapi.com/${selectedCountry.isoA2}/flat/64.png`}
+                width={64}
+                height={64}
+                alt="flag"
+              />
+            </div>
+            <h1 className="ml-8">{selectedCountry.name}</h1>
+          </div>
+          <p>Population:</p>
+          <p>Size:</p>
+          <p>Capital:</p>
+          <Journeys />
+        </div>
+      )}
     </div>
   );
 }

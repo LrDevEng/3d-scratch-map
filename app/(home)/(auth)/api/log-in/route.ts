@@ -119,6 +119,7 @@ export async function POST(
       email: userWithPasswordHash.email,
       givenName: userWithPasswordHash.givenName,
       familyName: userWithPasswordHash.familyName,
+      imageUrl: userWithPasswordHash.imageUrl,
     },
   });
 }
