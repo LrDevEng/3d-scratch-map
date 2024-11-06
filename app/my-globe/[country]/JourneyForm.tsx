@@ -3,14 +3,14 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import type { CreateJourneyResponseBodyPost } from '../../api/journeys/route';
-import { useSelectedCountry } from '../../stores/useCountry';
 
-export default function JourneyForm() {
-  const selectedCountryAdm0A3 = useSelectedCountry(
-    (state) => state.countryAdm0A3,
-  );
+type Props = {
+  selectedCountryAdm0A3: string;
+};
+
+export default function JourneyForm({ selectedCountryAdm0A3 }: Props) {
   const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
 
@@ -57,8 +57,8 @@ export default function JourneyForm() {
 
         <div className="form-control mt-2 w-full">
           <label className="label flex">
-            <div className="label-text mx-4 w-20 text-left text-neutral-content">
-              Start Date
+            <div className="label-text mx-4 w-8 text-left text-neutral-content">
+              From
             </div>
             <input
               type="date"
@@ -74,8 +74,8 @@ export default function JourneyForm() {
 
         <div className="form-control mt-2 w-full">
           <label className="label flex">
-            <div className="label-text mx-4 w-20 text-left text-neutral-content">
-              End Date
+            <div className="label-text mx-4 w-8 text-left text-neutral-content">
+              To
             </div>
             <input
               type="date"

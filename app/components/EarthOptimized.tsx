@@ -3,12 +3,12 @@
 import { Bvh, Line, OrbitControls, Text, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { FeatureCollection } from 'geojson';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import { Mesh, MeshBasicMaterial } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
-import { useSelectedCountry } from '../stores/useCountry';
 
 export type Props = {
   countryData: FeatureCollection;
@@ -41,6 +41,7 @@ export type Props = {
   rotateSelf?: boolean;
   showCountryText?: boolean;
   enableCountryInteraction?: boolean;
+  baseUrl?: string;
   onMounted?: () => void;
 };
 
@@ -97,25 +98,35 @@ export default function Earth({
   rotateSelf = true,
   showCountryText = false,
   enableCountryInteraction = false,
+  baseUrl = '/my-globe',
   onMounted = () => {
     console.log('Earth mounted.');
   },
 }: Props) {
+  // Router
+  const router = useRouter();
+
   // References
   const refGlobe = useRef<Mesh>();
   const refText = useRef<Mesh>();
   const refCountries = useRef<Mesh[]>([]);
 
-  // State
-  const selectedCountry = useSelectedCountry((state) => state.country);
-  // const selectedCountryPrev = useSelectedCountry((state) => state.countryPrev);
-  const updateSelectedCountry = useSelectedCountry((state) => state.update);
+  // Url state
+  const params = useParams();
+  const paramsCountry = params.country || '';
+  const selectedCountryAdm0A3 = Array.isArray(paramsCountry)
+    ? paramsCountry[0]?.toUpperCase()
+    : paramsCountry.toUpperCase();
   const selectedRef = refCountries.current.find(
-    (refCountry) => refCountry.name === selectedCountry,
+    (refCountry) => refCountry.name === selectedCountryAdm0A3,
   );
-  // const selectedRefPrev = refCountries.current.find(
-  //   (refCountry) => refCountry.name === selectedCountryPrev,
-  // );
+  const updateUrl = (newCountryAdm0A3: string) => {
+    if (newCountryAdm0A3.length === 3) {
+      router.push(`/my-globe/${newCountryAdm0A3.toLowerCase()}`);
+    } else {
+      router.push('/my-globe');
+    }
+  };
 
   // Texture
   const earthTexture = useTexture(texture);
@@ -274,10 +285,11 @@ export default function Earth({
           rotation={[0, -Math.PI / 2, 0]}
           onDoubleClick={(event) => {
             event.stopPropagation();
-            updateSelectedCountry('', '', '');
           }}
           onPointerMissed={() => {
-            updateSelectedCountry('', '', '');
+            if (enableCountryInteraction) {
+              updateUrl('');
+            }
           }}
           onPointerEnter={(event) => {
             event.stopPropagation();
@@ -294,7 +306,7 @@ export default function Earth({
       {renderCountryPolygons &&
         countriesProcessed.map((country, index) => {
           if (country) {
-            const isSelected = selectedCountry === country.countryName;
+            const isSelected = selectedCountryAdm0A3 === country.adm0A3;
             const hasVisit = visitedCountries.includes(country.adm0A3);
             const baseMaterial = hasVisit
               ? countryMaterialNotHoveredVisited
@@ -303,8 +315,8 @@ export default function Earth({
             if (country.type === 'Polygon') {
               return (
                 <mesh
-                  key={`country-${country.countryName}`}
-                  name={country.countryName}
+                  key={`country-${country.adm0A3}`}
+                  name={country.adm0A3}
                   geometry={country.conicPolygon}
                   material={baseMaterial}
                   ref={(currentRef) => {
@@ -313,11 +325,7 @@ export default function Earth({
                   onDoubleClick={(event) => {
                     event.stopPropagation();
                     if (enableCountryInteraction) {
-                      updateSelectedCountry(
-                        country.countryName,
-                        country.isoA2,
-                        country.adm0A3,
-                      );
+                      updateUrl(country.adm0A3);
                     }
                   }}
                   onPointerEnter={(event) => {
@@ -351,8 +359,8 @@ export default function Earth({
             } else if (country.type === 'MultiPolygon') {
               return (
                 <mesh
-                  key={`country-${country.countryName}`}
-                  name={country.countryName}
+                  key={`country-${country.adm0A3}`}
+                  name={country.adm0A3}
                   ref={(currentRef) => {
                     if (currentRef) refCountries.current[index] = currentRef;
                   }}
@@ -392,17 +400,13 @@ export default function Earth({
                     country.conicPolygons.map((conicPolygon) => {
                       return (
                         <mesh
-                          key={`country-multi-polygon-${country.countryName}-${uuid()}`}
+                          key={`country-multi-polygon-${country.adm0A3}-${uuid()}`}
                           geometry={conicPolygon}
                           material={baseMaterial}
                           onDoubleClick={(event) => {
                             event.stopPropagation();
                             if (enableCountryInteraction) {
-                              updateSelectedCountry(
-                                country.countryName,
-                                country.isoA2,
-                                country.adm0A3,
-                              );
+                              updateUrl(country.adm0A3);
                             }
                           }}
                         />
