@@ -25,3 +25,11 @@ export function getSafeReturnToPath(path: string | string[] | undefined) {
   }
   return result.data as Route;
 }
+
+const keys = {
+  country: new RegExp('[a-z]{3}'),
+};
+
+export function validateUrlParam(key: string, param: string): boolean {
+  return keys[key as keyof typeof keys].test(param);
+}

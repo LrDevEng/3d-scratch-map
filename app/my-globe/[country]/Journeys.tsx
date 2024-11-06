@@ -5,9 +5,10 @@ import JourneyForm from './JourneyForm';
 
 type Props = {
   journeys: Journey[];
+  selectedCountryAdm0A3: string;
 };
 
-export default function Journeys({ journeys }: Props) {
+export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
   return (
     <div className="text-center">
       <h2>Journeys</h2>
@@ -17,7 +18,7 @@ export default function Journeys({ journeys }: Props) {
         <HorizontalDivider />
       </div>
       <div className="flex justify-center">
-        <JourneyForm />
+        <JourneyForm selectedCountryAdm0A3={selectedCountryAdm0A3} />
       </div>
       {journeys.map((journey) => {
         return (

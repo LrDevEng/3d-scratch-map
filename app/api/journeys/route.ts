@@ -51,7 +51,7 @@ export async function POST(
   // 5. If the note creation fails, return an error
   if (!newJourney) {
     return NextResponse.json(
-      { error: 'Journey not created or access denied creating note' },
+      { error: 'Journey not created or access denied creating journey' },
       {
         status: 400,
       },
