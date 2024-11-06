@@ -3,6 +3,25 @@ import { type Session } from '../migrations/00001-createTableSessions';
 import { type Journey } from '../migrations/00002-createTableJourneys';
 import { sql } from './connect';
 
+export const getJourney = cache(
+  async (sessionToken: string, journeyId: number) => {
+    const [journey] = await sql<Journey[]>`
+      SELECT
+        journeys.*
+      FROM
+        journeys
+        INNER JOIN sessions ON (
+          sessions.token = ${sessionToken}
+          AND sessions.user_id = journeys.user_id
+          AND expiry_timestamp > now()
+        )
+      WHERE
+        journeys.id = ${journeyId}
+    `;
+    return journey;
+  },
+);
+
 export const getJourneys = cache(async (sessionToken: string) => {
   const journeys = await sql<Journey[]>`
     SELECT
