@@ -15,7 +15,8 @@ export const getJourneys = cache(async (sessionToken: string) => {
         AND expiry_timestamp > now()
       )
     ORDER BY
-      journeys.date_start
+      journeys.date_start DESC,
+      journeys.date_end DESC
   `;
   return journeys;
 });

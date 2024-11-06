@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import AddButton from '../../components/AddButton';
 import HorizontalDivider from '../../components/HorizontalDivider';
+import JourneyCardCompact from './JourneyCardCompact';
 import JourneyForm from './JourneyForm';
 
 type Props = {
@@ -31,16 +32,14 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
           />
         </div>
       )}
-      {journeys.map((journey) => {
-        return (
-          <div key={`journey-${journey.id}`}>
-            <div>{journey.title}</div>
-            <div>{journey.dateStart.toDateString()}</div>
-            <div>{journey.dateEnd.toDateString()}</div>
-            <div>{journey.summary}</div>
-          </div>
-        );
-      })}
+      {!showAddJourney &&
+        journeys.map((journey, index) => {
+          return (
+            <div key={`journey-${journey.id}`}>
+              <JourneyCardCompact journey={journey} reverse={index % 2 !== 0} />
+            </div>
+          );
+        })}
     </div>
   );
 }

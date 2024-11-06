@@ -73,7 +73,9 @@ export default function UserGlobe({ countryData, visitedCountries }: Props) {
           </div>
         )}
       </div>
-      <div className={`absolute right-0 top-0 ${selected ? 'bg-black' : ''}`}>
+      <div
+        className={`absolute right-0 top-0 z-50 ${selected ? 'bg-black' : ''}`}
+      >
         <div className={`flex items-center ${dropDownWidth}`}>
           {selected && (
             <CloseButton className="ml-8" onClick={() => updateUrl('')} />
