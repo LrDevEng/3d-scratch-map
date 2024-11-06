@@ -39,9 +39,7 @@ export default function CountryOverview({ selectedCountry, journeys }: Props) {
         </div>
         <CountryInfo countryIsoA2={selectedCountryIsoA2} />
         <Journeys
-          journeys={journeys.filter(
-            (journey) => journey.countryAdm0A3 === selectedCountryAdm0A3,
-          )}
+          journeys={journeys}
           selectedCountryAdm0A3={selectedCountryAdm0A3}
         />
       </div>

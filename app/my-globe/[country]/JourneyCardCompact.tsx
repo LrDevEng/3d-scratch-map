@@ -1,4 +1,7 @@
+'use client';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import type { Journey } from '../../../migrations/00002-createTableJourneys';
 import HorizontalDivider from '../../components/HorizontalDivider';
@@ -6,16 +9,26 @@ import HorizontalDivider from '../../components/HorizontalDivider';
 type Props = {
   journey: Journey;
   reverse?: boolean;
+  selectedCountryAdm0A3: string;
 };
 
 export default function JourneyCardCompact({
   journey,
+  selectedCountryAdm0A3,
   reverse = false,
 }: Props) {
+  const router = useRouter();
   const flexDirection = reverse ? 'flex-row-reverse' : 'flex-row';
 
   return (
-    <button className="w-full">
+    <button
+      className="w-full"
+      onClick={() =>
+        router.push(
+          `/my-globe/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`,
+        )
+      }
+    >
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
         <div className={`card-body ${flexDirection}`}>
           <div className="h-auto w-1/4 rounded-2xl border-2 border-white">

@@ -24,15 +24,16 @@ export default async function UserSpace(props: Props) {
     redirect('/my-globe');
   }
 
-  // 2. Query the journeys with the current user
+  // 2. Query the journeys with the current user session token for specific country
   const journeys = await getJourneys(sessionTokenCookie.value);
+  const countryJourneys = journeys.filter(
+    (journey) => journey.countryAdm0A3 === selectedCountry.properties?.ADM0_A3,
+  );
 
   return (
     <CountryOverview
       selectedCountry={selectedCountry.properties}
-      journeys={journeys}
+      journeys={countryJourneys}
     />
   );
-
-  // return <UserGlobe countryData={countryData} searchCountry="" />;
 }

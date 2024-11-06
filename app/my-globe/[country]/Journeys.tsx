@@ -36,7 +36,11 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
         journeys.map((journey, index) => {
           return (
             <div key={`journey-${journey.id}`}>
-              <JourneyCardCompact journey={journey} reverse={index % 2 !== 0} />
+              <JourneyCardCompact
+                journey={journey}
+                reverse={index % 2 !== 0}
+                selectedCountryAdm0A3={selectedCountryAdm0A3}
+              />
             </div>
           );
         })}
