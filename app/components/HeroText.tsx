@@ -18,18 +18,13 @@ export default function HeroText({ text, position, fontSize = 0.7 }: Props) {
 
   return (
     <mesh position={position}>
-      {/* <Text fontSize={fontSize} font="./fonts/quicksand-bold.ttf">
-        {text}
-        <meshBasicMaterial color="white" />
-      </Text> */}
-
       <Text3D
-        font="./fonts/quicksand-semi-bold.json"
+        font="/fonts/quicksand-semi-bold.json"
         size={fontSize}
         scale={[1, 1, 0.3]}
       >
         {text}
-        <meshMatcapMaterial color="#64a71d" matcap={matcapTexture} />
+        <meshMatcapMaterial color="#66b14e" matcap={matcapTexture} />
       </Text3D>
     </mesh>
   );

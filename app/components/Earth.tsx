@@ -13,6 +13,7 @@ import { useSelectedCountry } from '../stores/useCountry';
 
 export type Props = {
   countryData: FeatureCollection;
+  visitedCountries?: string[];
   showCoordinateSystem?: boolean;
   axisStart?: number;
   axisEnd?: number;
@@ -26,6 +27,7 @@ export type Props = {
   countryPolygonRadiusMin?: number;
   countryPolygonRadiusMax?: number;
   countryPolygonOpacity?: number;
+  countryPolygonOpacityVisited?: number;
   countryPolygonColor?: string;
   countryHoveredColor?: string;
   countryElevatedColor?: string;
@@ -46,6 +48,7 @@ export type Props = {
 
 export default function Earth({
   countryData,
+  visitedCountries = [],
   showCoordinateSystem = false,
   axisStart = 0,
   axisEnd = 4,
@@ -59,6 +62,7 @@ export default function Earth({
   countryPolygonRadiusMin = 2,
   countryPolygonRadiusMax = 2.02,
   countryPolygonOpacity = 0.75,
+  countryPolygonOpacityVisited = 0.01,
   countryPolygonColor = '#f0d897',
   countryHoveredColor = '#00ff00',
   countryElevatedColor = '#ff0000',
@@ -97,6 +101,11 @@ export default function Earth({
     color: countryPolygonColor,
     transparent: true,
     opacity: countryPolygonOpacity,
+  });
+  const countryMaterialNotHoveredVisited = new MeshBasicMaterial({
+    color: countryPolygonColor,
+    transparent: true,
+    opacity: countryPolygonOpacityVisited,
   });
   const countryMaterialSelected = new MeshBasicMaterial({
     color: countryElevatedColor,
@@ -169,10 +178,10 @@ export default function Earth({
           rotation={[0, -Math.PI / 2, 0]}
           onDoubleClick={(event) => {
             event.stopPropagation();
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerMissed={() => {
-            updateSelectedCountry('');
+            updateSelectedCountry('', '', '');
           }}
           onPointerEnter={(event) => {
             event.stopPropagation();
@@ -189,13 +198,21 @@ export default function Earth({
       {renderCountryPolygons &&
         countryData.features.map(({ geometry, properties }, index) => {
           const countryName = properties ? properties.NAME : '';
+          const adm0A3 = properties ? properties.ADM0_A3 : undefined;
+          const adm0A3State = properties ? properties.ADM0_A3 : '';
+          const isoA2State = properties ? properties.ISO_A2 : '';
           const isSelected = selectedCountry === countryName;
+          const hasVisit = visitedCountries.includes(adm0A3);
           const radiusMax = isSelected
             ? countryElevatedRadius
             : countryPolygonRadiusMax;
           const baseMaterial = isSelected
             ? countryMaterialSelected
-            : countryMaterialNotHovered;
+            : hasVisit
+              ? countryMaterialNotHoveredVisited
+              : countryMaterialNotHovered;
+
+          // console.log(`${countryName}: `, properties.ADM0_A3, index);
           if (geometry.type === 'Polygon') {
             return (
               <mesh
@@ -214,7 +231,7 @@ export default function Earth({
                 onDoubleClick={(event) => {
                   event.stopPropagation();
                   if (enableCountryInteraction) {
-                    updateSelectedCountry(countryName);
+                    updateSelectedCountry(countryName, isoA2State, adm0A3State);
                   }
                 }}
                 onPointerEnter={(event) => {
@@ -293,7 +310,11 @@ export default function Earth({
                       onDoubleClick={(event) => {
                         event.stopPropagation();
                         if (enableCountryInteraction) {
-                          updateSelectedCountry(countryName);
+                          updateSelectedCountry(
+                            countryName,
+                            isoA2State,
+                            adm0A3State,
+                          );
                         }
                       }}
                     />
