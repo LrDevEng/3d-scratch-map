@@ -1,16 +1,22 @@
 'use client';
 
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { CreateJourneyResponseBodyPost } from '../../api/journeys/route';
 
 type Props = {
   selectedCountryAdm0A3: string;
+  onSubmit?: () => void;
 };
 
-export default function JourneyForm({ selectedCountryAdm0A3 }: Props) {
+export default function JourneyForm({
+  selectedCountryAdm0A3,
+  onSubmit,
+}: Props) {
+  const router = useRouter();
   const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState<Date>();
+  const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
 
@@ -41,6 +47,10 @@ export default function JourneyForm({ selectedCountryAdm0A3 }: Props) {
             return;
           }
         }
+        if (onSubmit) {
+          onSubmit();
+        }
+        router.refresh();
       }}
       className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
     >
