@@ -4,7 +4,7 @@ import { AdaptiveDpr, AdaptiveEvents, Html, Preload } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent, Suspense } from 'react';
-import { type Props as EarthProps } from './Earth';
+import { type Props as EarthProps } from './EarthOptimized';
 import HeroText from './HeroText';
 import Starfield from './Starfield';
 
