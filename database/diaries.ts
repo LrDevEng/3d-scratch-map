@@ -4,6 +4,31 @@ import { type Journey } from '../migrations/00002-createTableJourneys';
 import { type Diary } from '../migrations/00003-createTableDiaries';
 import { sql } from './connect';
 
+export const getDiaries = cache(
+  async (sessionToken: string, journeyId: number) => {
+    const diaries = await sql<Diary[]>`
+      SELECT
+        diaries.*
+      FROM
+        diaries
+        INNER JOIN (
+          journeys
+          INNER JOIN sessions ON (
+            sessions.token = ${sessionToken}
+            AND sessions.user_id = journeys.user_id
+            AND expiry_timestamp > now()
+          )
+        ) ON (
+          journeys.id = ${journeyId}
+          AND diaries.journey_id = journeys.id
+        )
+      ORDER BY
+        diaries.date_start DESC
+    `;
+    return diaries;
+  },
+);
+
 export const createDiary = cache(
   async (
     sessionToken: Session['token'],
@@ -21,20 +46,21 @@ export const createDiary = cache(
           thoughts
         ) (
           SELECT
-            journeys.user_id,
-            ${journeyId},
+            journeys.id,
             ${title},
             ${dateStart},
             ${thoughts}
           FROM
             journeys
-          WHERE
-            journeys.user_id = sessions.user_id
-            AND sessions.token = ${sessionToken}
-            AND sessions.expiry_timestamp > now()
+            INNER JOIN sessions ON (
+              sessions.token = ${sessionToken}
+              AND sessions.expiry_timestamp > now()
+              AND journeys.user_id = sessions.user_id
+              AND journeys.id = ${journeyId}
+            )
         )
       RETURNING
-        journeys.*
+        diaries.*
     `;
 
     return diary;
