@@ -44,3 +44,20 @@ export async function createOrUpdateJourney(
     }
   }
 }
+
+export async function deleteJourney(journeyId: number) {
+  const response = await fetch(`/api/journeys/${journeyId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const responseBody: JourneyResponseBodyCud = await response.json();
+
+    if ('error' in responseBody) {
+      // TODO: Use toast instead of showing
+      // this below creation / update form
+      console.log(responseBody.error);
+      return;
+    }
+  }
+}

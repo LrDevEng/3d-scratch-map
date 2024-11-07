@@ -5,18 +5,20 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../components/DeleteButton';
-import { createOrUpdateJourney } from './actions';
+import { createOrUpdateJourney, deleteJourney } from './actions';
 
 type Props = {
   selectedCountryAdm0A3: string;
   journey: Journey | undefined;
   onSubmit?: () => void;
+  onDelete?: () => void;
 };
 
 export default function JourneyForm({
   selectedCountryAdm0A3,
   journey,
   onSubmit,
+  onDelete,
 }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -118,7 +120,17 @@ export default function JourneyForm({
           </div>
         </div>
       </form>
-      {journey && <DeleteButton />}
+      {journey && (
+        <DeleteButton
+          onClick={async () => {
+            await deleteJourney(journey.id);
+            if (onDelete) {
+              onDelete();
+            }
+            router.refresh();
+          }}
+        />
+      )}
     </div>
   );
 }

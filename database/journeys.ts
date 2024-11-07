@@ -129,13 +129,14 @@ export const updateJourney = cache(
 );
 
 export const deleteJourney = cache(
-  async (sessionToken: Session['token'], journeyId: number) => {
+  async (sessionToken: Session['token'], userId: number, journeyId: number) => {
     const [journey] = await sql<Journey[]>`
       DELETE FROM journeys USING sessions
       WHERE
         sessions.token = ${sessionToken}
         AND sessions.expiry_timestamp > now()
         AND journeys.id = ${journeyId}
+        AND journeys.user_id = ${userId}
       RETURNING
         journeys.*
     `;

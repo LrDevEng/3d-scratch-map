@@ -48,6 +48,12 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
                 journeyToEdit: undefined,
               }))
             }
+            onDelete={() =>
+              setShowJourneyForm((prev) => ({
+                show: !prev.show,
+                journeyToEdit: undefined,
+              }))
+            }
           />
         </div>
       )}

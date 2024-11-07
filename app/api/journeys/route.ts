@@ -47,7 +47,7 @@ export async function POST(
       result.data.summary,
     ));
 
-  // 5. If the note creation fails, return an error
+  // 5. If the journey creation fails, return an error
   if (!newJourney) {
     return NextResponse.json(
       { error: 'Journey not created or access denied creating journey' },
