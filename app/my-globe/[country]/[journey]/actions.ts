@@ -1,20 +1,35 @@
 import type { DiaryResponseBodyCud } from '../../../api/diaries/route';
 
 export async function createOrUpdateDiary(
+  diaryId: number | undefined,
   journeyId: number,
   title: string,
   dateStart: Date,
   thoughts: string,
 ) {
-  const response = await fetch('/api/diaries', {
-    method: 'POST',
-    body: JSON.stringify({
-      journeyId,
-      title,
-      dateStart,
-      thoughts,
-    }),
-  });
+  let response;
+
+  if (diaryId) {
+    response = await fetch(`/api/diaries/${diaryId}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        journeyId,
+        title,
+        dateStart,
+        thoughts,
+      }),
+    });
+  } else {
+    response = await fetch('/api/diaries', {
+      method: 'POST',
+      body: JSON.stringify({
+        journeyId,
+        title,
+        dateStart,
+        thoughts,
+      }),
+    });
+  }
 
   if (!response.ok) {
     const responseBody: DiaryResponseBodyCud = await response.json();

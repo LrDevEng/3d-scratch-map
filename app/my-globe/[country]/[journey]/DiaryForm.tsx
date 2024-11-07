@@ -38,9 +38,15 @@ export default function DiaryForm({
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          // const diaryId = diary?.id || undefined;
+          const diaryId = diary?.id || undefined;
 
-          await createOrUpdateDiary(journeyId, title, startDate, thoughts);
+          await createOrUpdateDiary(
+            diaryId,
+            journeyId,
+            title,
+            startDate,
+            thoughts,
+          );
 
           if (onSubmit) {
             onSubmit();

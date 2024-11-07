@@ -66,3 +66,28 @@ export const createDiary = cache(
     return diary;
   },
 );
+
+export const updateDiary = cache(
+  async (sessionToken: Session['token'], updatedDiary: Diary) => {
+    const [diary] = await sql<Diary[]>`
+      UPDATE diaries
+      SET
+        title = ${updatedDiary.title},
+        date_start = ${updatedDiary.dateStart},
+        thoughts = ${updatedDiary.thoughts}
+      FROM
+        sessions
+        INNER JOIN journeys ON (
+          sessions.token = ${sessionToken}
+          AND sessions.expiry_timestamp > now()
+          AND journeys.user_id = sessions.user_id
+          AND journeys.id = ${updatedDiary.journeyId}
+        )
+      WHERE
+        sessionjourneys.journey_id = journeys.id
+      RETURNING
+        diaries.*
+    `;
+    return diary;
+  },
+);
