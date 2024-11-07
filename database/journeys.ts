@@ -100,3 +100,46 @@ export const createJourney = cache(
     return journey;
   },
 );
+
+export const updateJourney = cache(
+  async (
+    sessionToken: Session['token'],
+    userId: number,
+    updatedJourney: Omit<Omit<Journey, 'userId'>, 'countryAdm0A3'>,
+  ) => {
+    const [journey] = await sql<Journey[]>`
+      UPDATE journeys
+      SET
+        title = ${updatedJourney.title},
+        date_start = ${updatedJourney.dateStart},
+        date_end = ${updatedJourney.dateEnd},
+        summary = ${updatedJourney.summary}
+      FROM
+        sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND journeys.id = ${updatedJourney.id}
+        AND journeys.user_id = ${userId}
+      RETURNING
+        journeys.*
+    `;
+    return journey;
+  },
+);
+
+export const deleteJourney = cache(
+  async (sessionToken: Session['token'], journeyId: number) => {
+    const [journey] = await sql<Journey[]>`
+      DELETE FROM journeys USING sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND journeys.id = ${journeyId}
+      RETURNING
+        journeys.*
+    `;
+
+    return journey;
+  },
+);

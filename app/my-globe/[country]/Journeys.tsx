@@ -10,8 +10,16 @@ type Props = {
   selectedCountryAdm0A3: string;
 };
 
+type ShowJourneyForm = {
+  show: boolean;
+  journeyToEdit: Journey | undefined;
+};
+
 export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
-  const [showAddJourney, setShowAddJourney] = useState(false);
+  const [showJourneyForm, setShowJourneyForm] = useState<ShowJourneyForm>({
+    show: false,
+    journeyToEdit: undefined,
+  });
 
   return (
     <div className="text-center">
@@ -19,20 +27,31 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
       <div className="flex items-center">
         <HorizontalDivider />
         <AddButton
-          open={showAddJourney}
-          onClick={() => setShowAddJourney((prev) => !prev)}
+          open={showJourneyForm.show}
+          onClick={() =>
+            setShowJourneyForm((prev) => ({
+              show: !prev.show,
+              journeyToEdit: undefined,
+            }))
+          }
         />
         <HorizontalDivider />
       </div>
-      {showAddJourney && (
+      {showJourneyForm.show && (
         <div className="flex justify-center">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
-            onSubmit={() => setShowAddJourney(false)}
+            journey={showJourneyForm.journeyToEdit}
+            onSubmit={() =>
+              setShowJourneyForm((prev) => ({
+                show: !prev.show,
+                journeyToEdit: undefined,
+              }))
+            }
           />
         </div>
       )}
-      {!showAddJourney &&
+      {!showJourneyForm.show &&
         journeys.map((journey, index) => {
           return (
             <div key={`journey-${journey.id}`}>
@@ -40,6 +59,12 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
                 journey={journey}
                 reverse={index % 2 !== 0}
                 selectedCountryAdm0A3={selectedCountryAdm0A3}
+                onEdit={() =>
+                  setShowJourneyForm((prev) => ({
+                    show: !prev.show,
+                    journeyToEdit: journey,
+                  }))
+                }
               />
             </div>
           );

@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import type { Journey } from '../../../../migrations/00002-createTableJourneys';
+import AddButton from '../../../components/AddButton';
 import BackButton from '../../../components/BackButton';
 import EditButton from '../../../components/EditButton';
 import HorizontalDivider from '../../../components/HorizontalDivider';
@@ -15,6 +16,8 @@ type Props = {
 
 export default function JourneyCardLarge({ journey, country }: Props) {
   const router = useRouter();
+
+  const [showAddDiary, setShowAddDiary] = useState(false);
 
   return (
     <div className="mx-8 mt-24 w-full">
@@ -38,6 +41,15 @@ export default function JourneyCardLarge({ journey, country }: Props) {
           />
         </div>
         <div className="mx-8 text-justify">{journey.summary}</div>
+      </div>
+      <h2>Diaries</h2>
+      <div className="flex items-center">
+        <HorizontalDivider />
+        <AddButton
+          open={showAddDiary}
+          onClick={() => setShowAddDiary((prev) => !prev)}
+        />
+        <HorizontalDivider />
       </div>
     </div>
   );

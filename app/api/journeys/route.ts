@@ -4,7 +4,7 @@ import type { Journey } from '../../../migrations/00002-createTableJourneys';
 import { journeySchema } from '../../../migrations/00002-createTableJourneys';
 import { getCookie } from '../../../util/cookies';
 
-export type CreateJourneyResponseBodyPost =
+export type JourneyResponseBodyCud =
   | {
       journey: Journey;
     }
@@ -14,7 +14,7 @@ export type CreateJourneyResponseBodyPost =
 
 export async function POST(
   request: Request,
-): Promise<NextResponse<CreateJourneyResponseBodyPost>> {
+): Promise<NextResponse<JourneyResponseBodyCud>> {
   // 1. Get the journey data from the request
   const body = await request.json();
 
@@ -22,7 +22,6 @@ export async function POST(
   const result = journeySchema.safeParse(body);
 
   if (!result.success) {
-    console.log('Post api journeys body: ', body);
     return NextResponse.json(
       {
         error: `Request does not contain journey object: ${result.error.message}`,
