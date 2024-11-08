@@ -3,6 +3,25 @@ import { type Session } from '../migrations/00001-createTableSessions';
 import { type Journey } from '../migrations/00002-createTableJourneys';
 import { sql } from './connect';
 
+export const getJourney = cache(
+  async (sessionToken: string, journeyId: number) => {
+    const [journey] = await sql<Journey[]>`
+      SELECT
+        journeys.*
+      FROM
+        journeys
+        INNER JOIN sessions ON (
+          sessions.token = ${sessionToken}
+          AND sessions.user_id = journeys.user_id
+          AND expiry_timestamp > now()
+        )
+      WHERE
+        journeys.id = ${journeyId}
+    `;
+    return journey;
+  },
+);
+
 export const getJourneys = cache(async (sessionToken: string) => {
   const journeys = await sql<Journey[]>`
     SELECT
@@ -15,7 +34,8 @@ export const getJourneys = cache(async (sessionToken: string) => {
         AND expiry_timestamp > now()
       )
     ORDER BY
-      journeys.date_start
+      journeys.date_start DESC,
+      journeys.date_end DESC
   `;
   return journeys;
 });
@@ -73,6 +93,50 @@ export const createJourney = cache(
             token = ${sessionToken}
             AND sessions.expiry_timestamp > now()
         )
+      RETURNING
+        journeys.*
+    `;
+
+    return journey;
+  },
+);
+
+export const updateJourney = cache(
+  async (
+    sessionToken: Session['token'],
+    userId: number,
+    updatedJourney: Omit<Omit<Journey, 'userId'>, 'countryAdm0A3'>,
+  ) => {
+    const [journey] = await sql<Journey[]>`
+      UPDATE journeys
+      SET
+        title = ${updatedJourney.title},
+        date_start = ${updatedJourney.dateStart},
+        date_end = ${updatedJourney.dateEnd},
+        summary = ${updatedJourney.summary}
+      FROM
+        sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND journeys.id = ${updatedJourney.id}
+        AND journeys.user_id = ${userId}
+      RETURNING
+        journeys.*
+    `;
+    return journey;
+  },
+);
+
+export const deleteJourney = cache(
+  async (sessionToken: Session['token'], userId: number, journeyId: number) => {
+    const [journey] = await sql<Journey[]>`
+      DELETE FROM journeys USING sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND journeys.id = ${journeyId}
+        AND journeys.user_id = ${userId}
       RETURNING
         journeys.*
     `;

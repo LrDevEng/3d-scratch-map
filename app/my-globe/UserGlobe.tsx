@@ -13,9 +13,10 @@ const Space = dynamic(() => import('../components/Space'), {
 
 type Props = {
   countryData: FeatureCollection;
+  visitedCountries: Set<string>;
 };
 
-export default function UserGlobe({ countryData }: Props) {
+export default function UserGlobe({ countryData, visitedCountries }: Props) {
   // Router
   const router = useRouter();
 
@@ -53,7 +54,7 @@ export default function UserGlobe({ countryData }: Props) {
         <Space
           earthProps={{
             countryData: countryData,
-            visitedCountries: ['GER', 'RUS', 'FRA'],
+            visitedCountries: visitedCountries,
             rotateSelf: true,
             orbitControlsEnableZoom: true,
             orbitControlsEnableRotate: true,
@@ -72,7 +73,9 @@ export default function UserGlobe({ countryData }: Props) {
           </div>
         )}
       </div>
-      <div className={`absolute right-0 top-0 ${selected ? 'bg-black' : ''}`}>
+      <div
+        className={`absolute right-0 top-0 z-50 ${selected ? 'bg-black' : ''}`}
+      >
         <div className={`flex items-center ${dropDownWidth}`}>
           {selected && (
             <CloseButton className="ml-8" onClick={() => updateUrl('')} />

@@ -3,52 +3,49 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { type Journey } from '../../../migrations/00002-createTableJourneys';
-import DeleteButton from '../../components/DeleteButton';
-import { createOrUpdateJourney, deleteJourney } from './actions';
+import type { Diary } from '../../../../migrations/00003-createTableDiaries';
+import DeleteButton from '../../../components/DeleteButton';
+import { createOrUpdateDiary, deleteDiary } from './actions';
 
 type Props = {
-  selectedCountryAdm0A3: string;
-  journey: Journey | undefined;
+  journeyId: number;
+  diary: Diary | undefined;
   onSubmit?: () => void;
   onDelete?: () => void;
 };
 
-export default function JourneyForm({
-  selectedCountryAdm0A3,
-  journey,
+export default function DiaryForm({
+  journeyId,
+  diary,
   onSubmit,
   onDelete,
 }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [summary, setSummary] = useState('');
+  const [thoughts, setThoughts] = useState('');
 
   useEffect(() => {
-    if (journey) {
-      setTitle(journey.title);
-      setStartDate(journey.dateStart);
-      setEndDate(journey.dateEnd);
-      setSummary(journey.summary);
+    if (diary) {
+      setTitle(diary.title);
+      setStartDate(diary.dateStart);
+      setThoughts(diary.thoughts);
     }
-  }, [journey]);
+  }, [diary]);
 
   return (
     <div className="mb-8">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const journeyId = journey?.id || undefined;
+          const diaryId = diary?.id || undefined;
 
-          await createOrUpdateJourney(
+          await createOrUpdateDiary(
+            diaryId,
             journeyId,
-            selectedCountryAdm0A3,
             title,
             startDate,
-            endDate,
-            summary,
+            thoughts,
           );
 
           if (onSubmit) {
@@ -61,7 +58,7 @@ export default function JourneyForm({
         <div className="card-body items-center text-center">
           <div className="form-control mt-2 w-full">
             <input
-              placeholder="journey title"
+              placeholder="diary title"
               className="input input-bordered w-full text-center"
               required
               value={title}
@@ -73,7 +70,7 @@ export default function JourneyForm({
             <div className="form-control mt-2 w-full">
               <label className="label flex">
                 <div className="label-text mx-4 text-left text-neutral-content">
-                  From
+                  Date
                 </div>
                 <input
                   type="date"
@@ -86,32 +83,15 @@ export default function JourneyForm({
                 />
               </label>
             </div>
-
-            <div className="form-control mt-2 w-full">
-              <label className="label flex">
-                <div className="label-text mx-4 text-left text-neutral-content">
-                  To
-                </div>
-                <input
-                  type="date"
-                  className="input input-bordered flex-grow"
-                  required
-                  value={dayjs(endDate).format('YYYY-MM-DD')}
-                  onChange={(event) =>
-                    setEndDate(new Date(event.currentTarget.value))
-                  }
-                />
-              </label>
-            </div>
           </div>
 
           <div className="form-control mt-2 w-full">
             <textarea
-              placeholder="brief summary of the journey (max. 2000 characters)"
+              placeholder="your thoughts"
               className="textarea textarea-bordered min-h-40 w-full"
               required
-              value={summary}
-              onChange={(event) => setSummary(event.currentTarget.value)}
+              value={thoughts}
+              onChange={(event) => setThoughts(event.currentTarget.value)}
             />
           </div>
 
@@ -120,10 +100,10 @@ export default function JourneyForm({
           </div>
         </div>
       </form>
-      {journey && (
+      {diary && (
         <DeleteButton
           onClick={async () => {
-            await deleteJourney(journey.id);
+            await deleteDiary(diary.id);
             if (onDelete) {
               onDelete();
             }

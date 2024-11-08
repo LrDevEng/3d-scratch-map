@@ -15,5 +15,5 @@ export async function checkAuthorization(returnTo: string | undefined) {
     redirect(redirectionPath);
   }
 
-  return user;
+  return { user, sessionTokenCookie };
 }

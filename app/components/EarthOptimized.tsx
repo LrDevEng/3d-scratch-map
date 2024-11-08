@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid';
 
 export type Props = {
   countryData: FeatureCollection;
-  visitedCountries?: string[];
+  visitedCountries?: Set<string>;
   showCoordinateSystem?: boolean;
   axisStart?: number;
   axisEnd?: number;
@@ -69,7 +69,7 @@ export type Props = {
 
 export default function Earth({
   countryData,
-  visitedCountries = [],
+  visitedCountries = new Set<string>(),
   showCoordinateSystem = false,
   axisStart = 0,
   axisEnd = 4,
@@ -307,7 +307,7 @@ export default function Earth({
         countriesProcessed.map((country, index) => {
           if (country) {
             const isSelected = selectedCountryAdm0A3 === country.adm0A3;
-            const hasVisit = visitedCountries.includes(country.adm0A3);
+            const hasVisit = visitedCountries.has(country.adm0A3);
             const baseMaterial = hasVisit
               ? countryMaterialNotHoveredVisited
               : countryMaterialNotHovered;

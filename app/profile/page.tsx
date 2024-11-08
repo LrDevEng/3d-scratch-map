@@ -2,7 +2,7 @@ import LogoutButton from '../(home)/(auth)/logout/LogoutButton';
 import { checkAuthorization } from '../../util/auth';
 
 export default async function Profile() {
-  const user = await checkAuthorization(`/profile`);
+  const { user } = await checkAuthorization(`/profile`);
 
   return (
     <div>
