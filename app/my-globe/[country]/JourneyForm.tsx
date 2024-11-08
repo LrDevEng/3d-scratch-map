@@ -1,6 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
@@ -25,6 +26,7 @@ export default function JourneyForm({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
+  const [imgUrl, setImgUrl] = useState<string | null>();
 
   useEffect(() => {
     if (journey) {
@@ -32,8 +34,18 @@ export default function JourneyForm({
       setStartDate(journey.dateStart);
       setEndDate(journey.dateEnd);
       setSummary(journey.summary);
+      setImgUrl(journey.imageUrl);
     }
   }, [journey]);
+
+  // Clean up freeing memory
+  useEffect(() => {
+    return () => {
+      if (imgUrl) {
+        URL.revokeObjectURL(imgUrl);
+      }
+    };
+  }, [imgUrl]);
 
   return (
     <div className="mb-8">
@@ -59,6 +71,16 @@ export default function JourneyForm({
         className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {imgUrl && (
+            <div className="relative h-[150px] w-full">
+              <Image
+                className="rounded-lg object-contain"
+                src={imgUrl}
+                alt="journey title image"
+                fill={true}
+              />
+            </div>
+          )}
           <div className="form-control mt-2 w-full">
             <input
               type="file"
@@ -66,6 +88,16 @@ export default function JourneyForm({
               className="file-input file-input-primary"
               placeholder="choose title image"
               required
+              onChange={(event) => {
+                const file = event.target.files
+                  ? event.target.files[0]
+                  : undefined;
+                if (file) {
+                  setImgUrl(URL.createObjectURL(file));
+                } else {
+                  setImgUrl(null);
+                }
+              }}
             />
           </div>
 

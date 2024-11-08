@@ -61,3 +61,5 @@ export async function deleteJourney(journeyId: number) {
     }
   }
 }
+
+export async function uploadJourneyImage() {}
