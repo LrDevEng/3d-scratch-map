@@ -61,6 +61,16 @@ export default function JourneyForm({
         <div className="card-body items-center text-center">
           <div className="form-control mt-2 w-full">
             <input
+              type="file"
+              accept=".jpg, .jpeg, .png, .gif, .webp"
+              className="file-input file-input-primary"
+              placeholder="choose title image"
+              required
+            />
+          </div>
+
+          <div className="form-control mt-2 w-full">
+            <input
               placeholder="journey title"
               className="input input-bordered w-full text-center"
               required

@@ -37,26 +37,32 @@ export default function JourneyDetailedView({
 
   return (
     <div className="mx-8 mt-24 w-full">
-      <div className="flex justify-between">
-        <BackButton onClick={() => router.replace(`/my-globe/${country}`)} />
-        <h1 className="text-center">{journey.title}</h1>
-        <EditButton />
-      </div>
-      <div className="mt-2 flex justify-between">
-        <div>From: {journey.dateStart.toDateString()}</div>
-        <div>To: {journey.dateEnd.toDateString()}</div>
-      </div>
-      <HorizontalDivider />
-      <div className="mt-4 flex">
-        <div className="rounded-2xl border-2 border-white">
+      <div className="relative">
+        <div className="absolute z-0 h-full w-full rounded-2xl opacity-60">
           <Image
+            className="object-cover"
             src="/images/logo-terra-scratch-4.png"
             alt="logo"
-            width={200}
-            height={200}
+            fill={true}
           />
         </div>
-        <div className="mx-8 text-justify">{journey.summary}</div>
+        <div className="relative z-10 flex justify-between bg-black bg-opacity-50">
+          <BackButton onClick={() => router.replace(`/my-globe/${country}`)} />
+          <h1 className="text-center">{journey.title}</h1>
+          <EditButton />
+        </div>
+        <div className="relative z-10 flex justify-between bg-black bg-opacity-50 pt-2">
+          <div>From: {journey.dateStart.toDateString()}</div>
+          <div>To: {journey.dateEnd.toDateString()}</div>
+        </div>
+        <div className="relative z-10">
+          <HorizontalDivider />
+        </div>
+        <div className="relative z-10 flex bg-black bg-opacity-50 pt-4">
+          <div className="mx-8 bg-black bg-opacity-50 text-justify">
+            {journey.summary}
+          </div>
+        </div>
       </div>
       <h2 className="mt-8 text-center">Diaries</h2>
       <div className="flex items-center">
@@ -72,6 +78,7 @@ export default function JourneyDetailedView({
         />
         <HorizontalDivider />
       </div>
+
       {showDiaryForm.show && (
         <div className="flex justify-center">
           <DiaryForm
