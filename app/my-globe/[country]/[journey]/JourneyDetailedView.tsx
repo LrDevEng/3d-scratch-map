@@ -94,13 +94,19 @@ export default function JourneyDetailedView({
       )}
       {!showDiaryForm.show &&
         diaries.map((diary) => {
-          {
-            return (
-              <div key={`diary-${diary.id}`}>
-                <DiaryView diary={diary} />
-              </div>
-            );
-          }
+          return (
+            <div key={`diary-${diary.id}`}>
+              <DiaryView
+                diary={diary}
+                onEdit={() =>
+                  setShowDiaryForm((prev) => ({
+                    show: !prev.show,
+                    diaryToEdit: diary,
+                  }))
+                }
+              />
+            </div>
+          );
         })}
     </div>
   );

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
-import { createOrUpdateDiary } from './actions';
+import { createOrUpdateDiary, deleteDiary } from './actions';
 
 type Props = {
   journeyId: number;
@@ -103,11 +103,11 @@ export default function DiaryForm({
       {diary && (
         <DeleteButton
           onClick={async () => {
-            // await deleteJourney(journey.id);
-            // if (onDelete) {
-            //   onDelete();
-            // }
-            // router.refresh();
+            await deleteDiary(diary.id);
+            if (onDelete) {
+              onDelete();
+            }
+            router.refresh();
           }}
         />
       )}
