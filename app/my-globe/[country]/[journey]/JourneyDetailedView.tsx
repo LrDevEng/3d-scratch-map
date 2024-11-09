@@ -39,12 +39,21 @@ export default function JourneyDetailedView({
     <div className="mx-8 mt-24 w-full">
       <div className="relative">
         <div className="absolute z-0 h-full w-full rounded-2xl opacity-60">
-          <Image
-            className="object-cover"
-            src="/images/logo-terra-scratch-4.png"
-            alt="logo"
-            fill={true}
-          />
+          {journey.imageUrl ? (
+            <Image
+              className="rounded-2xl object-cover"
+              src={journey.imageUrl}
+              alt="logo"
+              fill={true}
+            />
+          ) : (
+            <Image
+              className="rounded-2xl object-cover"
+              src="/images/logo-terra-scratch-4.png"
+              alt="logo"
+              fill={true}
+            />
+          )}
         </div>
         <div className="relative z-10 flex justify-between bg-black bg-opacity-50">
           <BackButton onClick={() => router.replace(`/my-globe/${country}`)} />
@@ -52,16 +61,14 @@ export default function JourneyDetailedView({
           <EditButton />
         </div>
         <div className="relative z-10 flex justify-between bg-black bg-opacity-50 pt-2">
-          <div>From: {journey.dateStart.toDateString()}</div>
-          <div>To: {journey.dateEnd.toDateString()}</div>
+          <div className="pl-4">From: {journey.dateStart.toDateString()}</div>
+          <div className="pr-4">To: {journey.dateEnd.toDateString()}</div>
         </div>
         <div className="relative z-10">
           <HorizontalDivider />
         </div>
-        <div className="relative z-10 flex bg-black bg-opacity-50 pt-4">
-          <div className="mx-8 bg-black bg-opacity-50 text-justify">
-            {journey.summary}
-          </div>
+        <div className="relative z-10 flex bg-black bg-opacity-50 pb-4 pt-4">
+          <div className="mx-8 text-justify">{journey.summary}</div>
         </div>
       </div>
       <h2 className="mt-8 text-center">Diaries</h2>

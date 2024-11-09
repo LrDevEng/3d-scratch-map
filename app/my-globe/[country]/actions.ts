@@ -1,65 +1,55 @@
-import type { JourneyResponseBodyCud } from '../../api/journeys/route';
+'use server';
 
-export async function createOrUpdateJourney(
-  journeyId: number | undefined,
-  countryAdm0A3: string,
-  title: string,
-  dateStart: Date,
-  dateEnd: Date,
-  summary: string,
-) {
-  let response;
-  if (journeyId) {
-    response = await fetch(`/api/journeys/${journeyId}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        countryAdm0A3,
-        title,
-        dateStart,
-        dateEnd,
-        summary,
-      }),
+import type { UploadApiResponse, UploadStream } from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Image upload to cloudinary
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+export async function uploadJourneyImage(imgToUpload: File) {
+  let url = null;
+  try {
+    const arrayBuffer = await imgToUpload.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    const uploadResult: UploadApiResponse = await new Promise(
+      (resolve, reject) => {
+        const uploadStream: UploadStream = cloudinary.uploader.upload_stream(
+          (error: Error | null, result: UploadApiResponse | undefined) => {
+            if (error) {
+              return reject(error);
+            }
+            if (result) {
+              return resolve(result);
+            } else {
+              return reject(
+                new Error('Cloudinary img upload failed. Internal error.'),
+              );
+            }
+          },
+        );
+        uploadStream.end(buffer);
+      },
+    );
+
+    console.log('Cloudinary img upload result: ', uploadResult);
+    url = cloudinary.url(uploadResult.secure_url, {
+      transformation: [
+        {
+          quality: 'auto',
+          fetch_format: 'auto',
+        },
+      ],
     });
-  } else {
-    response = await fetch('/api/journeys', {
-      method: 'POST',
-      body: JSON.stringify({
-        countryAdm0A3,
-        title,
-        dateStart,
-        dateEnd,
-        summary,
-      }),
-    });
+    console.log('Cloudinary img upload url: ', url);
+  } catch (error) {
+    console.log('Cloudinary img upload error: ', error);
   }
-
-  if (!response.ok) {
-    const responseBody: JourneyResponseBodyCud = await response.json();
-
-    if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
-      console.log(responseBody.error);
-      return;
-    }
-  }
+  return url;
 }
-
-export async function deleteJourney(journeyId: number) {
-  const response = await fetch(`/api/journeys/${journeyId}`, {
-    method: 'DELETE',
-  });
-
-  if (!response.ok) {
-    const responseBody: JourneyResponseBodyCud = await response.json();
-
-    if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
-      console.log(responseBody.error);
-      return;
-    }
-  }
-}
-
-export async function uploadJourneyImage() {}

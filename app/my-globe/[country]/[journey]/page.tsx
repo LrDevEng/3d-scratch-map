@@ -29,7 +29,7 @@ export default async function JourneyDetailed(props: Props) {
 
   const diaries = await getDiaries(
     sessionTokenCookie.value,
-    specificJourney?.id,
+    specificJourney.id,
   );
 
   return (

@@ -45,6 +45,7 @@ export async function POST(
       result.data.dateStart,
       result.data.dateEnd,
       result.data.summary,
+      result.data.imageUrl,
     ));
 
   // 5. If the journey creation fails, return an error

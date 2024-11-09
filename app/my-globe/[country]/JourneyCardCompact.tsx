@@ -31,12 +31,23 @@ export default function JourneyCardCompact({
             href={`/my-globe/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
           >
             <div className="mr-8 max-h-[200px] w-1/4 rounded-2xl border-2 border-white">
-              <Image
-                src="/images/logo-terra-scratch-4.png"
-                alt="logo"
-                width={200}
-                height={200}
-              />
+              {journey.imageUrl ? (
+                <Image
+                  className="rounded-2xl"
+                  src={journey.imageUrl}
+                  alt="logo"
+                  width={200}
+                  height={200}
+                />
+              ) : (
+                <Image
+                  className="rounded-2xl"
+                  src="/images/logo-terra-scratch-4.png"
+                  alt="logo"
+                  width={200}
+                  height={200}
+                />
+              )}
             </div>
             <div className="mr-8 w-3/4">
               <h3>{journey.title}</h3>

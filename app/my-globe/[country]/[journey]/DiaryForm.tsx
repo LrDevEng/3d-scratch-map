@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
-import { createOrUpdateDiary, deleteDiary } from './actions';
+import { createOrUpdateDiary, deleteDiary } from './diaryApiCalls';
 
 type Props = {
   journeyId: number;
