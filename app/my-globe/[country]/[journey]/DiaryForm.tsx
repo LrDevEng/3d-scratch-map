@@ -34,7 +34,7 @@ export default function DiaryForm({
   }, [diary]);
 
   return (
-    <div className="mb-8">
+    <div className="mb-8 flex flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -53,7 +53,7 @@ export default function DiaryForm({
           }
           router.refresh();
         }}
-        className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
+        className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
           <div className="form-control mt-2 w-full">
