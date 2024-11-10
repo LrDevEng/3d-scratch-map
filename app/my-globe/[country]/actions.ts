@@ -13,7 +13,7 @@ cloudinary.config({
   secure: true,
 });
 
-export async function uploadJourneyImage(imgToUpload: File) {
+export async function uploadImage(imgToUpload: File) {
   let url = null;
   try {
     const arrayBuffer = await imgToUpload.arrayBuffer();

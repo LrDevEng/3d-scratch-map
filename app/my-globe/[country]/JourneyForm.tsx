@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../components/DeleteButton';
-import { uploadJourneyImage } from './actions';
+import { uploadImage } from './actions';
 import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
 type Props = {
@@ -58,7 +58,7 @@ export default function JourneyForm({
           let currentImgUrl = null;
           if (imgToUpload) {
             console.log('Trying to upload picture.');
-            currentImgUrl = await uploadJourneyImage(imgToUpload);
+            currentImgUrl = await uploadImage(imgToUpload);
             if (!currentImgUrl) {
               console.log('Image upload failed.');
             }

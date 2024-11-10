@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
+import { uploadImage } from '../actions';
 import { createOrUpdateDiary, deleteDiary } from './diaryApiCalls';
+import { createDiaryImage } from './diaryImageApiCalls';
 
 type Props = {
   journeyId: number;
@@ -24,6 +26,10 @@ export default function DiaryForm({
   const [title, setTitle] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [thoughts, setThoughts] = useState('');
+  const [imgUrls, setImgUrls] = useState<string[] | undefined>(undefined);
+  const [imgsToUpload, setImgsToUpload] = useState<File[] | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     if (diary) {
@@ -33,6 +39,15 @@ export default function DiaryForm({
     }
   }, [diary]);
 
+  // Clean up freeing memory
+  useEffect(() => {
+    return () => {
+      if (imgUrls) {
+        imgUrls.forEach((imgUrl) => URL.revokeObjectURL(imgUrl));
+      }
+    };
+  }, [imgUrls]);
+
   return (
     <div className="mb-8 flex flex-col items-center">
       <form
@@ -40,13 +55,37 @@ export default function DiaryForm({
           event.preventDefault();
           const diaryId = diary?.id || undefined;
 
-          await createOrUpdateDiary(
+          const response = await createOrUpdateDiary(
             diaryId,
             journeyId,
             title,
             startDate,
             thoughts,
           );
+
+          if ('error' in response) {
+            console.log('Error creating or updating diary: ', response.error);
+          } else if ('diary' in response) {
+            console.log(
+              'Diary sucessfully created or updated: ',
+              response.diary,
+            );
+
+            if (imgsToUpload) {
+              for (const imgToUpload of imgsToUpload) {
+                const newImgUrl = await uploadImage(imgToUpload);
+                if (newImgUrl) {
+                  await createDiaryImage(
+                    response.diary.id,
+                    newImgUrl,
+                    null,
+                    null,
+                    null,
+                  );
+                }
+              }
+            }
+          }
 
           if (onSubmit) {
             onSubmit();
@@ -55,6 +94,27 @@ export default function DiaryForm({
         }}
         className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
       >
+        <div className="form-control mt-2 w-full">
+          <input
+            type="file"
+            multiple
+            accept=".jpg, .jpeg, .png, .gif, .webp"
+            className="file-input file-input-primary"
+            placeholder="choose diary image(s)"
+            onChange={(event) => {
+              const files = event.target.files;
+              if (files) {
+                const filesArray = [...files];
+                setImgUrls(filesArray.map((file) => URL.createObjectURL(file)));
+                setImgsToUpload(filesArray);
+              } else {
+                setImgUrls(undefined);
+                setImgsToUpload(undefined);
+              }
+            }}
+          />
+        </div>
+
         <div className="card-body items-center text-center">
           <div className="form-control mt-2 w-full">
             <input

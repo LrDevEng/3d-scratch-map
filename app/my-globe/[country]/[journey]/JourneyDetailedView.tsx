@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import type { Journey } from '../../../../migrations/00002-createTableJourneys';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
+import type { DiaryImage } from '../../../../migrations/00004-createTableDiaryImages';
 import AddButton from '../../../components/AddButton';
 import BackButton from '../../../components/BackButton';
 import EditButton from '../../../components/EditButton';
@@ -15,6 +16,7 @@ import DiaryView from './DiaryView';
 type Props = {
   journey: Journey;
   diaries: Diary[];
+  diaryImages: DiaryImage[];
   country: string;
 };
 
@@ -26,6 +28,7 @@ type ShowDiaryForm = {
 export default function JourneyDetailedView({
   journey,
   diaries,
+  diaryImages,
   country,
 }: Props) {
   const router = useRouter();
@@ -112,6 +115,9 @@ export default function JourneyDetailedView({
             <div key={`diary-${diary.id}`}>
               <DiaryView
                 diary={diary}
+                diaryImages={diaryImages.filter(
+                  (diaryImage) => diaryImage.diaryId === diary.id,
+                )}
                 onEdit={() =>
                   setShowDiaryForm((prev) => ({
                     show: !prev.show,

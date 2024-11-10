@@ -2,16 +2,22 @@
 
 import React from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
+import type { DiaryImage } from '../../../../migrations/00004-createTableDiaryImages';
 import EditButton from '../../../components/EditButton';
 import HorizontalDivider from '../../../components/HorizontalDivider';
 import ImageCarousel from '../../../components/ImageCarousel';
 
 type Props = {
   diary: Diary;
+  diaryImages: DiaryImage[];
   onEdit?: () => void;
 };
 
-export default function DiaryView({ diary, onEdit = () => {} }: Props) {
+export default function DiaryView({
+  diary,
+  diaryImages,
+  onEdit = () => {},
+}: Props) {
   return (
     <div className="w-full">
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
@@ -19,10 +25,7 @@ export default function DiaryView({ diary, onEdit = () => {} }: Props) {
           <div className="mr-8 w-3/4">
             <ImageCarousel
               diaryId={diary.id}
-              imageUrls={[
-                '/images/logo-terra-scratch-4.png',
-                '/images/logo-terra-scratch-2.png',
-              ]}
+              imageUrls={diaryImages.map((diaryImage) => diaryImage.imageUrl)}
             />
           </div>
           <div className="mr-8 w-1/4">
