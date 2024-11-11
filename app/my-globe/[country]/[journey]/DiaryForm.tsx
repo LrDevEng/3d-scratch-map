@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
 import ImageCarousel from '../../../components/ImageCarousel';
-import { uploadImage } from '../actions';
+import { uploadImage } from './actions';
 import { createOrUpdateDiary, deleteDiary } from './diaryApiCalls';
 import { createDiaryImage } from './diaryImageApiCalls';
 

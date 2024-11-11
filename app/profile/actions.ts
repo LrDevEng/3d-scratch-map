@@ -22,7 +22,8 @@ export async function uploadImage(imgToUpload: File) {
       (resolve, reject) => {
         const uploadStream: UploadStream = cloudinary.uploader.upload_stream(
           {
-            folder: 'Journeys',
+            transformation: [{ width: 400, height: 400, crop: 'fill' }],
+            folder: 'Profile',
           },
           (error, result) => {
             if (error) {

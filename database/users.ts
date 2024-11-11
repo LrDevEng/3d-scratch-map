@@ -28,6 +28,30 @@ export const getUser = cache(async (sessionToken: Session['token']) => {
   return user;
 });
 
+export const updateUser = cache(
+  async (
+    sessionToken: Session['token'],
+    userId: User['id'],
+    imageUrl: User['imageUrl'],
+  ) => {
+    const [user] = await sql<User[]>`
+      UPDATE users
+      SET
+        image_url = ${imageUrl}
+      FROM
+        sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND users.id = ${userId}
+      RETURNING
+        users.*
+    `;
+
+    return user;
+  },
+);
+
 export const getUserInsecure = cache(async (email: User['email']) => {
   const [user] = await sql<User[]>`
     SELECT
