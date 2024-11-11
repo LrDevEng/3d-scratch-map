@@ -7,7 +7,7 @@ export const journeySchema = z.object({
   dateStart: z.coerce.date(),
   dateEnd: z.coerce.date(),
   summary: z.string().max(2000),
-  imageUrl: z.string().nullable().optional(),
+  imageUrl: z.string().nullable(),
 });
 
 export type Journey = {

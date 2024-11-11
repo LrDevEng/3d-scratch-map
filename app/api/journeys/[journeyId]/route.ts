@@ -44,7 +44,7 @@ export async function PUT(
       dateStart: result.data.dateStart,
       dateEnd: result.data.dateEnd,
       summary: result.data.summary,
-      imageUrl: result.data.imageUrl || null,
+      imageUrl: result.data.imageUrl,
     },
   );
 

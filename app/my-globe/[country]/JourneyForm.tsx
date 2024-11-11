@@ -1,11 +1,13 @@
 'use client';
 
 import dayjs from 'dayjs';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../components/DeleteButton';
-import { createOrUpdateJourney, deleteJourney } from './actions';
+import { uploadImage } from './actions';
+import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
 type Props = {
   selectedCountryAdm0A3: string;
@@ -25,6 +27,8 @@ export default function JourneyForm({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
+  const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
+  const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
 
   useEffect(() => {
     if (journey) {
@@ -32,24 +36,58 @@ export default function JourneyForm({
       setStartDate(journey.dateStart);
       setEndDate(journey.dateEnd);
       setSummary(journey.summary);
+      setImgUrl(journey.imageUrl ? journey.imageUrl : undefined);
     }
   }, [journey]);
+
+  // Clean up freeing memory
+  useEffect(() => {
+    return () => {
+      if (imgUrl) {
+        URL.revokeObjectURL(imgUrl);
+      }
+    };
+  }, [imgUrl]);
 
   return (
     <div className="mb-8">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const journeyId = journey?.id || undefined;
+          // Try to upload image to cloudinary and set current image url to new url if successful
+          let currentImgUrl = null;
+          if (imgToUpload) {
+            console.log('Trying to upload picture.');
+            currentImgUrl = await uploadImage(imgToUpload);
+            if (!currentImgUrl) {
+              console.log('Image upload failed.');
+            }
+          }
 
-          await createOrUpdateJourney(
+          // If no upload was requested or upload failed retreive old image url from journey
+          if (!currentImgUrl && journey?.imageUrl) {
+            currentImgUrl = journey.imageUrl;
+          }
+
+          const journeyId = journey?.id || undefined;
+          const response = await createOrUpdateJourney(
             journeyId,
             selectedCountryAdm0A3,
             title,
             startDate,
             endDate,
             summary,
+            currentImgUrl,
           );
+
+          if ('error' in response) {
+            console.log('Error creating or updating journey: ', response.error);
+          } else if ('journey' in response) {
+            console.log(
+              'Journey sucessfully created or updated: ',
+              response.journey,
+            );
+          }
 
           if (onSubmit) {
             onSubmit();
@@ -59,6 +97,38 @@ export default function JourneyForm({
         className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {imgUrl && (
+            <div className="relative h-[150px] w-full">
+              <Image
+                className="rounded-lg object-contain"
+                src={imgUrl}
+                alt="journey title image"
+                fill={true}
+                sizes="(max-width: 20vw)"
+              />
+            </div>
+          )}
+          <div className="form-control mt-2 w-full">
+            <input
+              type="file"
+              accept=".jpg, .jpeg, .png, .gif, .webp"
+              className="file-input file-input-primary"
+              placeholder="choose title image"
+              onChange={(event) => {
+                const file = event.target.files
+                  ? event.target.files[0]
+                  : undefined;
+                if (file) {
+                  setImgUrl(URL.createObjectURL(file));
+                  setImgToUpload(file);
+                } else {
+                  setImgUrl(undefined);
+                  setImgToUpload(undefined);
+                }
+              }}
+            />
+          </div>
+
           <div className="form-control mt-2 w-full">
             <input
               placeholder="journey title"

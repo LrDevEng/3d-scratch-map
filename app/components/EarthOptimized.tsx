@@ -128,6 +128,9 @@ export default function Earth({
     }
   };
 
+  // Derived state
+  // if (selectedCountryAdm0A3) rotateSelf = false;
+
   // Texture
   const earthTexture = useTexture(texture);
 

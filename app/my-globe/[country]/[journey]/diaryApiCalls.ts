@@ -31,16 +31,19 @@ export async function createOrUpdateDiary(
     });
   }
 
-  if (!response.ok) {
-    const responseBody: DiaryResponseBodyCud = await response.json();
+  const responseBody: DiaryResponseBodyCud = await response.json();
+  return responseBody;
 
-    if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
-      console.log(responseBody.error);
-      return;
-    }
-  }
+  // if (!response.ok) {
+  //   const responseBody: DiaryResponseBodyCud = await response.json();
+
+  //   if ('error' in responseBody) {
+  //     // TODO: Use toast instead of showing
+  //     // this below creation / update form
+  //     console.log(responseBody.error);
+  //     return;
+  //   }
+  // }
 }
 
 export async function deleteDiary(diaryId: number) {

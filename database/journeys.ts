@@ -69,6 +69,7 @@ export const createJourney = cache(
     dateStart: Journey['dateStart'],
     dateEnd: Journey['dateEnd'],
     summary: Journey['summary'],
+    imageUrl: Journey['imageUrl'],
   ) => {
     const [journey] = await sql<Journey[]>`
       INSERT INTO
@@ -78,7 +79,8 @@ export const createJourney = cache(
           title,
           date_start,
           date_end,
-          summary
+          summary,
+          image_url
         ) (
           SELECT
             sessions.user_id,
@@ -86,7 +88,8 @@ export const createJourney = cache(
             ${title},
             ${dateStart},
             ${dateEnd},
-            ${summary}
+            ${summary},
+            ${imageUrl}
           FROM
             sessions
           WHERE
@@ -113,7 +116,8 @@ export const updateJourney = cache(
         title = ${updatedJourney.title},
         date_start = ${updatedJourney.dateStart},
         date_end = ${updatedJourney.dateEnd},
-        summary = ${updatedJourney.summary}
+        summary = ${updatedJourney.summary},
+        image_url = ${updatedJourney.imageUrl}
       FROM
         sessions
       WHERE

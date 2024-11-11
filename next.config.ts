@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
         pathname: '/**/flat/64.png',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        search: '',
+      },
     ],
   },
 };

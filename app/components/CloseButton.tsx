@@ -8,7 +8,10 @@ export default function CloseButton(
 ) {
   // w3 svg icon overview: https://iconsvg.xyz/
   return (
-    <button className="btn btn-circle" {...props}>
+    <button
+      className="btn btn-circle border-none bg-transparent hover:bg-transparent"
+      {...props}
+    >
       <svg
         className="hover:stroke-[#66b14e]"
         xmlns="http://www.w3.org/2000/svg"
