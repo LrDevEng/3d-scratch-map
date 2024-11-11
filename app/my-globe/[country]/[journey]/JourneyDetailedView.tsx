@@ -48,6 +48,7 @@ export default function JourneyDetailedView({
               src={journey.imageUrl}
               alt="logo"
               fill={true}
+              sizes="(max-width: 50vw)"
             />
           ) : (
             <Image
@@ -55,6 +56,7 @@ export default function JourneyDetailedView({
               src="/images/logo-terra-scratch-4.png"
               alt="logo"
               fill={true}
+              sizes="(max-width: 50vw)"
             />
           )}
         </div>
@@ -94,6 +96,12 @@ export default function JourneyDetailedView({
           <DiaryForm
             journeyId={journey.id}
             diary={showDiaryForm.diaryToEdit}
+            diaryImageUrls={diaryImages
+              .filter(
+                (diaryImage) =>
+                  diaryImage.diaryId === showDiaryForm.diaryToEdit?.id,
+              )
+              .map((diaryImage) => diaryImage.imageUrl)}
             onSubmit={() =>
               setShowDiaryForm((prev) => ({
                 show: !prev.show,

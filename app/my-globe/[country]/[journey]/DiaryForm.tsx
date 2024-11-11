@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
+import ImageCarousel from '../../../components/ImageCarousel';
 import { uploadImage } from '../actions';
 import { createOrUpdateDiary, deleteDiary } from './diaryApiCalls';
 import { createDiaryImage } from './diaryImageApiCalls';
@@ -12,6 +13,7 @@ import { createDiaryImage } from './diaryImageApiCalls';
 type Props = {
   journeyId: number;
   diary: Diary | undefined;
+  diaryImageUrls: string[];
   onSubmit?: () => void;
   onDelete?: () => void;
 };
@@ -19,6 +21,7 @@ type Props = {
 export default function DiaryForm({
   journeyId,
   diary,
+  diaryImageUrls,
   onSubmit,
   onDelete,
 }: Props) {
@@ -37,7 +40,8 @@ export default function DiaryForm({
       setStartDate(diary.dateStart);
       setThoughts(diary.thoughts);
     }
-  }, [diary]);
+    setImgUrls(diaryImageUrls);
+  }, [diary, diaryImageUrls]);
 
   // Clean up freeing memory
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function DiaryForm({
   }, [imgUrls]);
 
   return (
-    <div className="mb-8 flex flex-col items-center">
+    <div className="mb-8 flex w-full max-w-[600px] flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -94,28 +98,41 @@ export default function DiaryForm({
         }}
         className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
       >
-        <div className="form-control mt-2 w-full">
-          <input
-            type="file"
-            multiple
-            accept=".jpg, .jpeg, .png, .gif, .webp"
-            className="file-input file-input-primary"
-            placeholder="choose diary image(s)"
-            onChange={(event) => {
-              const files = event.target.files;
-              if (files) {
-                const filesArray = [...files];
-                setImgUrls(filesArray.map((file) => URL.createObjectURL(file)));
-                setImgsToUpload(filesArray);
-              } else {
-                setImgUrls(undefined);
-                setImgsToUpload(undefined);
-              }
-            }}
-          />
-        </div>
-
         <div className="card-body items-center text-center">
+          {imgUrls && imgUrls.length > 0 && (
+            <div className="relative h-[150px] w-full">
+              <ImageCarousel
+                imageUrls={imgUrls}
+                enableFullScreen={false}
+                height="h-[150px]"
+              />
+            </div>
+          )}
+
+          <div className="form-control mt-2 w-full">
+            <input
+              type="file"
+              multiple
+              accept=".jpg, .jpeg, .png, .gif, .webp"
+              className="file-input file-input-primary"
+              placeholder="choose diary image(s)"
+              onChange={(event) => {
+                const files = event.target.files;
+                if (files) {
+                  const filesArray = [...files];
+                  setImgUrls([
+                    ...filesArray.map((file) => URL.createObjectURL(file)),
+                    ...diaryImageUrls,
+                  ]);
+                  setImgsToUpload(filesArray);
+                } else {
+                  setImgUrls(diaryImageUrls);
+                  setImgsToUpload(undefined);
+                }
+              }}
+            />
+          </div>
+
           <div className="form-control mt-2 w-full">
             <input
               placeholder="diary title"

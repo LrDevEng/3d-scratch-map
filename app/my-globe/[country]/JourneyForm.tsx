@@ -104,6 +104,7 @@ export default function JourneyForm({
                 src={imgUrl}
                 alt="journey title image"
                 fill={true}
+                sizes="(max-width: 20vw)"
               />
             </div>
           )}

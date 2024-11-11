@@ -24,7 +24,6 @@ export default function DiaryView({
         <div className="card-body flex-row p-4">
           <div className="mr-8 w-3/4">
             <ImageCarousel
-              diaryId={diary.id}
               imageUrls={diaryImages.map((diaryImage) => diaryImage.imageUrl)}
             />
           </div>
