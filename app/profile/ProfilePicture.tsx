@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import EditButton from '../components/EditButton';
 import { uploadImage } from './actions';
 
@@ -41,8 +42,10 @@ export default function ProfilePicture({ profileImgSrc }: Props) {
 
               if ('error' in responseBody) {
                 console.log('Error updating user: ', responseBody.error);
+                toast.error('Error: Failed to update profile picture.');
               } else if ('user' in responseBody) {
                 console.log('User sucessfully updated: ', responseBody.user);
+                toast.success('Success: Profile picture updated.');
               }
             }
 

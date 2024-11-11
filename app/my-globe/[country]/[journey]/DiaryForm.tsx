@@ -3,6 +3,7 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import type { Diary } from '../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../components/DeleteButton';
 import ImageCarousel from '../../../components/ImageCarousel';
@@ -69,24 +70,36 @@ export default function DiaryForm({
 
           if ('error' in response) {
             console.log('Error creating or updating diary: ', response.error);
+            toast.error('Error: Failed to create/update diary.');
           } else if ('diary' in response) {
             console.log(
               'Diary sucessfully created or updated: ',
               response.diary,
             );
+            toast.success('Success: Diary created/updated.');
 
             if (imgsToUpload) {
+              let success = true;
               for (const imgToUpload of imgsToUpload) {
                 const newImgUrl = await uploadImage(imgToUpload);
                 if (newImgUrl) {
-                  await createDiaryImage(
+                  const newDiaryImage = await createDiaryImage(
                     response.diary.id,
                     newImgUrl,
                     null,
                     null,
                     null,
                   );
+
+                  if (!newDiaryImage) {
+                    success = false;
+                  }
+                } else {
+                  success = false;
                 }
+              }
+              if (!success) {
+                toast.error('Error: Failed to upload diary image(s).');
               }
             }
           }
