@@ -21,7 +21,8 @@ export async function up(sql: Sql) {
       id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
       user_id1 integer NOT NULL REFERENCES users (id) ON DELETE cascade,
       user_id2 integer NOT NULL REFERENCES users (id) ON DELETE cascade,
-      status integer NOT NULL
+      status integer NOT NULL,
+      CONSTRAINT unique_followers UNIQUE (user_id1, user_id2)
     )
   `;
 }

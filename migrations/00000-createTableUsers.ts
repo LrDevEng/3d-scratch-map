@@ -1,5 +1,6 @@
 import type { Sql } from 'postgres';
 import { z } from 'zod';
+import type { Follower } from './00005-createTableFollowers';
 
 export const userSchemaRegister = z.object({
   email: z.string().min(3).max(100),
@@ -10,6 +11,10 @@ export const userSchemaRegister = z.object({
 
 export const userSchemaProfilePicture = z.object({
   imageUrl: z.string(),
+});
+
+export const userSchemaSearch = z.object({
+  searchTerm: z.string().min(3).max(100),
 });
 
 export const userSchemaLogIn = z.object({
@@ -23,6 +28,22 @@ export type User = {
   givenName: string;
   familyName: string;
   imageUrl: string | null;
+};
+
+export type FollowingUser = {
+  id: User['id'];
+  email: User['email'];
+  givenName: User['givenName'];
+  imageUrl: User['imageUrl'];
+  status: Follower['status'];
+};
+
+export type FollowerUser = {
+  id: User['id'];
+  email: User['email'];
+  givenName: User['givenName'];
+  imageUrl: User['imageUrl'];
+  status: Follower['status'];
 };
 
 export async function up(sql: Sql) {

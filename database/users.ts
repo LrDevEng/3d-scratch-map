@@ -56,6 +56,22 @@ export const updateUser = cache(
   },
 );
 
+export const searchUsersInsecure = cache(async (searchTerm: string) => {
+  const users = await sql<Omit<User, 'familyName'>[]>`
+    SELECT
+      users.id,
+      users.email,
+      users.given_name,
+      users.image_url
+    FROM
+      users
+    WHERE
+      users.email = ${searchTerm}
+  `;
+
+  return users;
+});
+
 export const getUserInsecure = cache(async (email: User['email']) => {
   const [user] = await sql<User[]>`
     SELECT
@@ -68,6 +84,22 @@ export const getUserInsecure = cache(async (email: User['email']) => {
       users
     WHERE
       email = ${email}
+  `;
+
+  return user;
+});
+
+export const getUserByIdInsecure = cache(async (userId: User['id']) => {
+  const [user] = await sql<Omit<User, 'familyName'>[]>`
+    SELECT
+      users.id,
+      users.email,
+      users.given_name,
+      users.image_url
+    FROM
+      users
+    WHERE
+      users.id = ${userId}
   `;
 
   return user;

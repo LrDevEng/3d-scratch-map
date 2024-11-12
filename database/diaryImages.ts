@@ -63,7 +63,12 @@ export const createDiaryImage = cache(
             d.id = ${diaryId}
         )
       RETURNING
-        diary_images.*
+        diary_images.id,
+        diary_images.diary_id,
+        diary_images.image_url,
+        diary_images.longitude,
+        diary_images.latitude,
+        diary_images.date_shot
     `;
 
     return diaryImage;

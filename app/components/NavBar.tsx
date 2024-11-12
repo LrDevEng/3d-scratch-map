@@ -36,9 +36,9 @@ export default async function NavBar() {
         {user && (
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-            href="/"
+            href="/followers"
           >
-            friends
+            followers
           </Link>
         )}
         <Link
