@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Quicksand } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import NavBar from './components/NavBar';
 
 export const dynamic = 'force-dynamic';
@@ -20,11 +21,23 @@ export default function RootLayout({
   return (
     <html data-theme="forest" className="dark" lang="en">
       <body className={quicksand.className}>
-        <div className="h-screen flex flex-col">
+        <div className="flex h-screen flex-col">
           <header>
             <NavBar />
           </header>
           <main className="flex-grow">{children}</main>
+          <Toaster
+            position="bottom-left"
+            toastOptions={{
+              // Define default options
+              className: '',
+              duration: 4000,
+              style: {
+                background: '#0f0f0f',
+                color: '#fff',
+              },
+            }}
+          />
         </div>
       </body>
     </html>

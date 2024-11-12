@@ -15,15 +15,13 @@ export default async function NavBar() {
 
   return (
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
-      <Link
-        className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-        href={homeRoute}
-      >
+      <Link className="px-8" href={homeRoute}>
         <Image
+          className="h-auto w-auto"
           src="/images/logo-terra-scratch-4.png"
           alt="logo"
-          width={60}
           height={60}
+          width={60}
         />
       </Link>
       <div className="flex h-full items-center">
@@ -50,12 +48,17 @@ export default async function NavBar() {
           about
         </Link>
         {user ? (
-          <Link
-            className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-            href="/profile"
-          >
-            profile
-          </Link>
+          <div className="duration-250 relative h-[60px] w-[60px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.5)]">
+            <Link href="/profile">
+              <Image
+                className="rounded-full object-contain"
+                src={user.imageUrl ? user.imageUrl : '/icons/userIcon.svg'}
+                alt="profile picture"
+                height={60}
+                width={60}
+              />
+            </Link>
+          </div>
         ) : (
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"

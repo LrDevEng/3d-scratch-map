@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { type Journey } from '../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../components/DeleteButton';
 import { uploadImage } from './actions';
@@ -61,6 +62,7 @@ export default function JourneyForm({
             currentImgUrl = await uploadImage(imgToUpload);
             if (!currentImgUrl) {
               console.log('Image upload failed.');
+              toast.error('Error: Failed to upload journey title image.');
             }
           }
 
@@ -82,11 +84,13 @@ export default function JourneyForm({
 
           if ('error' in response) {
             console.log('Error creating or updating journey: ', response.error);
+            toast.error('Error: Failed to create/update journey.');
           } else if ('journey' in response) {
             console.log(
               'Journey sucessfully created or updated: ',
               response.journey,
             );
+            toast.success('Success: Journey created/updated.');
           }
 
           if (onSubmit) {

@@ -22,10 +22,9 @@ export async function createDiaryImage(
     const responseBody: DiaryImageResponseBodyCud = await response.json();
 
     if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
       console.log(responseBody.error);
-      return;
     }
+    return false;
   }
+  return true;
 }

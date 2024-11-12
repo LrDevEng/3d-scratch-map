@@ -33,6 +33,7 @@ export const createDiaryImage = cache(
     latitude: DiaryImage['latitude'],
     dateShot: DiaryImage['dateShot'],
   ) => {
+    // const dateShotInsert = dateShot ? dateShot : new Date();
     const [diaryImage] = await sql<DiaryImage[]>`
       INSERT INTO
         diary_images (

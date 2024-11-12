@@ -22,7 +22,7 @@ export async function uploadImage(imgToUpload: File) {
       (resolve, reject) => {
         const uploadStream: UploadStream = cloudinary.uploader.upload_stream(
           {
-            folder: 'Journeys',
+            folder: 'Diaries',
           },
           (error, result) => {
             if (error) {

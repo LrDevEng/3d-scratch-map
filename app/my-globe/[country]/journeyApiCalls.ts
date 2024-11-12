@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import type { JourneyResponseBodyCud } from '../../api/journeys/route';
 
 export async function createOrUpdateJourney(
@@ -49,10 +50,11 @@ export async function deleteJourney(journeyId: number) {
     const responseBody: JourneyResponseBodyCud = await response.json();
 
     if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
       console.log('Delete journey error: ', responseBody.error);
+      toast.error('Error: Failed to delete journey.');
       return;
+    } else {
+      toast.success('Success: Journey deleted.');
     }
   }
 }

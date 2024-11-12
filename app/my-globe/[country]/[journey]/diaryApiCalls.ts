@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import type { DiaryResponseBodyCud } from '../../../api/diaries/route';
 
 export async function createOrUpdateDiary(
@@ -33,17 +34,6 @@ export async function createOrUpdateDiary(
 
   const responseBody: DiaryResponseBodyCud = await response.json();
   return responseBody;
-
-  // if (!response.ok) {
-  //   const responseBody: DiaryResponseBodyCud = await response.json();
-
-  //   if ('error' in responseBody) {
-  //     // TODO: Use toast instead of showing
-  //     // this below creation / update form
-  //     console.log(responseBody.error);
-  //     return;
-  //   }
-  // }
 }
 
 export async function deleteDiary(diaryId: number) {
@@ -55,27 +45,11 @@ export async function deleteDiary(diaryId: number) {
     const responseBody: DiaryResponseBodyCud = await response.json();
 
     if ('error' in responseBody) {
-      // TODO: Use toast instead of showing
-      // this below creation / update form
       console.log(responseBody.error);
+      toast.error('Error: Failed to delete diary.');
       return;
     }
+  } else {
+    toast.success('Success: Diary deleted.');
   }
 }
-
-// export async function deleteJourney(journeyId: number) {
-//   const response = await fetch(`/api/journeys/${journeyId}`, {
-//     method: 'DELETE',
-//   });
-
-//   if (!response.ok) {
-//     const responseBody: JourneyResponseBodyCud = await response.json();
-
-//     if ('error' in responseBody) {
-//       // TODO: Use toast instead of showing
-//       // this below creation / update form
-//       console.log(responseBody.error);
-//       return;
-//     }
-//   }
-// }

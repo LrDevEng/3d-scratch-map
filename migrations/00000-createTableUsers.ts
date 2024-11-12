@@ -8,6 +8,10 @@ export const userSchemaRegister = z.object({
   familyName: z.string().min(1),
 });
 
+export const userSchemaProfilePicture = z.object({
+  imageUrl: z.string(),
+});
+
 export const userSchemaLogIn = z.object({
   email: z.string().min(3).max(100),
   password: z.string().min(8),

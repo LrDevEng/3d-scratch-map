@@ -2,15 +2,15 @@
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent } from 'react';
-import { type Props as SpaceProps } from '../components/Space';
+import Space, { type Props as SpaceProps } from '../components/Space';
 
 type Props = {
   countryData: FeatureCollection;
 };
 
-const Space = dynamic(() => import('../components/Space'), {
-  ssr: false,
-}) as FunctionComponent<SpaceProps>;
+// const Space = dynamic(() => import('../components/Space'), {
+//   ssr: false,
+// }) as FunctionComponent<SpaceProps>;
 
 export default function HomeSpace({ countryData }: Props) {
   return (

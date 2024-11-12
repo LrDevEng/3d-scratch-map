@@ -9,6 +9,7 @@ import { Mesh, MeshBasicMaterial } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
+import { useEarthRef } from '../stores/useEarth';
 
 export type Props = {
   countryData: FeatureCollection;
@@ -107,9 +108,19 @@ export default function Earth({
   const router = useRouter();
 
   // References
-  const refGlobe = useRef<Mesh>();
+  const refGlobe = useRef<Mesh>(null);
   const refText = useRef<Mesh>();
   const refCountries = useRef<Mesh[]>([]);
+
+  // References from state
+  const refEarth = useEarthRef((state) => state.earthRef);
+  const updateEarthRef = useEarthRef((state) => state.update);
+
+  useEffect(() => {
+    if (!refEarth && refGlobe.current) {
+      updateEarthRef(refGlobe);
+    }
+  }, [refEarth, updateEarthRef]);
 
   // Url state
   const params = useParams();
@@ -208,6 +219,9 @@ export default function Earth({
     if (refGlobe.current && rotateSelf) {
       refGlobe.current.rotation.y += delta * 0.02;
     }
+    if (refEarth?.current && rotateSelf) {
+      refEarth.current.rotation.y += delta * 0.02;
+    }
     if (refText.current) {
       refText.current.lookAt(state.camera.position);
     }
@@ -235,7 +249,8 @@ export default function Earth({
   useEffect(() => {
     onMounted();
     if (refGlobe.current) refGlobe.current.visible = true;
-  }, [onMounted]);
+    if (refEarth?.current) refEarth.current.visible = true;
+  }, [onMounted, refEarth]);
 
   function updateText(text: string) {
     if (refText.current) {
@@ -245,7 +260,7 @@ export default function Earth({
   }
 
   return (
-    <mesh position={[0, 0, 0]} ref={refGlobe} visible={false}>
+    <mesh position={[0, 0, 0]} ref={refEarth || refGlobe} visible={false}>
       {/* Text 2D */}
       {showCountryText && (
         <Text ref={refText} position={[0, 2.5, 0]} fontSize={0.5}>
