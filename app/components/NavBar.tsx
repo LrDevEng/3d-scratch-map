@@ -17,10 +17,11 @@ export default async function NavBar() {
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
       <Link className="px-8" href={homeRoute}>
         <Image
+          className="h-auto w-auto"
           src="/images/logo-terra-scratch-4.png"
           alt="logo"
-          width={60}
           height={60}
+          width={60}
         />
       </Link>
       <div className="flex h-full items-center">
@@ -52,9 +53,9 @@ export default async function NavBar() {
               <Image
                 className="rounded-full object-contain"
                 src={user.imageUrl ? user.imageUrl : '/icons/userIcon.svg'}
-                alt="logo"
-                fill={true}
-                sizes="(max-width: 40px)"
+                alt="profile picture"
+                height={60}
+                width={60}
               />
             </Link>
           </div>
