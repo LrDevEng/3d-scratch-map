@@ -31,9 +31,11 @@ export default async function UserSpace(props: Props) {
   );
 
   return (
-    <CountryOverview
-      selectedCountry={selectedCountry.properties}
-      journeys={countryJourneys}
-    />
+    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] w-full overflow-y-auto">
+      <CountryOverview
+        selectedCountry={selectedCountry.properties}
+        journeys={countryJourneys}
+      />
+    </div>
   );
 }

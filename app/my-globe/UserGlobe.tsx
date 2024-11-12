@@ -67,9 +67,10 @@ export default function UserGlobe({ countryData, visitedCountries }: Props) {
           }}
           showHeroText={false}
         />
+
         {isLoading && (
-          <div className="absolute left-1/4 top-1/2 z-50">
-            <h1>Loading ...</h1>
+          <div className="absolute left-0 top-0 z-[60] flex h-full w-full items-center justify-center bg-[#0f0f0f]">
+            <h1>Loading Interactive 3D Map ...</h1>
           </div>
         )}
       </div>

@@ -45,7 +45,11 @@ export const updateUser = cache(
         AND sessions.expiry_timestamp > now()
         AND users.id = ${userId}
       RETURNING
-        users.*
+        users.id,
+        users.email,
+        users.given_name,
+        users.family_name,
+        users.image_url
     `;
 
     return user;
