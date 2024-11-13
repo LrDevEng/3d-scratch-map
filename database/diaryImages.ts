@@ -24,6 +24,27 @@ export const getDiaryImages = cache(
   },
 );
 
+export const getDiaryImagesByFollowingId = cache(
+  async (sessionToken: string, diaryId: number, followingId: number) => {
+    const diaryImages = await sql<DiaryImage[]>`
+      SELECT
+        di.*
+      FROM
+        diary_images di
+        JOIN diaries d ON di.diary_id = d.id
+        JOIN journeys j ON d.journey_id = j.id
+        JOIN followers f ON j.user_id = f.user_id2
+        JOIN sessions s ON f.user_id1 = s.user_id
+      WHERE
+        s.token = ${sessionToken}
+        AND s.expiry_timestamp > now()
+        AND d.id = ${diaryId}
+        AND f.user_id2 = ${followingId}
+    `;
+    return diaryImages;
+  },
+);
+
 export const createDiaryImage = cache(
   async (
     sessionToken: Session['token'],

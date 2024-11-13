@@ -91,6 +91,29 @@ export const getFollowingUsers = cache(
   },
 );
 
+export const getFollowingUser = cache(
+  async (sessionToken: Session['token'], followingUserId: User['id']) => {
+    const [followingUser] = await sql<FollowingUser[]>`
+      SELECT
+        u2.id,
+        u2.email,
+        u2.given_name,
+        u2.image_url,
+        f.status
+      FROM
+        followers f
+        JOIN users u1 ON f.user_id1 = u1.id
+        JOIN users u2 ON f.user_id2 = u2.id
+        JOIN sessions s ON u1.id = s.user_id
+      WHERE
+        s.token = ${sessionToken}
+        AND s.expiry_timestamp > now()
+        AND u2.id = ${followingUserId}
+    `;
+    return followingUser;
+  },
+);
+
 export const getFollowers = cache(async (sessionToken: Session['token']) => {
   const followers = await sql<Follower[]>`
     SELECT

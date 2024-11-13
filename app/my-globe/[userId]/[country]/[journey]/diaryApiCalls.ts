@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import type { DiaryResponseBodyCud } from '../../../api/diaries/route';
+import type { DiaryResponseBodyCud } from '../../../../api/diaries/route';
 
 export async function createOrUpdateDiary(
   diaryId: number | undefined,

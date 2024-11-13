@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getValidSessionToken } from '../../../../database/sessions';
+import { getUser } from '../../../../database/users';
 import { getSafeReturnToPath } from '../../../../util/validation';
 import RegisterLogIn from '../../RegisterLogIn';
 
@@ -23,7 +24,9 @@ export default async function Register({ searchParams }: Props) {
 
   // 3. If the sessionToken cookie is valid, redirect to home
   if (session) {
-    redirect(getSafeReturnToPath(returnTo) || '/my-globe');
+    // Get the current user with the sessionToken
+    const user = await getUser(sessionTokenCookie.value);
+    redirect(getSafeReturnToPath(returnTo) || `/my-globe/${user?.id}`);
   }
 
   return (

@@ -3,13 +3,13 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import type { Journey } from '../../../../migrations/00002-createTableJourneys';
-import type { Diary } from '../../../../migrations/00003-createTableDiaries';
-import type { DiaryImage } from '../../../../migrations/00004-createTableDiaryImages';
-import AddButton from '../../../components/AddButton';
-import BackButton from '../../../components/BackButton';
-import EditButton from '../../../components/EditButton';
-import HorizontalDivider from '../../../components/HorizontalDivider';
+import type { Journey } from '../../../../../migrations/00002-createTableJourneys';
+import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
+import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
+import AddButton from '../../../../components/AddButton';
+import BackButton from '../../../../components/BackButton';
+import EditButton from '../../../../components/EditButton';
+import HorizontalDivider from '../../../../components/HorizontalDivider';
 import DiaryForm from './DiaryForm';
 import DiaryView from './DiaryView';
 
@@ -18,6 +18,8 @@ type Props = {
   diaries: Diary[];
   diaryImages: DiaryImage[];
   country: string;
+  userId: string;
+  personalGlobe: boolean;
 };
 
 type ShowDiaryForm = {
@@ -30,6 +32,8 @@ export default function JourneyDetailedView({
   diaries,
   diaryImages,
   country,
+  userId,
+  personalGlobe,
 }: Props) {
   const router = useRouter();
 
@@ -61,7 +65,9 @@ export default function JourneyDetailedView({
           )}
         </div>
         <div className="relative z-10 flex justify-between bg-black bg-opacity-50">
-          <BackButton onClick={() => router.replace(`/my-globe/${country}`)} />
+          <BackButton
+            onClick={() => router.replace(`/my-globe/${userId}/${country}`)}
+          />
           <h1 className="text-center">{journey.title}</h1>
           <EditButton />
         </div>
@@ -79,19 +85,21 @@ export default function JourneyDetailedView({
       <h2 className="mt-8 text-center">Diaries</h2>
       <div className="flex items-center">
         <HorizontalDivider />
-        <AddButton
-          open={showDiaryForm.show}
-          onClick={() =>
-            setShowDiaryForm((prev) => ({
-              show: !prev.show,
-              diaryToEdit: undefined,
-            }))
-          }
-        />
+        {personalGlobe && (
+          <AddButton
+            open={showDiaryForm.show}
+            onClick={() =>
+              setShowDiaryForm((prev) => ({
+                show: !prev.show,
+                diaryToEdit: undefined,
+              }))
+            }
+          />
+        )}
         <HorizontalDivider />
       </div>
 
-      {showDiaryForm.show && (
+      {showDiaryForm.show && personalGlobe && (
         <div className="flex justify-center">
           <DiaryForm
             journeyId={journey.id}
@@ -126,6 +134,7 @@ export default function JourneyDetailedView({
                 diaryImages={diaryImages.filter(
                   (diaryImage) => diaryImage.diaryId === diary.id,
                 )}
+                personalGlobe={personalGlobe}
                 onEdit={() =>
                   setShowDiaryForm((prev) => ({
                     show: !prev.show,

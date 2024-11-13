@@ -2,21 +2,31 @@
 
 import type { FeatureCollection } from 'geojson';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { type FunctionComponent, useState } from 'react';
-import CloseButton from '../components/CloseButton';
-import { type Props as SpaceProps } from '../components/Space';
+import type { FollowingUser } from '../../../migrations/00000-createTableUsers';
+import { parseGenitive } from '../../../util/parsers';
+import CloseButton from '../../components/CloseButton';
+import { type Props as SpaceProps } from '../../components/Space';
 
-const Space = dynamic(() => import('../components/Space'), {
+const Space = dynamic(() => import('../../components/Space'), {
   ssr: false,
 }) as FunctionComponent<SpaceProps>;
 
 type Props = {
   countryData: FeatureCollection;
   visitedCountries: Set<string>;
+  personalGlobe: boolean;
+  followingUser: FollowingUser | undefined;
 };
 
-export default function UserGlobe({ countryData, visitedCountries }: Props) {
+export default function UserGlobe({
+  countryData,
+  visitedCountries,
+  personalGlobe,
+  followingUser,
+}: Props) {
   // Router
   const router = useRouter();
 
@@ -29,12 +39,14 @@ export default function UserGlobe({ countryData, visitedCountries }: Props) {
   const selectedCountry = countryData.features.find(
     ({ properties }) => properties?.ADM0_A3 === selectedCountryAdm0A3,
   ) || { properties: { NAME: '- select country -' } };
+  const paramsUserId = params.userId;
+  const userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
 
   const updateUrl = (newCountryAdm0A3: string) => {
     if (newCountryAdm0A3.length === 3) {
-      router.push(`/my-globe/${newCountryAdm0A3.toLowerCase()}`);
+      router.push(`/my-globe/${userId}/${newCountryAdm0A3.toLowerCase()}`);
     } else {
-      router.push('/my-globe');
+      router.push(`/my-globe/${userId}`);
     }
   };
 
@@ -113,6 +125,26 @@ export default function UserGlobe({ countryData, visitedCountries }: Props) {
           </div>
         </div>
       </div>
+      {!personalGlobe && followingUser && (
+        <div className="absolute bottom-0 left-0 z-50 flex items-center p-8">
+          <div className="rounded-full border-2 border-white">
+            <Image
+              className="rounded-full object-contain"
+              src={
+                followingUser.imageUrl
+                  ? followingUser.imageUrl
+                  : '/icons/userIcon.svg'
+              }
+              alt="profile picture"
+              height={60}
+              width={60}
+            />
+          </div>
+          <div className="pl-4">
+            {parseGenitive(followingUser.givenName)} Globe
+          </div>
+        </div>
+      )}
     </div>
   );
 }

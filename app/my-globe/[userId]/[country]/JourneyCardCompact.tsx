@@ -3,14 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import type { Journey } from '../../../migrations/00002-createTableJourneys';
-import EditButton from '../../components/EditButton';
-import HorizontalDivider from '../../components/HorizontalDivider';
+import type { Journey } from '../../../../migrations/00002-createTableJourneys';
+import EditButton from '../../../components/EditButton';
+import HorizontalDivider from '../../../components/HorizontalDivider';
 
 type Props = {
   journey: Journey;
   reverse?: boolean;
   selectedCountryAdm0A3: string;
+  userId: string;
+  personalGlobe: boolean;
   onEdit?: () => void;
 };
 
@@ -18,6 +20,8 @@ export default function JourneyCardCompact({
   journey,
   selectedCountryAdm0A3,
   reverse = false,
+  userId,
+  personalGlobe,
   onEdit = () => {},
 }: Props) {
   const flexDirection = reverse ? 'flex-row-reverse' : 'flex-row';
@@ -28,7 +32,7 @@ export default function JourneyCardCompact({
         <div className="card-body flex-row p-4">
           <Link
             className={`flex flex-grow items-center ${flexDirection}`}
-            href={`/my-globe/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
+            href={`/my-globe/${userId}/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
           >
             <div className="mr-8 max-h-[200px] w-1/4 rounded-2xl border-2 border-white">
               {journey.imageUrl ? (
@@ -60,7 +64,9 @@ export default function JourneyCardCompact({
             </div>
           </Link>
 
-          <EditButton className="self-center" onClick={onEdit} />
+          {personalGlobe && (
+            <EditButton className="self-center" onClick={onEdit} />
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import type { DiaryImageResponseBodyCud } from '../../../api/diaryImages/route';
+import type { DiaryImageResponseBodyCud } from '../../../../api/diaryImages/route';
 
 export async function createDiaryImage(
   diaryId: number,

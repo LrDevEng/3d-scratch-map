@@ -25,6 +25,28 @@ export const getDiaries = cache(
   },
 );
 
+export const getDiariesByFollowingId = cache(
+  async (sessionToken: string, journeyId: number, followingId: number) => {
+    const diaries = await sql<Diary[]>`
+      SELECT
+        d.*
+      FROM
+        diaries d
+        JOIN journeys j ON d.journey_id = j.id
+        JOIN followers f ON j.user_id = f.user_id2
+        JOIN sessions s ON f.user_id1 = s.user_id
+      WHERE
+        s.token = ${sessionToken}
+        AND s.expiry_timestamp > now()
+        AND j.id = ${journeyId}
+        AND f.user_id2 = ${followingId}
+      ORDER BY
+        d.date_start DESC
+    `;
+    return diaries;
+  },
+);
+
 export const createDiary = cache(
   async (
     sessionToken: Session['token'],

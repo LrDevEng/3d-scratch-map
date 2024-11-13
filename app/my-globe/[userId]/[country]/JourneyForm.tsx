@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { type Journey } from '../../../migrations/00002-createTableJourneys';
-import DeleteButton from '../../components/DeleteButton';
+import { type Journey } from '../../../../migrations/00002-createTableJourneys';
+import DeleteButton from '../../../components/DeleteButton';
 import { uploadImage } from './actions';
 import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 

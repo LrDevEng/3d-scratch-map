@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { type Journey } from '../../../migrations/00002-createTableJourneys';
-import AddButton from '../../components/AddButton';
-import HorizontalDivider from '../../components/HorizontalDivider';
+import { type Journey } from '../../../../migrations/00002-createTableJourneys';
+import AddButton from '../../../components/AddButton';
+import HorizontalDivider from '../../../components/HorizontalDivider';
 import JourneyCardCompact from './JourneyCardCompact';
 import JourneyForm from './JourneyForm';
 
 type Props = {
   journeys: Journey[];
   selectedCountryAdm0A3: string;
+  userId: string;
+  personalGlobe: boolean;
 };
 
 type ShowJourneyForm = {
@@ -15,7 +17,12 @@ type ShowJourneyForm = {
   journeyToEdit: Journey | undefined;
 };
 
-export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
+export default function Journeys({
+  journeys,
+  selectedCountryAdm0A3,
+  userId,
+  personalGlobe,
+}: Props) {
   const [showJourneyForm, setShowJourneyForm] = useState<ShowJourneyForm>({
     show: false,
     journeyToEdit: undefined,
@@ -26,18 +33,20 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
       <h2>Journeys</h2>
       <div className="flex items-center">
         <HorizontalDivider />
-        <AddButton
-          open={showJourneyForm.show}
-          onClick={() =>
-            setShowJourneyForm((prev) => ({
-              show: !prev.show,
-              journeyToEdit: undefined,
-            }))
-          }
-        />
+        {personalGlobe && (
+          <AddButton
+            open={showJourneyForm.show}
+            onClick={() =>
+              setShowJourneyForm((prev) => ({
+                show: !prev.show,
+                journeyToEdit: undefined,
+              }))
+            }
+          />
+        )}
         <HorizontalDivider />
       </div>
-      {showJourneyForm.show && (
+      {showJourneyForm.show && personalGlobe && (
         <div className="flex justify-center">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
@@ -65,6 +74,8 @@ export default function Journeys({ journeys, selectedCountryAdm0A3 }: Props) {
                 journey={journey}
                 reverse={index % 2 !== 0}
                 selectedCountryAdm0A3={selectedCountryAdm0A3}
+                userId={userId}
+                personalGlobe={personalGlobe}
                 onEdit={() =>
                   setShowJourneyForm((prev) => ({
                     show: !prev.show,
