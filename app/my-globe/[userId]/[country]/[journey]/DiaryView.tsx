@@ -10,12 +10,14 @@ import ImageCarousel from '../../../../components/ImageCarousel';
 type Props = {
   diary: Diary;
   diaryImages: DiaryImage[];
+  personalGlobe: boolean;
   onEdit?: () => void;
 };
 
 export default function DiaryView({
   diary,
   diaryImages,
+  personalGlobe,
   onEdit = () => {},
 }: Props) {
   return (
@@ -36,7 +38,9 @@ export default function DiaryView({
             <div className="mt-4 text-justify">{diary.thoughts}</div>
           </div>
 
-          <EditButton className="self-center" onClick={onEdit} />
+          {personalGlobe && (
+            <EditButton className="self-center" onClick={onEdit} />
+          )}
         </div>
       </div>
     </div>

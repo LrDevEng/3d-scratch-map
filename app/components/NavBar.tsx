@@ -12,9 +12,9 @@ export default async function NavBar() {
 
   return (
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
-      <Link className="px-8" href={`/my-globe/${user?.id}`}>
+      <Link className="w-fit" href={`/my-globe/${user?.id}`}>
         <Image
-          className="h-auto w-auto"
+          className="h-auto w-fit"
           src="/images/logo-terra-scratch-4.png"
           alt="logo"
           height={60}

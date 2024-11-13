@@ -10,12 +10,14 @@ type Props = {
   selectedCountry: GeoJsonProperties | undefined;
   journeys: Journey[];
   userId: string;
+  personalGlobe: boolean;
 };
 
 export default function CountryOverview({
   selectedCountry,
   journeys,
   userId,
+  personalGlobe,
 }: Props) {
   const selectedCountryName = selectedCountry?.NAME as string;
   const selectedCountryIsoA2 = selectedCountry?.ISO_A2 as string;
@@ -46,6 +48,7 @@ export default function CountryOverview({
         journeys={journeys}
         selectedCountryAdm0A3={selectedCountryAdm0A3}
         userId={userId}
+        personalGlobe={personalGlobe}
       />
     </div>
   );

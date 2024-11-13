@@ -12,6 +12,7 @@ type Props = {
   reverse?: boolean;
   selectedCountryAdm0A3: string;
   userId: string;
+  personalGlobe: boolean;
   onEdit?: () => void;
 };
 
@@ -20,6 +21,7 @@ export default function JourneyCardCompact({
   selectedCountryAdm0A3,
   reverse = false,
   userId,
+  personalGlobe,
   onEdit = () => {},
 }: Props) {
   const flexDirection = reverse ? 'flex-row-reverse' : 'flex-row';
@@ -62,7 +64,9 @@ export default function JourneyCardCompact({
             </div>
           </Link>
 
-          <EditButton className="self-center" onClick={onEdit} />
+          {personalGlobe && (
+            <EditButton className="self-center" onClick={onEdit} />
+          )}
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ type Props = {
   journeys: Journey[];
   selectedCountryAdm0A3: string;
   userId: string;
+  personalGlobe: boolean;
 };
 
 type ShowJourneyForm = {
@@ -20,6 +21,7 @@ export default function Journeys({
   journeys,
   selectedCountryAdm0A3,
   userId,
+  personalGlobe,
 }: Props) {
   const [showJourneyForm, setShowJourneyForm] = useState<ShowJourneyForm>({
     show: false,
@@ -31,18 +33,20 @@ export default function Journeys({
       <h2>Journeys</h2>
       <div className="flex items-center">
         <HorizontalDivider />
-        <AddButton
-          open={showJourneyForm.show}
-          onClick={() =>
-            setShowJourneyForm((prev) => ({
-              show: !prev.show,
-              journeyToEdit: undefined,
-            }))
-          }
-        />
+        {personalGlobe && (
+          <AddButton
+            open={showJourneyForm.show}
+            onClick={() =>
+              setShowJourneyForm((prev) => ({
+                show: !prev.show,
+                journeyToEdit: undefined,
+              }))
+            }
+          />
+        )}
         <HorizontalDivider />
       </div>
-      {showJourneyForm.show && (
+      {showJourneyForm.show && personalGlobe && (
         <div className="flex justify-center">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
@@ -71,6 +75,7 @@ export default function Journeys({
                 reverse={index % 2 !== 0}
                 selectedCountryAdm0A3={selectedCountryAdm0A3}
                 userId={userId}
+                personalGlobe={personalGlobe}
                 onEdit={() =>
                   setShowJourneyForm((prev) => ({
                     show: !prev.show,

@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation';
-import { getJourneys } from '../../../../database/journeys';
+import Link from 'next/link';
+import {
+  getJourneys,
+  getJourneysByFollowingId,
+} from '../../../../database/journeys';
 import { checkAuthorization } from '../../../../util/auth';
 import { getCountries } from '../../../../util/localdata';
 import { validateUrlParam } from '../../../../util/validation';
@@ -11,7 +14,7 @@ type Props = {
 
 export default async function UserSpace(props: Props) {
   const { country, userId } = await props.params;
-  const { sessionTokenCookie } = await checkAuthorization(
+  const { user, sessionTokenCookie } = await checkAuthorization(
     `/my-globe/${userId}/${country}`,
   );
   const countryData = await getCountries();
@@ -19,13 +22,33 @@ export default async function UserSpace(props: Props) {
     ({ properties }) => properties?.ADM0_A3 === country.toUpperCase(),
   );
 
-  // 1. Validate url input and redirect in case it does not match
-  if (!selectedCountry || !validateUrlParam('country', country)) {
-    redirect(`/my-globe/${userId}`);
+  // 1. Validate url input and show access denied page in case it does not match
+  if (
+    !selectedCountry ||
+    !validateUrlParam('country', country) ||
+    !validateUrlParam('userId', userId)
+  ) {
+    return (
+      <div className="relative flex h-full w-full flex-col items-center bg-[#0f0f0f]">
+        <h1 className="my-16">Country does not exist or access denied!</h1>
+        <Link href={`/my-globe/${user.id}`}>Return home.</Link>
+      </div>
+    );
   }
 
-  // 2. Query the journeys with the current user session token for specific country
-  const journeys = await getJourneys(sessionTokenCookie.value);
+  // 2. Get journeys either from current user or from follower
+  let journeys;
+  let personalGlobe = true;
+  if (user.id === Number(userId)) {
+    journeys = await getJourneys(sessionTokenCookie.value);
+  } else {
+    journeys = await getJourneysByFollowingId(
+      sessionTokenCookie.value,
+      Number(userId),
+    );
+    personalGlobe = false;
+  }
+
   const countryJourneys = journeys.filter(
     (journey) => journey.countryAdm0A3 === selectedCountry.properties?.ADM0_A3,
   );
@@ -36,6 +59,7 @@ export default async function UserSpace(props: Props) {
         selectedCountry={selectedCountry.properties}
         journeys={countryJourneys}
         userId={userId}
+        personalGlobe={personalGlobe}
       />
     </div>
   );

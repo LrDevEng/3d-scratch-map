@@ -22,6 +22,28 @@ export const getJourney = cache(
   },
 );
 
+export const getJourneyByFollowingId = cache(
+  async (sessionToken: string, journeyId: number, followingUserId: number) => {
+    const [journey] = await sql<Journey[]>`
+      SELECT
+        j.*
+      FROM
+        journeys j
+        JOIN users u ON j.user_id = u.id
+        JOIN followers f ON u.id = f.user_id2
+        JOIN sessions s ON f.user_id1 = s.user_id
+      WHERE
+        s.token = ${sessionToken}
+        AND j.user_id = ${followingUserId}
+        AND j.id = ${journeyId}
+      ORDER BY
+        j.date_start DESC,
+        j.date_end DESC
+    `;
+    return journey;
+  },
+);
+
 export const getJourneys = cache(async (sessionToken: string) => {
   const journeys = await sql<Journey[]>`
     SELECT
@@ -39,6 +61,27 @@ export const getJourneys = cache(async (sessionToken: string) => {
   `;
   return journeys;
 });
+
+export const getJourneysByFollowingId = cache(
+  async (sessionToken: string, followingUserId: number) => {
+    const journeys = await sql<Journey[]>`
+      SELECT
+        j.*
+      FROM
+        journeys j
+        JOIN users u ON j.user_id = u.id
+        JOIN followers f ON u.id = f.user_id2
+        JOIN sessions s ON f.user_id1 = s.user_id
+      WHERE
+        s.token = ${sessionToken}
+        AND j.user_id = ${followingUserId}
+      ORDER BY
+        j.date_start DESC,
+        j.date_end DESC
+    `;
+    return journeys;
+  },
+);
 
 export const getJourneysForCountry = cache(
   async (sessionToken: string, countryAdm0A3: string) => {

@@ -19,6 +19,7 @@ type Props = {
   diaryImages: DiaryImage[];
   country: string;
   userId: string;
+  personalGlobe: boolean;
 };
 
 type ShowDiaryForm = {
@@ -32,6 +33,7 @@ export default function JourneyDetailedView({
   diaryImages,
   country,
   userId,
+  personalGlobe,
 }: Props) {
   const router = useRouter();
 
@@ -83,19 +85,21 @@ export default function JourneyDetailedView({
       <h2 className="mt-8 text-center">Diaries</h2>
       <div className="flex items-center">
         <HorizontalDivider />
-        <AddButton
-          open={showDiaryForm.show}
-          onClick={() =>
-            setShowDiaryForm((prev) => ({
-              show: !prev.show,
-              diaryToEdit: undefined,
-            }))
-          }
-        />
+        {personalGlobe && (
+          <AddButton
+            open={showDiaryForm.show}
+            onClick={() =>
+              setShowDiaryForm((prev) => ({
+                show: !prev.show,
+                diaryToEdit: undefined,
+              }))
+            }
+          />
+        )}
         <HorizontalDivider />
       </div>
 
-      {showDiaryForm.show && (
+      {showDiaryForm.show && personalGlobe && (
         <div className="flex justify-center">
           <DiaryForm
             journeyId={journey.id}
@@ -130,6 +134,7 @@ export default function JourneyDetailedView({
                 diaryImages={diaryImages.filter(
                   (diaryImage) => diaryImage.diaryId === diary.id,
                 )}
+                personalGlobe={personalGlobe}
                 onEdit={() =>
                   setShowDiaryForm((prev) => ({
                     show: !prev.show,
