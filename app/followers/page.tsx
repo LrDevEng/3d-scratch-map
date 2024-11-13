@@ -2,6 +2,7 @@ import { getFollowerUsers, getFollowingUsers } from '../../database/followers';
 import { checkAuthorization } from '../../util/auth';
 import FollowersAccepted from './FollowersAccepted';
 import FollowersPending from './FollowersPending';
+import FollowerUpdates from './FollowerUpdates';
 import FollowingAccepted from './FollowingAccepted';
 import FollowingPending from './FollowingPending';
 import SearchFriends from './SearchFollowers';
@@ -34,6 +35,7 @@ export default async function Followers() {
   return (
     <div className="relative mt-24 flex w-full flex-col items-center px-8">
       Friends
+      <FollowerUpdates currentUserId={user.id} />
       <SearchFriends
         followingIds={[
           ...followingUsers.map((followingUser) => followingUser.id),
