@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useCountryInfos } from '../../stores/useCountry';
+import { useCountryInfos } from '../../../stores/useCountry';
 
 type Props = {
   countryIsoA2: string;
@@ -10,8 +10,6 @@ type Props = {
 export default function CountryInfo({ countryIsoA2 }: Props) {
   const countryInfos = useCountryInfos((state) => state.countryInfos);
   const updateCountryInfos = useCountryInfos((state) => state.update);
-
-  console.log('Country info rendered with: ', countryIsoA2);
 
   // Country api
   // https://restcountries.com/v3.1/alpha/fr

@@ -2,16 +2,21 @@
 
 import type { GeoJsonProperties } from 'geojson';
 import Image from 'next/image';
-import type { Journey } from '../../../migrations/00002-createTableJourneys';
+import type { Journey } from '../../../../migrations/00002-createTableJourneys';
 import CountryInfo from './CountryInfo';
 import Journeys from './Journeys';
 
 type Props = {
   selectedCountry: GeoJsonProperties | undefined;
   journeys: Journey[];
+  userId: string;
 };
 
-export default function CountryOverview({ selectedCountry, journeys }: Props) {
+export default function CountryOverview({
+  selectedCountry,
+  journeys,
+  userId,
+}: Props) {
   const selectedCountryName = selectedCountry?.NAME as string;
   const selectedCountryIsoA2 = selectedCountry?.ISO_A2 as string;
   const selectedCountryAdm0A3 = selectedCountry?.ADM0_A3 as string;
@@ -40,6 +45,7 @@ export default function CountryOverview({ selectedCountry, journeys }: Props) {
       <Journeys
         journeys={journeys}
         selectedCountryAdm0A3={selectedCountryAdm0A3}
+        userId={userId}
       />
     </div>
   );

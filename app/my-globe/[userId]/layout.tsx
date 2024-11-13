@@ -1,6 +1,6 @@
-import { getJourneys } from '../../database/journeys';
-import { checkAuthorization } from '../../util/auth';
-import { getCountries } from '../../util/localdata';
+import { getJourneys } from '../../../database/journeys';
+import { checkAuthorization } from '../../../util/auth';
+import { getCountries } from '../../../util/localdata';
 import UserGlobe from './UserGlobe';
 
 export default async function GlobeLayout({

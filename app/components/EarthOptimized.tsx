@@ -42,7 +42,6 @@ export type Props = {
   rotateSelf?: boolean;
   showCountryText?: boolean;
   enableCountryInteraction?: boolean;
-  baseUrl?: string;
   onMounted?: () => void;
 };
 
@@ -99,7 +98,6 @@ export default function Earth({
   rotateSelf = true,
   showCountryText = false,
   enableCountryInteraction = false,
-  baseUrl = '/my-globe',
   onMounted = () => {
     console.log('Earth mounted.');
   },
@@ -131,11 +129,14 @@ export default function Earth({
   const selectedRef = refCountries.current.find(
     (refCountry) => refCountry.name === selectedCountryAdm0A3,
   );
+  const paramsUserId = params.userId;
+  const userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
+
   const updateUrl = (newCountryAdm0A3: string) => {
     if (newCountryAdm0A3.length === 3) {
-      router.push(`/my-globe/${newCountryAdm0A3.toLowerCase()}`);
+      router.push(`/my-globe/${userId}/${newCountryAdm0A3.toLowerCase()}`);
     } else {
-      router.push('/my-globe');
+      router.push(`/my-globe/${userId}`);
     }
   };
 

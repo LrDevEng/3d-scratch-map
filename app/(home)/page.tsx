@@ -13,7 +13,7 @@ export default async function Home() {
 
   // 3. Redirect user if already authenticate
   if (user) {
-    redirect('/my-globe');
+    redirect(`/my-globe/${user.id}`);
   }
 
   return (

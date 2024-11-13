@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import type { JourneyResponseBodyCud } from '../../api/journeys/route';
+import type { JourneyResponseBodyCud } from '../../../api/journeys/route';
 
 export async function createOrUpdateJourney(
   journeyId: number | undefined,

@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import type { Diary } from '../../../../migrations/00003-createTableDiaries';
-import type { DiaryImage } from '../../../../migrations/00004-createTableDiaryImages';
-import EditButton from '../../../components/EditButton';
-import HorizontalDivider from '../../../components/HorizontalDivider';
-import ImageCarousel from '../../../components/ImageCarousel';
+import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
+import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
+import EditButton from '../../../../components/EditButton';
+import HorizontalDivider from '../../../../components/HorizontalDivider';
+import ImageCarousel from '../../../../components/ImageCarousel';
 
 type Props = {
   diary: Diary;

@@ -1,18 +1,18 @@
 import { redirect } from 'next/navigation';
-import { getJourneys } from '../../../database/journeys';
-import { checkAuthorization } from '../../../util/auth';
-import { getCountries } from '../../../util/localdata';
-import { validateUrlParam } from '../../../util/validation';
+import { getJourneys } from '../../../../database/journeys';
+import { checkAuthorization } from '../../../../util/auth';
+import { getCountries } from '../../../../util/localdata';
+import { validateUrlParam } from '../../../../util/validation';
 import CountryOverview from './CountryOverview';
 
 type Props = {
-  params: Promise<{ country: string }>;
+  params: Promise<{ country: string; userId: string }>;
 };
 
 export default async function UserSpace(props: Props) {
-  const { country } = await props.params;
+  const { country, userId } = await props.params;
   const { sessionTokenCookie } = await checkAuthorization(
-    `/my-globe/${country}`,
+    `/my-globe/${userId}/${country}`,
   );
   const countryData = await getCountries();
   const selectedCountry = countryData.features.find(
@@ -21,7 +21,7 @@ export default async function UserSpace(props: Props) {
 
   // 1. Validate url input and redirect in case it does not match
   if (!selectedCountry || !validateUrlParam('country', country)) {
-    redirect('/my-globe');
+    redirect(`/my-globe/${userId}`);
   }
 
   // 2. Query the journeys with the current user session token for specific country
@@ -35,6 +35,7 @@ export default async function UserSpace(props: Props) {
       <CountryOverview
         selectedCountry={selectedCountry.properties}
         journeys={countryJourneys}
+        userId={userId}
       />
     </div>
   );
