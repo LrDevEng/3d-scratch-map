@@ -1,0 +1,114 @@
+'use client';
+
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import type { FollowerUser } from '../../migrations/00000-createTableUsers';
+import { type FollowResponseBodyCud } from '../api/followers/following/[followingId]/route';
+import HorizontalDivider from '../components/HorizontalDivider';
+
+type Props = {
+  followerUsers: FollowerUser[];
+};
+
+export default function FollowersPending({ followerUsers }: Props) {
+  const router = useRouter();
+
+  return (
+    <div className="flex w-full flex-col items-center">
+      <div className="flex w-full items-center">
+        <HorizontalDivider />
+        <h3 className="mx-4 text-nowrap">Followers (Pending)</h3>
+        <HorizontalDivider />
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th />
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {followerUsers.map((followerUser) => {
+            return (
+              <tr key={`found-user-${followerUser.id}`}>
+                <td className="py-2">
+                  <div className="h-[50px] w-[50px] rounded-full border-2 border-white">
+                    <Image
+                      className="rounded-full object-contain"
+                      src={
+                        followerUser.imageUrl
+                          ? followerUser.imageUrl
+                          : '/icons/userIcon.svg'
+                      }
+                      alt="profile picture"
+                      height={50}
+                      width={50}
+                    />
+                  </div>
+                </td>
+                <td className="px-4 py-2">{followerUser.givenName}</td>
+                <td className="py-2">{followerUser.email}</td>
+                <td className="px-4 py-2">
+                  <button
+                    className="btn btn-ghost"
+                    onClick={async () => {
+                      const response = await fetch(
+                        `/api/followers/follower/${followerUser.id}`,
+                        {
+                          method: 'PUT',
+                        },
+                      );
+
+                      const responseBody: FollowResponseBodyCud =
+                        await response.json();
+
+                      if ('error' in responseBody) {
+                        toast.error(
+                          'Error: Accepting follower request failed.',
+                        );
+                      } else if ('follower' in responseBody) {
+                        toast.success('Success: Follower request accepted.');
+                      }
+
+                      router.refresh();
+                    }}
+                  >
+                    accept
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={async () => {
+                      const response = await fetch(
+                        `/api/followers/follower/${followerUser.id}`,
+                        {
+                          method: 'DELETE',
+                        },
+                      );
+
+                      const responseBody: FollowResponseBodyCud =
+                        await response.json();
+
+                      if ('error' in responseBody) {
+                        toast.error('Error: Rejecting follower failed.');
+                      } else if ('follower' in responseBody) {
+                        toast.success('Success: Follower rejected.');
+                      }
+
+                      router.refresh();
+                    }}
+                  >
+                    reject
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}

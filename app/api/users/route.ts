@@ -1,12 +1,23 @@
 import { NextResponse } from 'next/server';
-import { updateUser } from '../../../database/users';
+import { searchUsersInsecure, updateUser } from '../../../database/users';
 import type { User } from '../../../migrations/00000-createTableUsers';
-import { userSchemaProfilePicture } from '../../../migrations/00000-createTableUsers';
+import {
+  userSchemaProfilePicture,
+  userSchemaSearch,
+} from '../../../migrations/00000-createTableUsers';
 import { checkAuthorization } from '../../../util/auth';
 
 export type UserResponseBodyUpdate =
   | {
       user: User;
+    }
+  | {
+      error: string;
+    };
+
+export type UserResponseBodySearch =
+  | {
+      users: Omit<User, 'familyName'>[] | undefined;
     }
   | {
       error: string;
@@ -54,4 +65,34 @@ export async function PUT(
 
   // 6. Return the updated user
   return NextResponse.json({ user: updatedUser });
+}
+
+export async function POST(
+  request: Request,
+): Promise<NextResponse<UserResponseBodySearch>> {
+  // 1. Get the search data from the request
+  const body = await request.json();
+
+  // 2. Validate user data with zod
+  const result = userSchemaSearch.safeParse(body);
+
+  if (!result.success) {
+    return NextResponse.json(
+      {
+        error: `Request does not contain search term: ${result.error.message}`,
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  // 3. Get the token from the session cookie
+  await checkAuthorization(undefined);
+
+  // 4. Get users based on search term
+  const users = await searchUsersInsecure(result.data.searchTerm);
+
+  // 6. Return the found users
+  return NextResponse.json({ users: users });
 }
