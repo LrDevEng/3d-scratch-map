@@ -5,7 +5,7 @@ import {
   userSchemaProfilePicture,
   userSchemaSearch,
 } from '../../../migrations/00000-createTableUsers';
-import { checkAuthorization } from '../../../util/auth';
+import { checkAuthentication } from '../../../util/auth';
 
 export type UserResponseBodyUpdate =
   | {
@@ -44,7 +44,7 @@ export async function PUT(
   }
 
   // 3. Get the token and user from the session cookie
-  const { user, sessionTokenCookie } = await checkAuthorization(undefined);
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 4. Update user
   const updatedUser = await updateUser(
@@ -88,7 +88,7 @@ export async function POST(
   }
 
   // 3. Get the token from the session cookie
-  await checkAuthorization(undefined);
+  await checkAuthentication(undefined);
 
   // 4. Get users based on search term
   const users = await searchUsersInsecure(result.data.searchTerm);

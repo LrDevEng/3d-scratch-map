@@ -33,10 +33,10 @@ export async function up(sql: Sql) {
     BEGIN
       PERFORM pg_notify('follower_updates', json_build_object(
         'operation', TG_OP,
-        'id', NEW.id,
-        'user_id1', NEW.user_id1,
-        'user_id2', NEW.user_id2,
-        'status', NEW.status
+        'id', CASE WHEN TG_OP = 'DELETE' THEN OLD.id ELSE NEW.id END,
+        'user_id1', CASE WHEN TG_OP = 'DELETE' THEN OLD.user_id1 ELSE NEW.user_id1 END,
+        'user_id2', CASE WHEN TG_OP = 'DELETE' THEN OLD.user_id2 ELSE NEW.user_id2 END,
+        'status', CASE WHEN TG_OP = 'DELETE' THEN OLD.status ELSE NEW.status END
       )::text);
       RETURN NEW;
     END;

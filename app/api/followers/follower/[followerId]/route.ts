@@ -3,7 +3,7 @@ import {
   acceptFollowRequest,
   deleteFollowerUser,
 } from '../../../../../database/followers';
-import { checkAuthorization } from '../../../../../util/auth';
+import { checkAuthentication } from '../../../../../util/auth';
 import type { FollowResponseBodyCud } from '../../following/[followingId]/route';
 
 type FollowerParams = {
@@ -17,7 +17,7 @@ export async function PUT(
   { params }: FollowerParams,
 ): Promise<NextResponse<FollowResponseBodyCud>> {
   // 1. Get the token from the cookie
-  const { sessionTokenCookie } = await checkAuthorization(undefined);
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Accept the request
   const newFollower = await acceptFollowRequest(
@@ -44,7 +44,7 @@ export async function DELETE(
   { params }: FollowerParams,
 ): Promise<NextResponse<FollowResponseBodyCud>> {
   // 1. Get the token and user from the session cookie
-  const { sessionTokenCookie } = await checkAuthorization(undefined);
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Delete the follower
   const deletedFollower = await deleteFollowerUser(

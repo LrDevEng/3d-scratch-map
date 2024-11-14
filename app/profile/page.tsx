@@ -1,9 +1,9 @@
 import LogoutButton from '../(home)/(auth)/logout/LogoutButton';
-import { checkAuthorization } from '../../util/auth';
+import { checkAuthentication } from '../../util/auth';
 import ProfilePicture from './ProfilePicture';
 
 export default async function Profile() {
-  const { user } = await checkAuthorization(`/profile`);
+  const { user } = await checkAuthentication(`/profile`);
   const profileImgSrc = user.imageUrl ? user.imageUrl : '/icons/userIcon.svg';
 
   return (

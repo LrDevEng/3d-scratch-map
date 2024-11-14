@@ -1,5 +1,5 @@
 import { getFollowerUsers, getFollowingUsers } from '../../database/followers';
-import { checkAuthorization } from '../../util/auth';
+import { checkAuthentication } from '../../util/auth';
 import FollowersAccepted from './FollowersAccepted';
 import FollowersPending from './FollowersPending';
 import FollowerUpdates from './FollowerUpdates';
@@ -8,7 +8,7 @@ import FollowingPending from './FollowingPending';
 import SearchFriends from './SearchFollowers';
 
 export default async function Followers() {
-  const { user, sessionTokenCookie } = await checkAuthorization(`/followers`);
+  const { user, sessionTokenCookie } = await checkAuthentication(`/followers`);
 
   // Following users
   const followingUsers = await getFollowingUsers(sessionTokenCookie.value);

@@ -14,7 +14,7 @@ import {
   getJourneyByFollowingId,
 } from '../../../../../database/journeys';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
-import { checkAuthorization } from '../../../../../util/auth';
+import { checkAuthentication } from '../../../../../util/auth';
 import { validateUrlParam } from '../../../../../util/validation';
 import JourneyDetailedView from './JourneyDetailedView';
 
@@ -24,7 +24,7 @@ type Props = {
 
 export default async function JourneyDetailed(props: Props) {
   const { userId, country, journey } = await props.params;
-  const { user, sessionTokenCookie } = await checkAuthorization(
+  const { user, sessionTokenCookie } = await checkAuthentication(
     `/my-globe/${userId}/${country}/${journey}`,
   );
 
