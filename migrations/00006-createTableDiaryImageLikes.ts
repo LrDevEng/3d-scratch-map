@@ -8,6 +8,10 @@ export const likeSchema = z.object({
   userId: z.number(),
 });
 
+export const likeSchemaPersonal = z.object({
+  journeyUserId: z.number(),
+});
+
 export type Like = {
   diaryImageId: DiaryImage['id'];
   userId: User['id'];

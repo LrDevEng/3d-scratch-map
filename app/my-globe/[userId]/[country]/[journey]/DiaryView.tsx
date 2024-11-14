@@ -12,6 +12,7 @@ import HorizontalDivider from '../../../../components/HorizontalDivider';
 import ImageCarousel from '../../../../components/ImageCarousel';
 
 type Props = {
+  journeyUserId: number;
   currentUserId: number;
   diary: Diary;
   diaryImages: DiaryImage[];
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export default function DiaryView({
+  journeyUserId,
   currentUserId,
   diary,
   diaryImages,
@@ -40,12 +42,6 @@ export default function DiaryView({
               previewUrls={undefined}
               diaryImageLikes={diaryImageLikes}
               onLikeClick={async (diaryImageId) => {
-                console.log(
-                  'Delete like: ',
-                  diaryImageId,
-                  diaryImageLikes,
-                  currentUserId,
-                );
                 if (
                   diaryImageId &&
                   diaryImageLikes.some(
@@ -57,6 +53,9 @@ export default function DiaryView({
                   // Delete like
                   const response = await fetch(`/api/likes/${diaryImageId}`, {
                     method: 'DELETE',
+                    body: JSON.stringify({
+                      journeyUserId: journeyUserId,
+                    }),
                   });
 
                   const responseBody: LikeResponseBodyCud =
@@ -71,6 +70,9 @@ export default function DiaryView({
                   // Create new like
                   const response = await fetch(`/api/likes/${diaryImageId}`, {
                     method: 'POST',
+                    body: JSON.stringify({
+                      journeyUserId: journeyUserId,
+                    }),
                   });
 
                   const responseBody: LikeResponseBodyCud =

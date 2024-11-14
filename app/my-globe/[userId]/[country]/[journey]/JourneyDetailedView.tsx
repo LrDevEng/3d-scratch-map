@@ -137,6 +137,7 @@ export default function JourneyDetailedView({
           return (
             <div key={`diary-${diary.id}`}>
               <DiaryView
+                journeyUserId={journey.userId}
                 currentUserId={currentUserId}
                 diary={diary}
                 diaryImages={diaryImages.filter(

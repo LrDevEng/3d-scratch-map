@@ -47,6 +47,33 @@ export const createLike = cache(
   },
 );
 
+export const createPersonalLike = cache(
+  async (sessionToken: Session['token'], diaryImageId: DiaryImage['id']) => {
+    const [like] = await sql<Like[]>`
+      INSERT INTO
+        likes (diary_image_id, user_id) (
+          SELECT
+            ${diaryImageId},
+            s.user_id
+          FROM
+            sessions s
+            JOIN journeys j ON s.user_id = j.user_id
+            JOIN diaries d ON j.id = d.journey_id
+            JOIN diary_images di ON d.id = di.diary_id
+          WHERE
+            s.token = ${sessionToken}
+            AND s.expiry_timestamp > now()
+            AND di.id = ${diaryImageId}
+        )
+      RETURNING
+        likes.diary_image_id,
+        likes.user_id
+    `;
+
+    return like;
+  },
+);
+
 export const deleteLike = cache(
   async (sessionToken: Session['token'], diaryImageId: DiaryImage['id']) => {
     const [like] = await sql<Like[]>`
@@ -54,7 +81,8 @@ export const deleteLike = cache(
       followers f,
       journeys j,
       diaries d,
-      diary_images di
+      diary_images di,
+      likes l
       WHERE
         s.user_id = f.user_id1
         AND f.user_id2 = j.user_id
@@ -64,6 +92,32 @@ export const deleteLike = cache(
         AND s.token = ${sessionToken}
         AND s.expiry_timestamp > now()
         AND di.id = ${diaryImageId}
+        AND l.diary_image_id = ${diaryImageId}
+      RETURNING
+        likes.*;
+    `;
+
+    return like;
+  },
+);
+
+export const deletePersonalLike = cache(
+  async (sessionToken: Session['token'], diaryImageId: DiaryImage['id']) => {
+    const [like] = await sql<Like[]>`
+      DELETE FROM likes USING sessions s,
+      journeys j,
+      diaries d,
+      diary_images di,
+      likes l
+      WHERE
+        s.user_id = j.user_id
+        AND j.id = d.journey_id
+        AND d.id = di.diary_id
+        AND di.id = likes.diary_image_id
+        AND s.token = ${sessionToken}
+        AND s.expiry_timestamp > now()
+        AND di.id = ${diaryImageId}
+        AND l.diary_image_id = ${diaryImageId}
       RETURNING
         likes.*;
     `;

@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
-import { createLike, deleteLike } from '../../../../database/likes';
-import type { Like } from '../../../../migrations/00006-createTableDiaryImageLikes';
+import {
+  createLike,
+  createPersonalLike,
+  deleteLike,
+  deletePersonalLike,
+} from '../../../../database/likes';
+import {
+  type Like,
+  likeSchemaPersonal,
+} from '../../../../migrations/00006-createTableDiaryImageLikes';
 import { checkAuthentication } from '../../../../util/auth';
 
 type LikeParams = {
@@ -21,16 +29,43 @@ export async function POST(
   request: Request,
   { params }: LikeParams,
 ): Promise<NextResponse<LikeResponseBodyCud>> {
-  // 1. Check authentication
-  const { sessionTokenCookie } = await checkAuthentication(undefined);
+  // 1. Get the user id from the request
+  const body = await request.json();
 
-  // 2. Create the like
-  const newLike = await createLike(
-    sessionTokenCookie.value,
-    Number((await params).diaryImageId),
-  );
+  // 2. Validate the user id with zod
+  const result = likeSchemaPersonal.safeParse(body);
 
-  // 3. If the creation of the new like fails, return an error
+  if (!result.success) {
+    return NextResponse.json(
+      {
+        error: `Request does not contain user id: ${result.error.message}`,
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  // 3. Check authentication
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
+
+  // 4. Create the like
+  let newLike;
+  if (user.id === result.data.journeyUserId) {
+    console.log('Personal like');
+    newLike = await createPersonalLike(
+      sessionTokenCookie.value,
+      Number((await params).diaryImageId),
+    );
+  } else {
+    console.log('Other like');
+    newLike = await createLike(
+      sessionTokenCookie.value,
+      Number((await params).diaryImageId),
+    );
+  }
+
+  // 5. If the creation of the new like fails, return an error
   if (!newLike) {
     return NextResponse.json(
       { error: 'Like not created or access denied creating like.' },
@@ -40,7 +75,7 @@ export async function POST(
     );
   }
 
-  // 4. Return the new like
+  // 6. Return the new like
   return NextResponse.json({ like: newLike });
 }
 
@@ -48,16 +83,41 @@ export async function DELETE(
   request: Request,
   { params }: LikeParams,
 ): Promise<NextResponse<LikeResponseBodyCud>> {
-  // 1. Check authentication
-  const { sessionTokenCookie } = await checkAuthentication(undefined);
+  // 1. Get the user id from the request
+  const body = await request.json();
 
-  // 2. Delete like
-  const deletedLike = await deleteLike(
-    sessionTokenCookie.value,
-    Number((await params).diaryImageId),
-  );
+  // 2. Validate the user id with zod
+  const result = likeSchemaPersonal.safeParse(body);
 
-  // 3. If the deletion of the like fails, return an error
+  if (!result.success) {
+    return NextResponse.json(
+      {
+        error: `Request does not contain user id: ${result.error.message}`,
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
+  // 3. Check authentication
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
+
+  // 4. Delete like
+  let deletedLike;
+  if (user.id === result.data.journeyUserId) {
+    deletedLike = await deletePersonalLike(
+      sessionTokenCookie.value,
+      Number((await params).diaryImageId),
+    );
+  } else {
+    deletedLike = await deleteLike(
+      sessionTokenCookie.value,
+      Number((await params).diaryImageId),
+    );
+  }
+
+  // 5. If the deletion of the like fails, return an error
   if (!deletedLike) {
     return NextResponse.json(
       {
@@ -69,6 +129,6 @@ export async function DELETE(
     );
   }
 
-  // 4. Return deleted like
+  // 6. Return deleted like
   return NextResponse.json({ like: deletedLike });
 }
