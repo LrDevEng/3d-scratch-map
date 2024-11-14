@@ -16,6 +16,23 @@ type NotificationResponse = {
   status: number;
 };
 
+// --- DB --------------------------------------------------------------------
+// Postgres connection with 'pg' library (supports listen/notify out of the box)
+// Using one global client for all endpoints
+const postgresClient = new Client({
+  user: process.env.PGUSERNAME,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: 5432,
+});
+
+// Connect to postgres client
+await postgresClient.connect();
+
+// Listen to the postgres notifications on 'follower_updates' channel
+await postgresClient.query('LISTEN follower_updates;');
+
 export async function GET(
   request: Request,
   { params }: FollowerNotificationParams,
@@ -30,22 +47,6 @@ export async function GET(
     return NextResponse.json({ error: 'Not authorized.', status: 401 });
   }
 
-  // --- DB --------------------------------------------------------------------
-  // Postgres connection with 'pg' library (supports listen/notify out of the box)
-  const postgresClient = new Client({
-    user: process.env.PGUSERNAME,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: 5432,
-  });
-
-  // Connect to postgres client
-  await postgresClient.connect();
-
-  // Listen to the postgres notifications on 'follower_updates' channel
-  await postgresClient.query('LISTEN follower_updates;');
-
   // --- SSE -------------------------------------------------------------------
   // Create stream, writer and encoder
   const stream = new TransformStream();
@@ -57,8 +58,10 @@ export async function GET(
   signal.addEventListener('abort', () => {
     // Close writer and end postgres connection
     writer.close().catch((error) => console.log(error));
-    postgresClient.end().catch((error) => console.log(error));
     console.log('Follower notification closed on endpoint: ', userEndpoint);
+
+    // After adding one global connection from the server to postgres, closing the postgres client is not required anymore
+    // postgresClient.end().catch((error) => console.log(error));
   });
 
   // Send data to the stream

@@ -115,9 +115,12 @@ export default function DiaryForm({
           {imgUrls && imgUrls.length > 0 && (
             <div className="relative h-[150px] w-full">
               <ImageCarousel
-                imageUrls={imgUrls}
+                diaryImages={undefined}
+                previewUrls={imgUrls}
+                diaryImageLikes={undefined}
                 enableFullScreen={false}
                 height="h-[150px]"
+                onLikeClick={() => {}}
               />
             </div>
           )}
