@@ -16,27 +16,20 @@ export default function FollowingAccepted({ followingUsers }: Props) {
   const router = useRouter();
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full flex-col">
       <div className="flex w-full items-center">
         <HorizontalDivider />
         <h3 className="mx-4 text-nowrap">you are following</h3>
         <HorizontalDivider />
       </div>
       <table>
-        <thead>
-          <tr>
-            <th />
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
         <tbody>
           {followingUsers.map((followingUser) => {
             return (
               <tr key={`found-user-${followingUser.id}`}>
-                <td className="py-2">
+                <td className="w-[60px] py-2">
                   <Link href={`/my-globe/${followingUser.id}`}>
-                    <div className="duration-250 relative h-[50px] w-[50px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.5)]">
+                    <div className="duration-250 relative h-[50px] w-[50px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_20px_3px_rgba(255,255,255,0.5)]">
                       <Image
                         className="rounded-full object-contain"
                         src={
@@ -51,10 +44,17 @@ export default function FollowingAccepted({ followingUsers }: Props) {
                     </div>
                   </Link>
                 </td>
-                <td className="px-4 py-2">{followingUser.givenName}</td>
-                <td className="py-2">{followingUser.email}</td>
-
-                <td className="px-4 py-2">
+                <td className="w-24 overflow-ellipsis px-4 py-2">
+                  <div className="w-24 overflow-hidden text-ellipsis">
+                    {followingUser.givenName}
+                  </div>
+                </td>
+                <td className="w-48 py-2">
+                  <div className="w-48 overflow-hidden text-ellipsis">
+                    {followingUser.email}
+                  </div>
+                </td>
+                <td className="w-96 px-4 py-2">
                   <button
                     className="btn btn-ghost"
                     onClick={async () => {

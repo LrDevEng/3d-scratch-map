@@ -5,7 +5,7 @@ import {
   getJourneys,
   getJourneysByFollowingId,
 } from '../../../database/journeys';
-import { checkAuthorization } from '../../../util/auth';
+import { checkAuthentication } from '../../../util/auth';
 import { getCountries } from '../../../util/localdata';
 import { validateUrlParam } from '../../../util/validation';
 import UserGlobe from './UserGlobe';
@@ -17,7 +17,7 @@ type Props = {
 
 export default async function GlobeLayout({ children, params }: Props) {
   const { userId } = await params;
-  const { user, sessionTokenCookie } = await checkAuthorization(
+  const { user, sessionTokenCookie } = await checkAuthentication(
     `/my-globe/${userId}`,
   );
 

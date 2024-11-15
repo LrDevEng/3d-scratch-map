@@ -37,13 +37,19 @@ export const acceptFollowRequest = cache(
       UPDATE followers
       SET
         status = ${1}
-      FROM
-        followers f
-        JOIN sessions s ON f.user_id2 = s.user_id
       WHERE
-        s.token = ${sessionToken}
-        AND s.expiry_timestamp > now()
-        AND f.user_id1 = ${userId}
+        id = (
+          SELECT
+            f.id
+          FROM
+            followers f
+            JOIN sessions s ON f.user_id2 = s.user_id
+          WHERE
+            s.token = ${sessionToken}
+            AND s.expiry_timestamp > now()
+            AND f.user_id1 = ${userId}
+            AND status = ${0}
+        )
       RETURNING
         followers.id,
         followers.user_id1,

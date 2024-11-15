@@ -13,8 +13,10 @@ import {
   getJourney,
   getJourneyByFollowingId,
 } from '../../../../../database/journeys';
+import { getLikesInsecure } from '../../../../../database/likes';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
-import { checkAuthorization } from '../../../../../util/auth';
+import type { Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import { checkAuthentication } from '../../../../../util/auth';
 import { validateUrlParam } from '../../../../../util/validation';
 import JourneyDetailedView from './JourneyDetailedView';
 
@@ -24,7 +26,7 @@ type Props = {
 
 export default async function JourneyDetailed(props: Props) {
   const { userId, country, journey } = await props.params;
-  const { user, sessionTokenCookie } = await checkAuthorization(
+  const { user, sessionTokenCookie } = await checkAuthentication(
     `/my-globe/${userId}/${country}/${journey}`,
   );
 
@@ -65,16 +67,23 @@ export default async function JourneyDetailed(props: Props) {
     redirect(`/my-globe/${userId}/${country}`);
   }
 
-  // Get diaries and diary images
+  // Get diaries, diary images and diary image likes
   let personalGlobe = true;
   let diaries;
   let diaryImages: DiaryImage[] = [];
+  let diaryImageLikes: Like[] = [];
   if (user.id === Number(userId)) {
     diaries = await getDiaries(sessionTokenCookie.value, specificJourney.id);
     for (const diary of diaries) {
       diaryImages = [
         ...diaryImages,
         ...(await getDiaryImages(sessionTokenCookie.value, diary.id)),
+      ];
+    }
+    for (const diaryImage of diaryImages) {
+      diaryImageLikes = [
+        ...diaryImageLikes,
+        ...(await getLikesInsecure(diaryImage.id)),
       ];
     }
   } else {
@@ -94,6 +103,12 @@ export default async function JourneyDetailed(props: Props) {
         )),
       ];
     }
+    for (const diaryImage of diaryImages) {
+      diaryImageLikes = [
+        ...diaryImageLikes,
+        ...(await getLikesInsecure(diaryImage.id)),
+      ];
+    }
     personalGlobe = false;
   }
 
@@ -103,8 +118,10 @@ export default async function JourneyDetailed(props: Props) {
         journey={specificJourney}
         diaries={diaries}
         diaryImages={diaryImages}
+        diaryImageLikes={diaryImageLikes}
         country={country}
-        userId={userId}
+        globeUserId={userId}
+        currentUserId={user.id}
         personalGlobe={personalGlobe}
       />
     </div>

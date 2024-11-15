@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import DeleteButton from '../../../../components/DeleteButton';
 import ImageCarousel from '../../../../components/ImageCarousel';
+import LoadingRing from '../../../../components/LoadingRing';
 import { uploadImage } from './actions';
 import { createOrUpdateDiary, deleteDiary } from './diaryApiCalls';
 import { createDiaryImage } from './diaryImageApiCalls';
@@ -34,6 +35,7 @@ export default function DiaryForm({
   const [imgsToUpload, setImgsToUpload] = useState<File[] | undefined>(
     undefined,
   );
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (diary) {
@@ -53,11 +55,23 @@ export default function DiaryForm({
     };
   }, [imgUrls]);
 
+  if (loading) {
+    return (
+      <div className="mb-8">
+        <LoadingRing />
+      </div>
+    );
+  }
+
   return (
     <div className="mb-8 flex w-full max-w-[600px] flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
+
+          // Set loading state
+          setLoading(true);
+
           const diaryId = diary?.id || undefined;
 
           const response = await createOrUpdateDiary(
@@ -107,6 +121,7 @@ export default function DiaryForm({
           if (onSubmit) {
             onSubmit();
           }
+          setLoading(false);
           router.refresh();
         }}
         className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
@@ -115,9 +130,13 @@ export default function DiaryForm({
           {imgUrls && imgUrls.length > 0 && (
             <div className="relative h-[150px] w-full">
               <ImageCarousel
-                imageUrls={imgUrls}
+                currentUserId={undefined}
+                diaryImages={undefined}
+                previewUrls={imgUrls}
+                diaryImageLikes={undefined}
                 enableFullScreen={false}
                 height="h-[150px]"
+                onLikeClick={() => {}}
               />
             </div>
           )}

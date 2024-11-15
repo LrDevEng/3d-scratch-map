@@ -3,7 +3,7 @@ import {
   getJourneys,
   getJourneysByFollowingId,
 } from '../../../../database/journeys';
-import { checkAuthorization } from '../../../../util/auth';
+import { checkAuthentication } from '../../../../util/auth';
 import { getCountries } from '../../../../util/localdata';
 import { validateUrlParam } from '../../../../util/validation';
 import CountryOverview from './CountryOverview';
@@ -14,7 +14,7 @@ type Props = {
 
 export default async function UserSpace(props: Props) {
   const { country, userId } = await props.params;
-  const { user, sessionTokenCookie } = await checkAuthorization(
+  const { user, sessionTokenCookie } = await checkAuthentication(
     `/my-globe/${userId}/${country}`,
   );
   const countryData = await getCountries();

@@ -7,7 +7,7 @@ export default function SearchBar(
   >,
 ) {
   return (
-    <div className="input input-bordered flex items-center gap-2">
+    <div className="input input-bordered flex w-[300px] items-center gap-2">
       <input className="grow" placeholder="search (email)" {...props} />
       <svg
         xmlns="http://www.w3.org/2000/svg"

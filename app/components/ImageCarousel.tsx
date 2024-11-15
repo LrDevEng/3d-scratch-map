@@ -2,20 +2,31 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import type { DiaryImage } from '../../migrations/00004-createTableDiaryImages';
+import type { Like } from '../../migrations/00006-createTableDiaryImageLikes';
 import BackwardsButton from './BackwardsButton';
 import ForwardsButton from './ForwardsButton';
+import LikeButton from './LikeButton';
 import MaxMinButton from './MaxMinButton';
 
 type Props = {
-  imageUrls: string[];
+  currentUserId: number | undefined;
+  diaryImages: DiaryImage[] | undefined;
+  previewUrls: string[] | undefined;
+  diaryImageLikes: Like[] | undefined;
   enableFullScreen?: boolean;
   height?: string;
+  onLikeClick: (diaryImageId: DiaryImage['id'] | undefined) => void;
 };
 
 export default function ImageCarousel({
-  imageUrls,
+  currentUserId,
+  diaryImages,
+  previewUrls,
+  diaryImageLikes,
   enableFullScreen = true,
   height = 'h-[300px]',
+  onLikeClick,
 }: Props) {
   const [currentImgIdx, setCurrentImgIdx] = useState(0);
   const [fullScreen, setFullScreen] = useState(false);
@@ -26,10 +37,15 @@ export default function ImageCarousel({
   const fullScreenClassesButton = fullScreen
     ? 'bg-black rounded-full border-2 border-white'
     : '';
+  const imgUrls = diaryImages
+    ? diaryImages.map((diaryImage) => diaryImage.imageUrl)
+    : previewUrls;
 
   useEffect(() => {
-    setCurrentImgIdx(0);
-  }, [imageUrls]);
+    if (previewUrls) {
+      setCurrentImgIdx(0);
+    }
+  }, [previewUrls]);
 
   return (
     <div className={`flex w-full items-center ${fullScreenClassesMain}`}>
@@ -54,9 +70,43 @@ export default function ImageCarousel({
             />
           </div>
         )}
-        {imageUrls[currentImgIdx] && (
+        {enableFullScreen && diaryImages && diaryImageLikes && (
+          <div className="absolute right-0 top-0 z-10">
+            <div className="flex items-center">
+              <div className="text-xl font-bold">
+                {diaryImageLikes.reduce((total, like) => {
+                  if (like.diaryImageId === diaryImages[currentImgIdx]?.id) {
+                    return total + 1;
+                  } else {
+                    return total;
+                  }
+                }, 0)}
+              </div>
+              <LikeButton
+                liked={
+                  currentUserId
+                    ? diaryImageLikes.some(
+                        (diaryImageLike) =>
+                          diaryImageLike.diaryImageId ===
+                            diaryImages[currentImgIdx]?.id &&
+                          diaryImageLike.userId === currentUserId,
+                      )
+                    : false
+                }
+                onClick={() => {
+                  onLikeClick(diaryImages[currentImgIdx]?.id);
+                }}
+              />
+            </div>
+          </div>
+        )}
+        {imgUrls && (
           <Image
-            src={imageUrls[currentImgIdx]}
+            src={
+              imgUrls[currentImgIdx]
+                ? imgUrls[currentImgIdx]
+                : '/images/logo-terra-scratch-4.png'
+            }
             className="rounded-2xl object-contain"
             fill={true}
             sizes="(max-width: 80vw)"
@@ -66,7 +116,8 @@ export default function ImageCarousel({
       </div>
       <div className="flex w-14 justify-center">
         <div className={`w-fit ${fullScreenClassesButton}`}>
-          {currentImgIdx < imageUrls.length - 1 && (
+          {((diaryImages && currentImgIdx < diaryImages.length - 1) ||
+            (previewUrls && currentImgIdx < previewUrls.length - 1)) && (
             <ForwardsButton
               type="button"
               onClick={() => setCurrentImgIdx((prev) => prev + 1)}

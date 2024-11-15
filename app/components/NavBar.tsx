@@ -1,7 +1,9 @@
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getFollowerUsers } from '../../database/followers';
 import { getUser } from '../../database/users';
+import FollowerUpdates from '../followers/FollowerUpdates';
 
 export default async function NavBar() {
   // 1. Checking if the sessionToken cookie exists
@@ -9,6 +11,16 @@ export default async function NavBar() {
 
   // 2. Get the current logged in user from the database using the sessionToken value
   const user = sessionTokenCookie && (await getUser(sessionTokenCookie.value));
+
+  let followerUsersPending = undefined;
+  if (sessionTokenCookie) {
+    // Follower users
+    const followerUsers = await getFollowerUsers(sessionTokenCookie.value);
+    // Follower users pending
+    followerUsersPending = followerUsers.filter(
+      (followerUser) => followerUser.status === 0,
+    );
+  }
 
   return (
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
@@ -30,12 +42,20 @@ export default async function NavBar() {
             my globe
           </Link>
         )}
+        {user && <FollowerUpdates currentUserId={user.id} />}
         {user && (
           <Link
-            className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
+            className="relative px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
             href="/followers"
           >
             followers
+            {followerUsersPending && followerUsersPending.length > 0 && (
+              <div className="absolute right-0 top-0 flex h-7 w-7 items-center rounded-full bg-[#66b14e]">
+                <div className="m-auto w-fit text-base">
+                  {followerUsersPending.length}
+                </div>
+              </div>
+            )}
           </Link>
         )}
         <Link

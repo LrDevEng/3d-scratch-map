@@ -6,9 +6,9 @@ import React, { useState } from 'react';
 import type { Journey } from '../../../../../migrations/00002-createTableJourneys';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
+import type { Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
 import AddButton from '../../../../components/AddButton';
 import BackButton from '../../../../components/BackButton';
-import EditButton from '../../../../components/EditButton';
 import HorizontalDivider from '../../../../components/HorizontalDivider';
 import DiaryForm from './DiaryForm';
 import DiaryView from './DiaryView';
@@ -17,8 +17,10 @@ type Props = {
   journey: Journey;
   diaries: Diary[];
   diaryImages: DiaryImage[];
+  diaryImageLikes: Like[];
   country: string;
-  userId: string;
+  globeUserId: string;
+  currentUserId: number;
   personalGlobe: boolean;
 };
 
@@ -31,8 +33,10 @@ export default function JourneyDetailedView({
   journey,
   diaries,
   diaryImages,
+  diaryImageLikes,
   country,
-  userId,
+  globeUserId,
+  currentUserId,
   personalGlobe,
 }: Props) {
   const router = useRouter();
@@ -64,12 +68,15 @@ export default function JourneyDetailedView({
             />
           )}
         </div>
-        <div className="relative z-10 flex justify-between bg-black bg-opacity-50">
-          <BackButton
-            onClick={() => router.replace(`/my-globe/${userId}/${country}`)}
-          />
-          <h1 className="text-center">{journey.title}</h1>
-          <EditButton />
+        <div className="relative z-10 flex w-full items-center justify-center bg-black bg-opacity-50">
+          <div className="absolute left-0 top-0">
+            <BackButton
+              onClick={() =>
+                router.replace(`/my-globe/${globeUserId}/${country}`)
+              }
+            />
+          </div>
+          <h1 className="w-fit">{journey.title}</h1>
         </div>
         <div className="relative z-10 flex justify-between bg-black bg-opacity-50 pt-2">
           <div className="pl-4">From: {journey.dateStart.toDateString()}</div>
@@ -130,10 +137,13 @@ export default function JourneyDetailedView({
           return (
             <div key={`diary-${diary.id}`}>
               <DiaryView
+                journeyUserId={journey.userId}
+                currentUserId={currentUserId}
                 diary={diary}
                 diaryImages={diaryImages.filter(
                   (diaryImage) => diaryImage.diaryId === diary.id,
                 )}
+                diaryImageLikes={diaryImageLikes}
                 personalGlobe={personalGlobe}
                 onEdit={() =>
                   setShowDiaryForm((prev) => ({

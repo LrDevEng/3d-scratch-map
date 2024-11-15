@@ -1,5 +1,5 @@
-import { checkAuthorization } from '../../../util/auth';
+import { checkAuthentication } from '../../../util/auth';
 
 export default async function Globe() {
-  await checkAuthorization('/');
+  await checkAuthentication('/');
 }

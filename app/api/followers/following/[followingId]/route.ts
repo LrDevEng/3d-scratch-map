@@ -4,7 +4,7 @@ import {
   stopFollowingUser,
 } from '../../../../../database/followers';
 import type { Follower } from '../../../../../migrations/00005-createTableFollowers';
-import { checkAuthorization } from '../../../../../util/auth';
+import { checkAuthentication } from '../../../../../util/auth';
 
 type FollowingParams = {
   params: Promise<{
@@ -25,7 +25,7 @@ export async function POST(
   { params }: FollowingParams,
 ): Promise<NextResponse<FollowResponseBodyCud>> {
   // 1. Get the token from the cookie
-  const { sessionTokenCookie } = await checkAuthorization(undefined);
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Create the follower
   const newFollower = await followRequest(
@@ -52,7 +52,7 @@ export async function DELETE(
   { params }: FollowingParams,
 ): Promise<NextResponse<FollowResponseBodyCud>> {
   // 1. Get the token and user from the session cookie
-  const { sessionTokenCookie } = await checkAuthorization(undefined);
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Stop following
   const deletedFollower = await stopFollowingUser(

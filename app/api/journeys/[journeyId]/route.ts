@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { deleteJourney, updateJourney } from '../../../../database/journeys';
 import { journeySchema } from '../../../../migrations/00002-createTableJourneys';
-import { checkAuthorization } from '../../../../util/auth';
+import { checkAuthentication } from '../../../../util/auth';
 import { type JourneyResponseBodyCud } from '../route';
 
 type JourneyParams = {
@@ -32,7 +32,7 @@ export async function PUT(
   }
 
   // 3. Get the token and user from the session cookie
-  const { user, sessionTokenCookie } = await checkAuthorization(undefined);
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 4. Update journey
   const updatedJourney = await updateJourney(
@@ -67,7 +67,7 @@ export async function DELETE(
   { params }: JourneyParams,
 ): Promise<NextResponse<JourneyResponseBodyCud>> {
   // 1. Get the token and user from the session cookie
-  const { user, sessionTokenCookie } = await checkAuthorization(undefined);
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Delete the journey
   const deletedJourney = await deleteJourney(

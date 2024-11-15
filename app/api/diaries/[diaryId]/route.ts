@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { deleteDiary, updateDiary } from '../../../../database/diaries';
 import { diarySchema } from '../../../../migrations/00003-createTableDiaries';
-import { checkAuthorization } from '../../../../util/auth';
+import { checkAuthentication } from '../../../../util/auth';
 import type { DiaryResponseBodyCud } from '../route';
 
 type DiaryParams = {
@@ -32,7 +32,7 @@ export async function PUT(
   }
 
   // 3. Get the token and user from the session cookie
-  const { user, sessionTokenCookie } = await checkAuthorization(undefined);
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 4. Update diary
   const updatedDiary = await updateDiary(sessionTokenCookie.value, user.id, {
@@ -61,7 +61,7 @@ export async function DELETE(
   { params }: DiaryParams,
 ): Promise<NextResponse<DiaryResponseBodyCud>> {
   // 1. Get the token and user from the session cookie
-  const { user, sessionTokenCookie } = await checkAuthorization(undefined);
+  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Delete the diary#
   const deletedDiary = await deleteDiary(
