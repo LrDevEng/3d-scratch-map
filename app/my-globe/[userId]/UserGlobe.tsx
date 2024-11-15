@@ -86,6 +86,26 @@ export default function UserGlobe({
           </div>
         )}
       </div>
+      <div className="absolute left-0 top-0 z-50">
+        <div className="mx-8 my-4 rounded-xl border border-white bg-base-100 px-4 py-4">
+          <h3>Control Center</h3>
+          <div className="mt-2 flex">
+            <div className="mr-4">zoom:</div>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value="5"
+              className="range"
+              onChange={() => {}}
+            />
+          </div>
+          <div className="mt-2 flex w-full justify-between">
+            <div className="mr-4">auto rotate:</div>
+            <input type="checkbox" defaultChecked className="checkbox" />
+          </div>
+        </div>
+      </div>
       <div
         className={`absolute right-0 top-0 z-50 ${selected ? 'bg-black' : ''}`}
       >
