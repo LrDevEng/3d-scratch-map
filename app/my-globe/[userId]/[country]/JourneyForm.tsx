@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { type Journey } from '../../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../../components/DeleteButton';
+import LoadingRing from '../../../components/LoadingRing';
 import { uploadImage } from './actions';
 import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
@@ -30,6 +31,7 @@ export default function JourneyForm({
   const [summary, setSummary] = useState('');
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (journey) {
@@ -50,11 +52,22 @@ export default function JourneyForm({
     };
   }, [imgUrl]);
 
+  if (loading) {
+    return (
+      <div className="mb-8">
+        <LoadingRing />
+      </div>
+    );
+  }
+
   return (
     <div className="mb-8">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
+          // Set loading state
+          setLoading(true);
+
           // Try to upload image to cloudinary and set current image url to new url if successful
           let currentImgUrl = null;
           if (imgToUpload) {
@@ -96,6 +109,7 @@ export default function JourneyForm({
           if (onSubmit) {
             onSubmit();
           }
+          setLoading(false);
           router.refresh();
         }}
         className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
