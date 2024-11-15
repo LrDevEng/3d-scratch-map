@@ -16,6 +16,11 @@ type NotificationResponse = {
   status: number;
 };
 
+// --- Resources SSE ---------------------------------------------------------
+// https://michaelangelo.io/blog/server-sent-events
+// https://vercel.com/blog/an-introduction-to-streaming-on-the-web
+// https://vercel.com/docs/limits/overview#websockets
+
 // --- DB --------------------------------------------------------------------
 // Postgres connection with 'pg' library (supports listen/notify out of the box)
 // Using one global client for all endpoints
@@ -48,7 +53,7 @@ export async function GET(
   }
 
   // --- SSE -------------------------------------------------------------------
-  // Create stream, writer and encoder
+  // Create stream, writer and encoder (utilizing web streams)
   const stream = new TransformStream();
   const writer = stream.writable.getWriter();
   const encoder = new TextEncoder();
@@ -56,7 +61,7 @@ export async function GET(
   // Clean up if client ends connection
   const { signal } = request;
   signal.addEventListener('abort', () => {
-    // Close writer and end postgres connection
+    // Close writer
     writer.close().catch((error) => console.log(error));
     console.log('Follower notification closed on endpoint: ', userEndpoint);
 

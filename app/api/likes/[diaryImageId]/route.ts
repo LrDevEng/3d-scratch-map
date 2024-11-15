@@ -3,7 +3,6 @@ import {
   createLike,
   createPersonalLike,
   deleteLike,
-  deletePersonalLike,
 } from '../../../../database/likes';
 import {
   type Like,
@@ -101,21 +100,13 @@ export async function DELETE(
   }
 
   // 3. Check authentication
-  const { user, sessionTokenCookie } = await checkAuthentication(undefined);
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 4. Delete like
-  let deletedLike;
-  if (user.id === result.data.journeyUserId) {
-    deletedLike = await deletePersonalLike(
-      sessionTokenCookie.value,
-      Number((await params).diaryImageId),
-    );
-  } else {
-    deletedLike = await deleteLike(
-      sessionTokenCookie.value,
-      Number((await params).diaryImageId),
-    );
-  }
+  const deletedLike = await deleteLike(
+    sessionTokenCookie.value,
+    Number((await params).diaryImageId),
+  );
 
   // 5. If the deletion of the like fails, return an error
   if (!deletedLike) {

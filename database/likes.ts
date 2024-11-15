@@ -77,47 +77,18 @@ export const createPersonalLike = cache(
 export const deleteLike = cache(
   async (sessionToken: Session['token'], diaryImageId: DiaryImage['id']) => {
     const [like] = await sql<Like[]>`
-      DELETE FROM likes USING sessions s,
-      followers f,
-      journeys j,
-      diaries d,
-      diary_images di,
-      likes l
+      DELETE FROM likes
       WHERE
-        s.user_id = f.user_id1
-        AND f.user_id2 = j.user_id
-        AND j.id = d.journey_id
-        AND d.id = di.diary_id
-        AND di.id = likes.diary_image_id
-        AND s.token = ${sessionToken}
-        AND s.expiry_timestamp > now()
-        AND di.id = ${diaryImageId}
-        AND l.diary_image_id = ${diaryImageId}
-      RETURNING
-        likes.*;
-    `;
-
-    return like;
-  },
-);
-
-export const deletePersonalLike = cache(
-  async (sessionToken: Session['token'], diaryImageId: DiaryImage['id']) => {
-    const [like] = await sql<Like[]>`
-      DELETE FROM likes USING sessions s,
-      journeys j,
-      diaries d,
-      diary_images di,
-      likes l
-      WHERE
-        s.user_id = j.user_id
-        AND j.id = d.journey_id
-        AND d.id = di.diary_id
-        AND di.id = likes.diary_image_id
-        AND s.token = ${sessionToken}
-        AND s.expiry_timestamp > now()
-        AND di.id = ${diaryImageId}
-        AND l.diary_image_id = ${diaryImageId}
+        likes.diary_image_id = ${diaryImageId}
+        AND likes.user_id = (
+          SELECT
+            s.user_id
+          FROM
+            sessions s
+          WHERE
+            s.token = ${sessionToken}
+            AND s.expiry_timestamp > now()
+        )
       RETURNING
         likes.*;
     `;

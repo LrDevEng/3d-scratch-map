@@ -16,19 +16,18 @@ export default function FollowerUpdates({ currentUserId }: Props) {
       `/api/followers/updates/${currentUserId}`,
     );
 
+    // Handle incoming messages
     eventSource.onmessage = function (event) {
-      // Handle the incoming update (for example, log it)
       console.log('Follower update received:', event.data);
-      // You can update your state here or trigger any side-effects
       router.refresh();
     };
 
-    // Handle errors (optional)
+    // Handle incoming errors
     eventSource.onerror = function (error) {
       console.error('EventSource failed:', error);
     };
 
-    // Cleanup on component unmount
+    // Clean up
     return () => {
       eventSource.close();
     };

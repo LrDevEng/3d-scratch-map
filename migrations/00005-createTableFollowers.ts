@@ -26,7 +26,7 @@ export async function up(sql: Sql) {
     )
   `;
 
-  // Notify trigger
+  // Create notification trigger
   await sql`
     CREATE
     OR REPLACE function notify_follower_update () returns trigger AS $$
@@ -43,7 +43,7 @@ export async function up(sql: Sql) {
     $$ language plpgsql;
   `;
 
-  // Attach the trigger
+  // Attach the trigger to the followers table
   await sql`
     CREATE TRIGGER follower_update_trigger
     AFTER insert
