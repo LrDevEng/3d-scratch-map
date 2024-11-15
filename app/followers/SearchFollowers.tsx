@@ -19,7 +19,7 @@ export default function SearchFollowers({ followingIds }: Props) {
   const [foundUsers, setFoundUsers] = useState<Omit<User, 'familyName'>[]>();
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -49,6 +49,7 @@ export default function SearchFollowers({ followingIds }: Props) {
             }
           }
 
+          setSearchTerm('');
           router.refresh();
         }}
       >
@@ -58,14 +59,7 @@ export default function SearchFollowers({ followingIds }: Props) {
         />
       </form>
       {foundUsers && foundUsers.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th />
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
+        <table className="mt-4">
           <tbody>
             {foundUsers.map((foundUser) => {
               return (

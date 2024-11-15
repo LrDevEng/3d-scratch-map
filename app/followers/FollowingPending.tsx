@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import type { FollowingUser } from '../../migrations/00000-createTableUsers';
 import type { FollowResponseBodyCud } from '../api/followers/following/[followingId]/route';
-import HorizontalDivider from '../components/HorizontalDivider';
 
 type Props = {
   followingUsers: FollowingUser[];
@@ -15,25 +14,13 @@ export default function FollowingPending({ followingUsers }: Props) {
   const router = useRouter();
 
   return (
-    <div className="flex w-full flex-col items-center">
-      <div className="flex w-full items-center">
-        <HorizontalDivider />
-        <h3 className="mx-4 text-nowrap">Following (Pending)</h3>
-        <HorizontalDivider />
-      </div>
+    <div className="flex w-full flex-col">
       <table>
-        <thead>
-          <tr>
-            <th />
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
         <tbody>
           {followingUsers.map((followingUser) => {
             return (
               <tr key={`found-user-${followingUser.id}`}>
-                <td className="py-2">
+                <td className="w-[60px] py-2">
                   <div className="h-[50px] w-[50px] rounded-full border-2 border-white">
                     <Image
                       className="rounded-full object-contain"
@@ -48,9 +35,17 @@ export default function FollowingPending({ followingUsers }: Props) {
                     />
                   </div>
                 </td>
-                <td className="px-4 py-2">{followingUser.givenName}</td>
-                <td className="py-2">{followingUser.email}</td>
-                <td className="px-4 py-2">
+                <td className="w-24 overflow-ellipsis px-4 py-2">
+                  <div className="w-24 overflow-hidden text-ellipsis">
+                    {followingUser.givenName}
+                  </div>
+                </td>
+                <td className="w-48 py-2">
+                  <div className="w-48 overflow-hidden text-ellipsis">
+                    {followingUser.email}
+                  </div>
+                </td>
+                <td className="w-72 px-4 py-2">
                   <button
                     className="btn btn-ghost"
                     onClick={async () => {
@@ -76,6 +71,7 @@ export default function FollowingPending({ followingUsers }: Props) {
                     revoke request
                   </button>
                 </td>
+                <td className="w-24 py-2 text-end text-[#66b14e]">pending</td>
               </tr>
             );
           })}

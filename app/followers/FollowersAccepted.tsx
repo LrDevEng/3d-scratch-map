@@ -20,25 +20,18 @@ export default function FollowersAccepted({
   const router = useRouter();
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full flex-col">
       <div className="flex w-full items-center">
         <HorizontalDivider />
         <h3 className="mx-4 text-nowrap">your followers</h3>
         <HorizontalDivider />
       </div>
       <table>
-        <thead>
-          <tr>
-            <th />
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
         <tbody>
           {followerUsers.map((followerUser) => {
             return (
               <tr key={`found-user-${followerUser.id}`}>
-                <td className="py-2">
+                <td className="w-[60px] py-2">
                   <div className="h-[50px] w-[50px] rounded-full border-2 border-white">
                     <Image
                       className="rounded-full object-contain"
@@ -53,9 +46,17 @@ export default function FollowersAccepted({
                     />
                   </div>
                 </td>
-                <td className="px-4 py-2">{followerUser.givenName}</td>
-                <td className="py-2">{followerUser.email}</td>
-                <td className="px-4 py-2">
+                <td className="w-24 overflow-ellipsis px-4 py-2">
+                  <div className="w-24 overflow-hidden text-ellipsis">
+                    {followerUser.givenName}
+                  </div>
+                </td>
+                <td className="w-48 py-2">
+                  <div className="w-48 overflow-hidden text-ellipsis">
+                    {followerUser.email}
+                  </div>
+                </td>
+                <td className="w-48 px-4 py-2">
                   <button
                     className="btn btn-ghost"
                     onClick={async () => {
@@ -81,10 +82,10 @@ export default function FollowersAccepted({
                     remove
                   </button>
                 </td>
-                {!followingUsers.some(
-                  (followingUser) => followingUser.id === followerUser.id,
-                ) && (
-                  <td>
+                <td className="w-48">
+                  {!followingUsers.some(
+                    (followingUser) => followingUser.id === followerUser.id,
+                  ) && (
                     <button
                       className="btn btn-ghost"
                       onClick={async () => {
@@ -109,8 +110,8 @@ export default function FollowersAccepted({
                     >
                       follow
                     </button>
-                  </td>
-                )}
+                  )}
+                </td>
               </tr>
             );
           })}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React from 'react';
 import toast from 'react-hot-toast';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
