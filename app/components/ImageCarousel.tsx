@@ -10,6 +10,7 @@ import LikeButton from './LikeButton';
 import MaxMinButton from './MaxMinButton';
 
 type Props = {
+  currentUserId: number | undefined;
   diaryImages: DiaryImage[] | undefined;
   previewUrls: string[] | undefined;
   diaryImageLikes: Like[] | undefined;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export default function ImageCarousel({
+  currentUserId,
   diaryImages,
   previewUrls,
   diaryImageLikes,
@@ -81,7 +83,16 @@ export default function ImageCarousel({
                 }, 0)}
               </div>
               <LikeButton
-                liked={false}
+                liked={
+                  currentUserId
+                    ? diaryImageLikes.some(
+                        (diaryImageLike) =>
+                          diaryImageLike.diaryImageId ===
+                            diaryImages[currentImgIdx]?.id &&
+                          diaryImageLike.userId === currentUserId,
+                      )
+                    : false
+                }
                 onClick={() => {
                   onLikeClick(diaryImages[currentImgIdx]?.id);
                 }}

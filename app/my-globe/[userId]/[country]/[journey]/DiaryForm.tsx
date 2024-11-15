@@ -115,6 +115,7 @@ export default function DiaryForm({
           {imgUrls && imgUrls.length > 0 && (
             <div className="relative h-[150px] w-full">
               <ImageCarousel
+                currentUserId={undefined}
                 diaryImages={undefined}
                 previewUrls={imgUrls}
                 diaryImageLikes={undefined}

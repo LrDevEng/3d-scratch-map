@@ -29,7 +29,7 @@ export default function FollowingAccepted({ followingUsers }: Props) {
               <tr key={`found-user-${followingUser.id}`}>
                 <td className="w-[60px] py-2">
                   <Link href={`/my-globe/${followingUser.id}`}>
-                    <div className="duration-250 relative h-[50px] w-[50px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_0_3px_rgba(255,255,255,0.5)]">
+                    <div className="duration-250 relative h-[50px] w-[50px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_20px_3px_rgba(255,255,255,0.5)]">
                       <Image
                         className="rounded-full object-contain"
                         src={

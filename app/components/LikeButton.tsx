@@ -6,11 +6,11 @@ interface LikeButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export default function LikeButton({ liked, ...props }: LikeButtonProps) {
   // w3 svg icon overview: https://iconsvg.xyz/
-  const bgColor = liked ? 'bg-[#ff0000]' : 'bg-transparent';
+  const fill = liked ? '#ff0000' : 'none';
 
   return (
     <button
-      className={`btn btn-circle border-none hover:bg-transparent ${bgColor}`}
+      className="btn btn-circle border-none bg-transparent hover:bg-transparent"
       {...props}
     >
       <svg
@@ -19,7 +19,7 @@ export default function LikeButton({ liked, ...props }: LikeButtonProps) {
         width="32"
         height="32"
         viewBox="0 0 24 24"
-        fill="none"
+        fill={fill}
         stroke="#ffffff"
         strokeWidth="2"
         strokeLinecap="round"
