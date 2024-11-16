@@ -9,6 +9,10 @@ import type { FollowingUser } from '../../../migrations/00000-createTableUsers';
 import { parseGenitive } from '../../../util/parsers';
 import CloseButton from '../../components/CloseButton';
 import { type Props as SpaceProps } from '../../components/Space';
+import {
+  useAutoRotateGlobe,
+  useAutoRotateStars,
+} from '../../stores/useControls';
 
 const Space = dynamic(() => import('../../components/Space'), {
   ssr: false,
@@ -52,6 +56,10 @@ export default function UserGlobe({
 
   // State
   const [isLoading, setIsLoading] = useState(true);
+  const globeRotation = useAutoRotateGlobe((state) => state.rotate);
+  const updateGlobeRotation = useAutoRotateGlobe((state) => state.update);
+  const starRotation = useAutoRotateStars((state) => state.rotate);
+  const updateStarRotation = useAutoRotateStars((state) => state.update);
 
   // Derived state
   const selected = selectedCountryAdm0A3?.length === 3;
@@ -67,7 +75,7 @@ export default function UserGlobe({
           earthProps={{
             countryData: countryData,
             visitedCountries: visitedCountries,
-            rotateSelf: true,
+            rotateSelf: globeRotation,
             orbitControlsEnableZoom: true,
             orbitControlsEnableRotate: true,
             showCountryText: true,
@@ -78,6 +86,7 @@ export default function UserGlobe({
             },
           }}
           showHeroText={false}
+          rotateStars={starRotation}
         />
 
         {isLoading && (
@@ -85,26 +94,6 @@ export default function UserGlobe({
             <h1>Loading Interactive 3D Map ...</h1>
           </div>
         )}
-      </div>
-      <div className="absolute left-0 top-0 z-50">
-        <div className="mx-8 my-4 rounded-xl border border-white bg-base-100 px-4 py-4">
-          <h3>Control Center</h3>
-          <div className="mt-2 flex">
-            <div className="mr-4">zoom:</div>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value="5"
-              className="range"
-              onChange={() => {}}
-            />
-          </div>
-          <div className="mt-2 flex w-full justify-between">
-            <div className="mr-4">auto rotate:</div>
-            <input type="checkbox" defaultChecked className="checkbox" />
-          </div>
-        </div>
       </div>
       <div
         className={`absolute right-0 top-0 z-50 ${selected ? 'bg-black' : ''}`}
@@ -142,6 +131,40 @@ export default function UserGlobe({
                 }
               })}
             </select>
+          </div>
+        </div>
+      </div>
+      <div className="absolute left-0 top-0 z-50">
+        <div className="mx-8 my-4 rounded-xl border border-white bg-base-100 px-4 py-4">
+          <h3>Control Center</h3>
+          <div className="mt-2 flex">
+            <div className="mr-4">zoom:</div>
+            <input
+              type="range"
+              min="1"
+              max="10"
+              value="5"
+              className="range"
+              onChange={() => {}}
+            />
+          </div>
+          <div className="mt-2 flex w-full justify-between">
+            <div className="mr-4">auto rotate (globe):</div>
+            <input
+              type="checkbox"
+              checked={globeRotation}
+              onChange={() => updateGlobeRotation(!globeRotation)}
+              className="checkbox"
+            />
+          </div>
+          <div className="mt-2 flex w-full justify-between">
+            <div className="mr-4">auto rotate (stars):</div>
+            <input
+              type="checkbox"
+              checked={starRotation}
+              onChange={() => updateStarRotation(!starRotation)}
+              className="checkbox"
+            />
           </div>
         </div>
       </div>

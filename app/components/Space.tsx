@@ -4,11 +4,13 @@ import {
   AdaptiveDpr,
   AdaptiveEvents,
   PerformanceMonitor,
+  PerspectiveCamera,
   Preload,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent, Suspense, useEffect, useRef } from 'react';
+import type { PerspectiveCamera as PerspectiveCameraImpl } from 'three';
 import { useSpaceRef } from '../stores/useSpace';
 import { type Props as EarthProps } from './EarthOptimized';
 import HeroText from './HeroText';
@@ -21,13 +23,19 @@ const Earth = dynamic(() => import('./EarthOptimized'), {
 export type Props = {
   earthProps: EarthProps;
   showHeroText?: boolean;
+  rotateStars?: boolean;
 };
 
-export default function Space({ earthProps, showHeroText = true }: Props) {
+export default function Space({
+  earthProps,
+  showHeroText = true,
+  rotateStars = true,
+}: Props) {
   const starRadius = 15;
   const spaceRef = useSpaceRef((state) => state.spaceRef);
   const updateSpaceRef = useSpaceRef((state) => state.update);
   const localSpaceRef = useRef<HTMLCanvasElement | null>(null);
+  const cameraRef = useRef<PerspectiveCameraImpl | null>(null);
 
   useEffect(() => {
     if (!spaceRef && localSpaceRef.current) {
@@ -41,6 +49,7 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
       className="cursor-pointer select-none"
       gl={{ powerPreference: 'high-performance' }}
     >
+      <PerspectiveCamera ref={cameraRef} position={[3, 3, 6]} makeDefault />
       <PerformanceMonitor>
         <Suspense>
           <AdaptiveEvents />
@@ -63,13 +72,13 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
           )}
           <Suspense>
             <Earth
+              cameraRef={cameraRef}
               orbitControlsMaxDist={starRadius}
-              rotateSelf={true}
               {...earthProps}
             />
           </Suspense>
         </Suspense>
-        <Starfield starRadius={starRadius} />
+        <Starfield starRadius={starRadius} rotate={rotateStars} />
       </PerformanceMonitor>
     </Canvas>
   );

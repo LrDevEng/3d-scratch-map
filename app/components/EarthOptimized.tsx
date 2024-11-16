@@ -1,17 +1,29 @@
 'use client';
 
-import { Bvh, Line, OrbitControls, Text, useTexture } from '@react-three/drei';
+import type { CameraControls as CameraControlsImpl } from '@react-three/drei';
+import {
+  Bvh,
+  CameraControls,
+  Line,
+  OrbitControls,
+  Text,
+  useTexture,
+} from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { FeatureCollection } from 'geojson';
 import { useParams, useRouter } from 'next/navigation';
+import type { MutableRefObject } from 'react';
 import { useEffect, useMemo, useRef } from 'react';
+import type { PerspectiveCamera as PerspectiveCameraImpl } from 'three';
 import { Mesh, MeshBasicMaterial } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
+import { useCameraZoomPosition } from '../stores/useControls';
 import { useEarthRef } from '../stores/useEarth';
 
 export type Props = {
+  cameraRef?: MutableRefObject<PerspectiveCameraImpl | null>;
   countryData: FeatureCollection;
   visitedCountries?: Set<string>;
   showCoordinateSystem?: boolean;
@@ -68,6 +80,7 @@ export type Props = {
 // });
 
 export default function Earth({
+  cameraRef,
   countryData,
   visitedCountries = new Set<string>(),
   showCoordinateSystem = false,
@@ -109,6 +122,7 @@ export default function Earth({
   const refGlobe = useRef<Mesh>(null);
   const refText = useRef<Mesh>();
   const refCountries = useRef<Mesh[]>([]);
+  const refControls = useRef<CameraControlsImpl | null>(null);
 
   // References from state
   const refEarth = useEarthRef((state) => state.earthRef);
@@ -119,6 +133,14 @@ export default function Earth({
       updateEarthRef(refGlobe);
     }
   }, [refEarth, updateEarthRef]);
+
+  // State
+  const cameraZoomPosition = useCameraZoomPosition(
+    (state) => state.zoomPosition,
+  );
+  const updateCameraZoomPosition = useCameraZoomPosition(
+    (state) => state.update,
+  );
 
   // Url state
   const params = useParams();
@@ -241,6 +263,14 @@ export default function Earth({
             child.material = countryMaterialSelected;
           }
         });
+      }
+    }
+    if (refControls.current) {
+      // https://drei.docs.pmnd.rs/controls/camera-controls
+      // https://yomotsu.github.io/camera-controls/examples/basic.html
+      //https://github.com/yomotsu/camera-controls
+      if (!rotateSelf) {
+        refControls.current.dollyTo(15, false);
       }
     }
     // console.log(delta);
@@ -463,7 +493,8 @@ export default function Earth({
           })}
         </mesh>
       )}
-      <OrbitControls
+      <CameraControls
+        ref={refControls}
         autoRotate={orbitControlsAutoRotate}
         enableZoom={orbitControlsEnableZoom}
         enableRotate={orbitControlsEnableRotate}
