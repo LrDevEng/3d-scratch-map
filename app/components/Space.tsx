@@ -4,13 +4,11 @@ import {
   AdaptiveDpr,
   AdaptiveEvents,
   PerformanceMonitor,
-  PerspectiveCamera,
   Preload,
 } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
 import { type FunctionComponent, Suspense, useEffect, useRef } from 'react';
-import type { PerspectiveCamera as PerspectiveCameraImpl } from 'three';
 import { useSpaceRef } from '../stores/useSpace';
 import { type Props as EarthProps } from './EarthOptimized';
 import HeroText from './HeroText';
@@ -35,7 +33,6 @@ export default function Space({
   const spaceRef = useSpaceRef((state) => state.spaceRef);
   const updateSpaceRef = useSpaceRef((state) => state.update);
   const localSpaceRef = useRef<HTMLCanvasElement | null>(null);
-  const cameraRef = useRef<PerspectiveCameraImpl | null>(null);
 
   useEffect(() => {
     if (!spaceRef && localSpaceRef.current) {
@@ -48,8 +45,8 @@ export default function Space({
       ref={spaceRef || localSpaceRef}
       className="cursor-pointer select-none"
       gl={{ powerPreference: 'high-performance' }}
+      camera={{ position: [3, 3, 6] }}
     >
-      <PerspectiveCamera ref={cameraRef} position={[3, 3, 6]} makeDefault />
       <PerformanceMonitor>
         <Suspense>
           <AdaptiveEvents />
@@ -71,11 +68,7 @@ export default function Space({
             />
           )}
           <Suspense>
-            <Earth
-              cameraRef={cameraRef}
-              orbitControlsMaxDist={starRadius}
-              {...earthProps}
-            />
+            <Earth orbitControlsMaxDist={starRadius} {...earthProps} />
           </Suspense>
         </Suspense>
         <Starfield starRadius={starRadius} rotate={rotateStars} />

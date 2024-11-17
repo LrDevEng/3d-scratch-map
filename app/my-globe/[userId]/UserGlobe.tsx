@@ -12,6 +12,7 @@ import { type Props as SpaceProps } from '../../components/Space';
 import {
   useAutoRotateGlobe,
   useAutoRotateStars,
+  useCameraZoom,
 } from '../../stores/useControls';
 
 const Space = dynamic(() => import('../../components/Space'), {
@@ -60,6 +61,10 @@ export default function UserGlobe({
   const updateGlobeRotation = useAutoRotateGlobe((state) => state.update);
   const starRotation = useAutoRotateStars((state) => state.rotate);
   const updateStarRotation = useAutoRotateStars((state) => state.update);
+  const zoomSlider = useCameraZoom((state) => state.zoomSlider);
+  const updateSliderAndInject = useCameraZoom(
+    (state) => state.updateSliderAndInject,
+  );
 
   // Derived state
   const selected = selectedCountryAdm0A3?.length === 3;
@@ -141,11 +146,14 @@ export default function UserGlobe({
             <div className="mr-4">zoom:</div>
             <input
               type="range"
-              min="1"
-              max="10"
-              value="5"
+              min="-15"
+              max="-2.5"
+              step="0.1"
+              value={-zoomSlider}
               className="range"
-              onChange={() => {}}
+              onChange={(event) => {
+                updateSliderAndInject(-Number(event.target.value));
+              }}
             />
           </div>
           <div className="mt-2 flex w-full justify-between">

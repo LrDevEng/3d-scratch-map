@@ -15,12 +15,18 @@ export const useAutoRotateStars = create<AutoRotate>((set) => ({
   update: (rotate) => set(() => ({ rotate: rotate })),
 }));
 
-interface CameraZoomPosition {
-  zoomPosition: number;
-  update: (newZoomPosition: number) => void;
+interface CameraZoom {
+  zoomSlider: number;
+  injectSlider: boolean;
+  updateSlider: (newZoom: number) => void;
+  updateSliderAndInject: (newZoom: number) => void;
 }
 
-export const useCameraZoomPosition = create<CameraZoomPosition>((set) => ({
-  zoomPosition: 6,
-  update: (newZoomPosition) => set(() => ({ zoomPosition: newZoomPosition })),
+export const useCameraZoom = create<CameraZoom>((set) => ({
+  zoomSlider: 4,
+  injectSlider: false,
+  updateSlider: (newZoom) =>
+    set(() => ({ zoomSlider: newZoom, injectSlider: false })),
+  updateSliderAndInject: (newZoom) =>
+    set(() => ({ zoomSlider: newZoom, injectSlider: true })),
 }));
