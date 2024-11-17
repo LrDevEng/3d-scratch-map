@@ -35,7 +35,6 @@ export type Props = {
   countryElevatedColor?: string;
   orbitControlsMaxDist?: number;
   orbitControlsMinDist?: number;
-  orbitControlsAutoRotate?: boolean;
   orbitControlsEnableZoom?: boolean;
   orbitControlsEnableRotate?: boolean;
   texture?: string;
@@ -91,7 +90,6 @@ export default function Earth({
   countryElevatedColor = '#ff0000',
   orbitControlsMaxDist = 20,
   orbitControlsMinDist = 2.5,
-  orbitControlsAutoRotate = false,
   orbitControlsEnableZoom = false,
   orbitControlsEnableRotate = false,
   texture = '/textures/texture_earth_map_10k.jpg',
@@ -261,13 +259,6 @@ export default function Earth({
           .catch((error) => console.log(error));
         updateSlider(refControls.current.distance);
       }
-      // else if (
-      //   refControls.current.distance !== zoomSlider &&
-      //   !refControls.current.active
-      // ) {
-      //   console.log('Update Slider from scroll');
-      //   updateSlider(refControls.current.distance);
-      // }
     }
     // console.log(delta);
   });
@@ -512,13 +503,11 @@ export default function Earth({
       )}
       <CameraControls
         ref={refControls}
-        autoRotate={orbitControlsAutoRotate}
-        enableZoom={orbitControlsEnableZoom}
-        enableRotate={orbitControlsEnableRotate}
-        autoRotateSpeed={0.1}
-        enablePan={false}
-        zoomSpeed={0.6}
+        enabled={orbitControlsEnableRotate && orbitControlsEnableZoom}
         dollySpeed={0.2}
+        truckSpeed={0}
+        polarRotateSpeed={1.25}
+        azimuthRotateSpeed={1.25}
         maxPolarAngle={Math.PI * 0.9}
         minPolarAngle={Math.PI * 0.1}
         minDistance={orbitControlsMinDist}

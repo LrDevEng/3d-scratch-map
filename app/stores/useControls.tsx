@@ -23,7 +23,7 @@ interface CameraZoom {
 }
 
 export const useCameraZoom = create<CameraZoom>((set) => ({
-  zoomSlider: 4,
+  zoomSlider: 5,
   injectSlider: false,
   updateSlider: (newZoom) =>
     set(() => ({ zoomSlider: newZoom, injectSlider: false })),

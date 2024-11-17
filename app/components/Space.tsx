@@ -45,7 +45,7 @@ export default function Space({
       ref={spaceRef || localSpaceRef}
       className="cursor-pointer select-none"
       gl={{ powerPreference: 'high-performance' }}
-      camera={{ position: [3, 3, 6] }}
+      camera={{ position: [0, 0, 5] }}
     >
       <PerformanceMonitor>
         <Suspense>

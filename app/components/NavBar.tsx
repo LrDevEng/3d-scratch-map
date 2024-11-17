@@ -23,7 +23,7 @@ export default async function NavBar() {
   }
 
   return (
-    <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
+    <nav className="flex h-20 w-screen items-center justify-between border-double border-black border-b-white bg-black px-8">
       <Link className="w-fit" href={`/my-globe/${user?.id}`}>
         <Image
           className="h-auto w-fit"
