@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import type { UserResponseBodyUpdate } from '../api/users/route';
 import EditButton from '../components/EditButton';
 import { uploadImage } from './actions';
 
@@ -38,7 +39,8 @@ export default function ProfilePicture({ profileImgSrc }: Props) {
                 }),
               });
 
-              const responseBody = await response.json();
+              const responseBody: UserResponseBodyUpdate =
+                await response.json();
 
               if ('error' in responseBody) {
                 console.log('Error updating user: ', responseBody.error);

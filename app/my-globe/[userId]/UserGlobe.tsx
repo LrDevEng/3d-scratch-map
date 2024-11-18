@@ -7,7 +7,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { type FunctionComponent, useState } from 'react';
 import type { FollowingUser } from '../../../migrations/00000-createTableUsers';
 import { parseGenitive } from '../../../util/parsers';
-import CloseButton from '../../components/CloseButton';
 import { type Props as SpaceProps } from '../../components/Space';
 import {
   useAutoRotateGlobe,
@@ -68,14 +67,11 @@ export default function UserGlobe({
 
   // Derived state
   const selected = selectedCountryAdm0A3?.length === 3;
-  const spaceWidth = selected ? 'w-[50vw]' : 'w-full';
-  const dropDownWidth = selected ? 'w-[50vw]' : 'w-[30vw]';
+  const dropDownWidth = selected ? 'w-full' : 'w-[30vw]';
 
   return (
     <div className="flex h-full w-full">
-      <div
-        className={`h-[calc(100vh-5rem)] min-h-[300px] bg-[#0f0f0f] ${spaceWidth}`}
-      >
+      <div className="h-[calc(100vh-5rem)] min-h-[300px] w-full bg-[#0f0f0f]">
         <Space
           earthProps={{
             countryData: countryData,
@@ -100,13 +96,8 @@ export default function UserGlobe({
           </div>
         )}
       </div>
-      <div
-        className={`absolute right-0 top-0 z-50 ${selected ? 'bg-black' : ''}`}
-      >
+      <div className="absolute right-0 top-0 z-50">
         <div className={`flex items-center ${dropDownWidth}`}>
-          {selected && (
-            <CloseButton className="ml-8" onClick={() => updateUrl('')} />
-          )}
           <div className="flex w-full justify-end">
             <select
               className="select select-bordered mx-8 my-4 w-[25vw] min-w-fit"
