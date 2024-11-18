@@ -34,26 +34,26 @@ export default function JourneyCardCompact({
             className={`flex flex-grow items-center ${flexDirection}`}
             href={`/my-globe/${userId}/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
           >
-            <div className="mr-8 max-h-[200px] w-1/4 rounded-2xl border-2 border-white">
+            <div className="relative mr-8 h-full w-1/2 rounded-2xl border-2 border-white">
               {journey.imageUrl ? (
                 <Image
-                  className="rounded-2xl"
+                  className="rounded-xl object-cover"
                   src={journey.imageUrl}
-                  alt="logo"
-                  width={200}
-                  height={200}
+                  alt="journey title image"
+                  fill={true}
+                  sizes="(max-width: 400px)"
                 />
               ) : (
                 <Image
-                  className="rounded-2xl"
+                  className="rounded-xl object-cover"
                   src="/images/logo-terra-scratch-4.png"
-                  alt="logo"
-                  width={200}
-                  height={200}
+                  alt="journey title image"
+                  fill={true}
+                  sizes="(max-width: 400px)"
                 />
               )}
             </div>
-            <div className="mr-8 w-3/4">
+            <div className="mr-8 w-1/2">
               <h3>{journey.title}</h3>
               <div className="mt-2 flex justify-between">
                 <div>From: {journey.dateStart.toDateString()}</div>
