@@ -24,6 +24,12 @@ type Props = {
   params: Promise<{ userId: string; country: string; journey: string }>;
 };
 
+export const metadata = {
+  title: 'Journey',
+  description:
+    'Make memories of a lifetime and keep them in your daily diaries.',
+};
+
 export default async function JourneyDetailed(props: Props) {
   const { userId, country, journey } = await props.params;
   const { user, sessionTokenCookie } = await checkAuthentication(
