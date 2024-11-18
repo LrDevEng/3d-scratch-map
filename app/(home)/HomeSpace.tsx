@@ -1,8 +1,6 @@
 'use client';
 import type { FeatureCollection } from 'geojson';
-import dynamic from 'next/dynamic';
-import { type FunctionComponent } from 'react';
-import Space, { type Props as SpaceProps } from '../components/Space';
+import Space from '../components/Space';
 
 type Props = {
   countryData: FeatureCollection;
