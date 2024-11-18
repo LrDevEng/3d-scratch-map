@@ -8,7 +8,7 @@ import {
 import { checkAuthentication } from '../../../util/auth';
 import { getCountries } from '../../../util/localdata';
 import { validateUrlParam } from '../../../util/validation';
-import UserGlobe from './UserGlobe';
+import ResizableLayout from './ResizableLayout';
 
 type Props = {
   children: React.ReactNode;
@@ -66,13 +66,13 @@ export default async function GlobeLayout({ children, params }: Props) {
 
   return (
     <div className="relative flex h-full w-full">
-      <UserGlobe
+      <ResizableLayout
+        children={children}
         countryData={countryData}
         visitedCountries={visitedCountries}
         personalGlobe={personalGlobe}
         followingUser={followingUser}
       />
-      {children}
     </div>
   );
 }

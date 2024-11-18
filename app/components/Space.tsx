@@ -21,9 +21,14 @@ const Earth = dynamic(() => import('./EarthOptimized'), {
 export type Props = {
   earthProps: EarthProps;
   showHeroText?: boolean;
+  rotateStars?: boolean;
 };
 
-export default function Space({ earthProps, showHeroText = true }: Props) {
+export default function Space({
+  earthProps,
+  showHeroText = true,
+  rotateStars = true,
+}: Props) {
   const starRadius = 15;
   const spaceRef = useSpaceRef((state) => state.spaceRef);
   const updateSpaceRef = useSpaceRef((state) => state.update);
@@ -40,6 +45,7 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
       ref={spaceRef || localSpaceRef}
       className="cursor-pointer select-none"
       gl={{ powerPreference: 'high-performance' }}
+      camera={{ position: [0, 0, 5] }}
     >
       <PerformanceMonitor>
         <Suspense>
@@ -62,14 +68,10 @@ export default function Space({ earthProps, showHeroText = true }: Props) {
             />
           )}
           <Suspense>
-            <Earth
-              orbitControlsMaxDist={starRadius}
-              rotateSelf={true}
-              {...earthProps}
-            />
+            <Earth orbitControlsMaxDist={starRadius} {...earthProps} />
           </Suspense>
         </Suspense>
-        <Starfield starRadius={starRadius} />
+        <Starfield starRadius={starRadius} rotate={rotateStars} />
       </PerformanceMonitor>
     </Canvas>
   );

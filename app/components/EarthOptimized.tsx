@@ -1,6 +1,7 @@
 'use client';
 
-import { Bvh, Line, OrbitControls, Text, useTexture } from '@react-three/drei';
+import type { CameraControls as CameraControlsImpl } from '@react-three/drei';
+import { Bvh, CameraControls, Line, Text, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import type { FeatureCollection } from 'geojson';
 import { useParams, useRouter } from 'next/navigation';
@@ -9,6 +10,7 @@ import { Mesh, MeshBasicMaterial } from 'three';
 import { ConicPolygonGeometry } from 'three-conic-polygon-geometry';
 import { GeoJsonGeometry } from 'three-geojson-geometry';
 import { v4 as uuid } from 'uuid';
+import { useCameraZoom } from '../stores/useControls';
 import { useEarthRef } from '../stores/useEarth';
 
 export type Props = {
@@ -33,7 +35,6 @@ export type Props = {
   countryElevatedColor?: string;
   orbitControlsMaxDist?: number;
   orbitControlsMinDist?: number;
-  orbitControlsAutoRotate?: boolean;
   orbitControlsEnableZoom?: boolean;
   orbitControlsEnableRotate?: boolean;
   texture?: string;
@@ -89,7 +90,6 @@ export default function Earth({
   countryElevatedColor = '#ff0000',
   orbitControlsMaxDist = 20,
   orbitControlsMinDist = 2.5,
-  orbitControlsAutoRotate = false,
   orbitControlsEnableZoom = false,
   orbitControlsEnableRotate = false,
   texture = '/textures/texture_earth_map_10k.jpg',
@@ -109,8 +109,9 @@ export default function Earth({
   const refGlobe = useRef<Mesh>(null);
   const refText = useRef<Mesh>();
   const refCountries = useRef<Mesh[]>([]);
+  const refControls = useRef<CameraControlsImpl | null>(null);
 
-  // References from state
+  // References from global zustand state
   const refEarth = useEarthRef((state) => state.earthRef);
   const updateEarthRef = useEarthRef((state) => state.update);
 
@@ -119,6 +120,11 @@ export default function Earth({
       updateEarthRef(refGlobe);
     }
   }, [refEarth, updateEarthRef]);
+
+  // Global zustand state
+  const zoomSlider = useCameraZoom((state) => state.zoomSlider);
+  const injectSlider = useCameraZoom((state) => state.injectSlider);
+  const updateSlider = useCameraZoom((state) => state.updateSlider);
 
   // Url state
   const params = useParams();
@@ -243,8 +249,40 @@ export default function Earth({
         });
       }
     }
+    if (refControls.current) {
+      // https://drei.docs.pmnd.rs/controls/camera-controls
+      // https://yomotsu.github.io/camera-controls/examples/basic.html
+      // https://github.com/yomotsu/camera-controls
+      if (injectSlider) {
+        refControls.current
+          .dollyTo(zoomSlider, false)
+          .catch((error) => console.log(error));
+        updateSlider(refControls.current.distance);
+      }
+    }
     // console.log(delta);
   });
+
+  // Add event listener to camera controls to update zoom slider
+  useEffect(() => {
+    let listenerRef: CameraControls | null;
+    if (refControls.current) {
+      listenerRef = refControls.current;
+      refControls.current.addEventListener('rest', () => {
+        if (
+          refControls.current &&
+          refControls.current.distance !== zoomSlider
+        ) {
+          updateSlider(refControls.current.distance);
+        }
+      });
+    }
+    return () => {
+      if (listenerRef) {
+        listenerRef.removeAllEventListeners();
+      }
+    };
+  }, [updateSlider, zoomSlider]);
 
   // On mounted event
   useEffect(() => {
@@ -463,13 +501,13 @@ export default function Earth({
           })}
         </mesh>
       )}
-      <OrbitControls
-        autoRotate={orbitControlsAutoRotate}
-        enableZoom={orbitControlsEnableZoom}
-        enableRotate={orbitControlsEnableRotate}
-        autoRotateSpeed={0.1}
-        enablePan={false}
-        zoomSpeed={0.6}
+      <CameraControls
+        ref={refControls}
+        enabled={orbitControlsEnableRotate && orbitControlsEnableZoom}
+        dollySpeed={0.2}
+        truckSpeed={0}
+        polarRotateSpeed={1.25}
+        azimuthRotateSpeed={1.25}
         maxPolarAngle={Math.PI * 0.9}
         minPolarAngle={Math.PI * 0.1}
         minDistance={orbitControlsMinDist}
