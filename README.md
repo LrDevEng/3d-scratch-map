@@ -18,6 +18,8 @@ Bon voyage.
 - [three-conic-polygon-geometry](https://github.com/vasturiano/three-conic-polygon-geometry)
 - [three-geojson-geometry](https://github.com/vasturiano/three-geojson-geometry)
 
+## Impressions
+
 ## Getting started (locally)
 
 Clone the main branch of this repository to your local machine and navigate into the cloned project folder.
