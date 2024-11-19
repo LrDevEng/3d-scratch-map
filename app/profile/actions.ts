@@ -2,6 +2,9 @@
 
 import type { UploadApiResponse, UploadStream } from 'cloudinary';
 import { v2 as cloudinary } from 'cloudinary';
+import { cookies } from 'next/headers';
+import { deleteSession } from '../../database/sessions';
+import { deleteUser } from '../../database/users';
 
 // Image upload to cloudinary
 
@@ -56,4 +59,28 @@ export async function uploadImage(imgToUpload: File) {
     console.log('Cloudinary img upload error: ', error);
   }
   return url;
+}
+
+export async function deleteAccount(): Promise<boolean> {
+  // 1. Get the session token from the cookie
+  const cookieStore = await cookies();
+  const sessionTokenCookie = cookieStore.get('sessionToken');
+
+  if (sessionTokenCookie) {
+    // 2. Delete the user
+    const deletedUser = await deleteUser(sessionTokenCookie.value);
+
+    // 3. If the user deletion fails, return an error
+    if (!deletedUser) {
+      return false;
+    } else {
+      // 4. Delete the session from the database based on the token
+      await deleteSession(sessionTokenCookie.value);
+
+      // 5. Delete the session cookie from the browser
+      cookieStore.delete(sessionTokenCookie.name);
+    }
+  }
+
+  return true;
 }
