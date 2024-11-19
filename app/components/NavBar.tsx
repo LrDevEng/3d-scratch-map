@@ -24,7 +24,11 @@ export default async function NavBar() {
 
   return (
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
-      <Link className="w-fit" href={`/my-globe/${user?.id}`}>
+      <Link
+        className="w-fit"
+        href={`/my-globe/${user?.id}`}
+        data-test-id="nav-bar-home"
+      >
         <Image
           className="h-auto w-fit"
           src="/images/logo-terra-scratch-4.png"
@@ -38,6 +42,7 @@ export default async function NavBar() {
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
             href={`/my-globe/${user.id}`}
+            data-test-id="nav-bar-my-globe"
           >
             my globe
           </Link>
@@ -47,6 +52,7 @@ export default async function NavBar() {
           <Link
             className="relative px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
             href="/followers"
+            data-test-id="nav-bar-followers"
           >
             followers
             {followerUsersPending && followerUsersPending.length > 0 && (
@@ -61,12 +67,13 @@ export default async function NavBar() {
         <Link
           className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
           href="/"
+          data-test-id="nav-bar-about"
         >
           about
         </Link>
         {user ? (
           <div className="duration-250 relative h-[60px] w-[60px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.5)]">
-            <Link href="/profile">
+            <Link href="/profile" data-test-id="nav-bar-profile">
               <Image
                 className="rounded-full object-contain"
                 src={user.imageUrl ? user.imageUrl : '/icons/userIcon.svg'}
@@ -80,6 +87,7 @@ export default async function NavBar() {
           <Link
             className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
             href="/log-in"
+            data-test-id="nav-bar-login"
           >
             log in
           </Link>

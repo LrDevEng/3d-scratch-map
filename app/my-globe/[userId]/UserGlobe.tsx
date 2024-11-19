@@ -100,6 +100,7 @@ export default function UserGlobe({
         <div className={`flex items-center ${dropDownWidth}`}>
           <div className="flex w-full justify-end">
             <select
+              data-test-id="my-globe-page-country-dropdown"
               className="select select-bordered mx-8 my-4 w-[25vw] min-w-fit"
               value={selectedCountry.properties?.NAME}
               onChange={(event) => {

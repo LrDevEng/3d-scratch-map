@@ -24,6 +24,7 @@ export default function CreateAccount() {
           <button
             className="btn btn-link"
             onClick={() => router.push('/log-in')}
+            data-test-id="landing-page-login-button"
           >
             log in
           </button>

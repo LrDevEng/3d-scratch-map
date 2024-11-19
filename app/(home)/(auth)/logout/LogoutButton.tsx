@@ -10,6 +10,7 @@ export default function LogoutButton() {
     <form>
       <button
         className="btn btn-ghost"
+        data-test-id="profile-logout-button"
         formAction={async () => {
           await logout();
           router.refresh();
