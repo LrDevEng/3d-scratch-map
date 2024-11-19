@@ -44,7 +44,6 @@ export async function POST(
       result.data.imageUrl,
       result.data.longitude,
       result.data.latitude,
-      result.data.dateShot,
     ));
 
   // 5. If the diary image creation fails, return an error

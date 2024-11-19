@@ -6,7 +6,6 @@ export const diaryImageSchema = z.object({
   imageUrl: z.string(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
-  dateShot: z.coerce.date().nullable(),
 });
 
 export type DiaryImage = {

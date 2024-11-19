@@ -52,7 +52,6 @@ export const createDiaryImage = cache(
     imageUrl: DiaryImage['imageUrl'],
     longitude: DiaryImage['longitude'],
     latitude: DiaryImage['latitude'],
-    dateShot: DiaryImage['dateShot'],
   ) => {
     // const dateShotInsert = dateShot ? dateShot : new Date();
     const [diaryImage] = await sql<DiaryImage[]>`
@@ -61,15 +60,13 @@ export const createDiaryImage = cache(
           diary_id,
           image_url,
           longitude,
-          latitude,
-          date_shot
+          latitude
         ) (
           SELECT
             d.id,
             ${imageUrl},
             ${longitude},
-            ${latitude},
-            ${dateShot}
+            ${latitude}
           FROM
             (
               journeys j

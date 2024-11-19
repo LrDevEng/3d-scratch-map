@@ -128,14 +128,14 @@ export default function Earth({
 
   // Url state
   const params = useParams();
-  const paramsCountry = params.country || '';
+  const paramsCountry = params?.country || '';
   const selectedCountryAdm0A3 = Array.isArray(paramsCountry)
     ? paramsCountry[0]?.toUpperCase()
     : paramsCountry.toUpperCase();
   const selectedRef = refCountries.current.find(
     (refCountry) => refCountry.name === selectedCountryAdm0A3,
   );
-  const paramsUserId = params.userId;
+  const paramsUserId = params?.userId;
   const userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
 
   const updateUrl = (newCountryAdm0A3: string) => {
