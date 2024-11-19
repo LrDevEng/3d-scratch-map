@@ -10,6 +10,7 @@ export default function DeleteAccount() {
     <div>
       {!showDeleteButton && (
         <button
+          data-test-id="profile-page-delete-account-button"
           className="btn btn-ghost"
           onClick={() => setShowDeleteButton(true)}
         >

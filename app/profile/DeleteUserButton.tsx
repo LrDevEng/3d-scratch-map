@@ -11,10 +11,10 @@ export default function DeleteUserButton() {
     <form>
       <button
         className="btn btn-ghost"
-        data-test-id="profile-logout-button"
+        data-test-id="profile-page-confirm-deletion"
         formAction={async () => {
           if (await deleteAccount()) {
-            router.refresh();
+            router.replace('/');
             toast.success('Success: Account deleted.');
           } else {
             toast.error('Error: Not able to delte account.');
