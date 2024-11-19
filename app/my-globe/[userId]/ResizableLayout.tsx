@@ -22,7 +22,7 @@ export default function ResizableLayout({
   followingUser,
 }: Props) {
   const params = useParams();
-  const paramsCountry = params.country || '';
+  const paramsCountry = params?.country || '';
   const selectedCountryAdm0A3 = Array.isArray(paramsCountry)
     ? paramsCountry[0]?.toUpperCase()
     : paramsCountry.toUpperCase();

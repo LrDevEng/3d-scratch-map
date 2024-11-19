@@ -12,6 +12,11 @@ type Props = {
   params: Promise<{ country: string; userId: string }>;
 };
 
+export const metadata = {
+  title: 'Country Overview',
+  description: 'Create your next journey.',
+};
+
 export default async function UserSpace(props: Props) {
   const { country, userId } = await props.params;
   const { user, sessionTokenCookie } = await checkAuthentication(

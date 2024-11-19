@@ -6,6 +6,11 @@ import FollowingAccepted from './FollowingAccepted';
 import FollowingPending from './FollowingPending';
 import SearchFollowers from './SearchFollowers';
 
+export const metadata = {
+  title: 'Followers',
+  description: 'Follow your friends on their travel adventures.',
+};
+
 export default async function Followers() {
   const { user, sessionTokenCookie } = await checkAuthentication(`/followers`);
 

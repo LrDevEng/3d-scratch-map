@@ -2,6 +2,12 @@ import LogoutButton from '../(home)/(auth)/logout/LogoutButton';
 import { checkAuthentication } from '../../util/auth';
 import ProfilePicture from './ProfilePicture';
 
+export const metadata = {
+  title: 'Profile',
+  description:
+    'Your personal profile page to edit settings and update account related information.',
+};
+
 export default async function Profile() {
   const { user } = await checkAuthentication(`/profile`);
   const profileImgSrc = user.imageUrl ? user.imageUrl : '/icons/userIcon.svg';

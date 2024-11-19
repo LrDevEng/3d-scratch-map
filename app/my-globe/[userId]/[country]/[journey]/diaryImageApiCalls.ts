@@ -5,7 +5,6 @@ export async function createDiaryImage(
   imageUrl: string,
   longitude: number | null,
   latitude: number | null,
-  dateShot: Date | null,
 ) {
   const response = await fetch('/api/diaryImages', {
     method: 'POST',
@@ -14,7 +13,6 @@ export async function createDiaryImage(
       imageUrl,
       longitude,
       latitude,
-      dateShot,
     }),
   });
 

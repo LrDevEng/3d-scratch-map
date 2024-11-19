@@ -102,7 +102,6 @@ export default function DiaryForm({
                     newImgUrl,
                     null,
                     null,
-                    null,
                   );
 
                   if (!newDiaryImage) {

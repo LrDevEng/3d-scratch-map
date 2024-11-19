@@ -36,14 +36,14 @@ export default function UserGlobe({
 
   // Url state
   const params = useParams();
-  const paramsCountry = params.country || '';
+  const paramsCountry = params?.country || '';
   const selectedCountryAdm0A3 = Array.isArray(paramsCountry)
     ? paramsCountry[0]?.toUpperCase()
     : paramsCountry.toUpperCase();
   const selectedCountry = countryData.features.find(
     ({ properties }) => properties?.ADM0_A3 === selectedCountryAdm0A3,
   ) || { properties: { NAME: '- select country -' } };
-  const paramsUserId = params.userId;
+  const paramsUserId = params?.userId;
   const userId = Array.isArray(paramsUserId) ? paramsUserId[0] : paramsUserId;
 
   const updateUrl = (newCountryAdm0A3: string) => {

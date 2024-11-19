@@ -7,7 +7,6 @@ import type { DiaryImage } from '../../../../../migrations/00004-createTableDiar
 import { type Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
 import type { LikeResponseBodyCud } from '../../../../api/likes/[diaryImageId]/route';
 import EditButton from '../../../../components/EditButton';
-import HorizontalDivider from '../../../../components/HorizontalDivider';
 import ImageCarousel from '../../../../components/ImageCarousel';
 
 type Props = {
@@ -34,8 +33,8 @@ export default function DiaryView({
   return (
     <div className="w-full">
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
-        <div className="card-body flex-row p-4">
-          <div className="mr-8 w-3/4">
+        <div className="relative p-4">
+          <div className="float-right mr-8 w-2/3">
             <ImageCarousel
               currentUserId={currentUserId}
               diaryImages={diaryImages}
@@ -88,17 +87,17 @@ export default function DiaryView({
               }}
             />
           </div>
-          <div className="mr-8 w-1/4">
+          <div className="mr-8">
             <h3>{diary.title}</h3>
-
             <div>Date: {diary.dateStart.toDateString()}</div>
-
-            <HorizontalDivider />
+            <hr className="border-2 border-white" />
             <div className="mt-4 text-justify">{diary.thoughts}</div>
           </div>
 
           {personalGlobe && (
-            <EditButton className="self-center" onClick={onEdit} />
+            <div className="absolute right-0 top-0 p-4">
+              <EditButton className="self-center" onClick={onEdit} />
+            </div>
           )}
         </div>
       </div>
