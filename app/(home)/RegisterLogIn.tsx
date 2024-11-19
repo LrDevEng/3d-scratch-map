@@ -82,7 +82,9 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
   return (
     <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
       <div className="card-body items-center text-center">
-        <h2 className="card-title">{title}</h2>
+        <h2 className="card-title" data-test-id="landing-page-form-title">
+          {title}
+        </h2>
 
         <form
           className="w-full"

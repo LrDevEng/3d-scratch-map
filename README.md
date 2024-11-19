@@ -139,5 +139,6 @@ pnpm jest
 ### Playwright
 
 ```bash
-pnpm playwright test
+pnpm exec playwright test
+pnpm exec playwright test --ui
 ```
