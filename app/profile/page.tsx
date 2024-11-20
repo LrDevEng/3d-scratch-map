@@ -1,5 +1,6 @@
 import LogoutButton from '../(home)/(auth)/logout/LogoutButton';
 import { checkAuthentication } from '../../util/auth';
+import DeleteAccount from './DeleteAccount';
 import ProfilePicture from './ProfilePicture';
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default async function Profile() {
     <div className="relative mx-8 mt-24 flex flex-col items-center">
       <div className="absolute right-0 top-0">
         <LogoutButton />
+        <DeleteAccount />
       </div>
       <ProfilePicture profileImgSrc={profileImgSrc} />
       <table>

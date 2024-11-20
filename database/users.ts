@@ -153,3 +153,28 @@ export const createUserInsecure = cache(
     return user;
   },
 );
+
+export const deleteUser = cache(async (sessionToken: Session['token']) => {
+  const [user] = await sql<User[]>`
+    DELETE FROM users USING sessions
+    WHERE
+      users.id IN (
+        SELECT
+          u.id
+        FROM
+          sessions s
+          JOIN users u ON s.user_id = u.id
+        WHERE
+          s.token = ${sessionToken}
+          AND s.expiry_timestamp > now()
+      )
+    RETURNING
+      users.id,
+      users.email,
+      users.given_name,
+      users.family_name,
+      users.image_url
+  `;
+
+  return user;
+});

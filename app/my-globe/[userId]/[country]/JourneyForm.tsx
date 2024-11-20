@@ -149,6 +149,7 @@ export default function JourneyForm({
 
           <div className="form-control mt-2 w-full">
             <input
+              data-test-id="journey-form-title"
               placeholder="journey title"
               className="input input-bordered w-full text-center"
               required
@@ -164,6 +165,7 @@ export default function JourneyForm({
                   From
                 </div>
                 <input
+                  data-test-id="journey-form-start-date"
                   type="date"
                   className="input input-bordered flex-grow"
                   required
@@ -181,6 +183,7 @@ export default function JourneyForm({
                   To
                 </div>
                 <input
+                  data-test-id="journey-form-end-date"
                   type="date"
                   className="input input-bordered flex-grow"
                   required
@@ -195,6 +198,7 @@ export default function JourneyForm({
 
           <div className="form-control mt-2 w-full">
             <textarea
+              data-test-id="journey-form-summary"
               placeholder="brief summary of the journey (max. 2000 characters)"
               className="textarea textarea-bordered min-h-40 w-full"
               required
@@ -204,12 +208,18 @@ export default function JourneyForm({
           </div>
 
           <div className="card-actions mt-8 w-full justify-end">
-            <button className="btn btn-primary w-full">save</button>
+            <button
+              className="btn btn-primary w-full"
+              data-test-id="journey-form-save-button"
+            >
+              save
+            </button>
           </div>
         </div>
       </form>
       {journey && (
         <DeleteButton
+          data-test-id="journey-form-delete-button"
           onClick={async () => {
             await deleteJourney(journey.id);
             if (onDelete) {

@@ -82,7 +82,9 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
   return (
     <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
       <div className="card-body items-center text-center">
-        <h2 className="card-title">{title}</h2>
+        <h2 className="card-title" data-test-id="landing-page-form-title">
+          {title}
+        </h2>
 
         <form
           className="w-full"
@@ -104,6 +106,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
                 value={givenName}
                 onChange={(event) => setGivenName(event.currentTarget.value)}
                 required
+                data-test-id="landing-page-form-given-name"
               />
             </div>
           )}
@@ -125,6 +128,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
                 value={familyName}
                 onChange={(event) => setFamilyName(event.currentTarget.value)}
                 required
+                data-test-id="landing-page-form-family-name"
               />
             </div>
           )}
@@ -145,6 +149,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
               value={email}
               onChange={(event) => setEmail(event.currentTarget.value)}
               required
+              data-test-id="landing-page-form-email"
             />
           </div>
 
@@ -168,6 +173,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
               value={password}
               onChange={(event) => setPassword(event.currentTarget.value)}
               required
+              data-test-id="landing-page-form-password"
             />
           </div>
 
@@ -194,6 +200,7 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
                   setPasswordRepeat(event.currentTarget.value)
                 }
                 required
+                data-test-id="landing-page-form-password-repeat"
               />
             </div>
           )}
@@ -208,7 +215,12 @@ export default function RegisterLogIn({ isLogIn = false, returnTo }: Props) {
           </div>
 
           <div className="card-actions mt-8 w-full justify-end">
-            <button className="btn btn-primary w-full">continue</button>
+            <button
+              className="btn btn-primary w-full"
+              data-test-id="landing-page-form-continue"
+            >
+              continue
+            </button>
           </div>
         </form>
         <div className="text-sm">

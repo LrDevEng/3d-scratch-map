@@ -28,7 +28,7 @@ export default async function Home() {
             width={140}
             height={140}
           />
-          <h1>Terra Scratch</h1>
+          <h1 data-test-id="landing-page-title">Terra Scratch</h1>
         </div>
         <h4>your digital 3D scratch map</h4>
       </div>

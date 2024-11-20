@@ -14,6 +14,7 @@ export default function CreateAccount() {
           <button
             className="btn btn-primary w-full"
             onClick={() => router.push('/register')}
+            data-test-id="landing-page-register-button"
           >
             register
           </button>
@@ -23,6 +24,7 @@ export default function CreateAccount() {
           <button
             className="btn btn-link"
             onClick={() => router.push('/log-in')}
+            data-test-id="landing-page-login-button"
           >
             log in
           </button>

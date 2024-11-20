@@ -31,6 +31,7 @@ export default function JourneyCardCompact({
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
         <div className="card-body flex-row p-4">
           <Link
+            data-test-id={`journey-card-compact-${selectedCountryAdm0A3.toLowerCase()}-${journey.title}`}
             className={`flex flex-grow items-center ${flexDirection}`}
             href={`/my-globe/${userId}/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
           >
@@ -65,7 +66,11 @@ export default function JourneyCardCompact({
           </Link>
 
           {personalGlobe && (
-            <EditButton className="self-center" onClick={onEdit} />
+            <EditButton
+              className="self-center"
+              onClick={onEdit}
+              data-test-id="edit-journey-button"
+            />
           )}
         </div>
       </div>

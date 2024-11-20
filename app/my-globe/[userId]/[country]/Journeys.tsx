@@ -35,6 +35,7 @@ export default function Journeys({
         <HorizontalDivider />
         {personalGlobe && (
           <AddButton
+            data-test-id="add-journey-button"
             open={showJourneyForm.show}
             onClick={() =>
               setShowJourneyForm((prev) => ({

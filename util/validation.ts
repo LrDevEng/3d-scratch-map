@@ -27,9 +27,9 @@ export function getSafeReturnToPath(path: string | string[] | undefined) {
 }
 
 const keys = {
-  country: new RegExp('[a-z]{3}'),
-  userId: new RegExp('^[0-9]*$'),
-  journey: new RegExp('^[0-9]*$'),
+  country: new RegExp('^[a-z]{3}$'),
+  userId: new RegExp('^[0-9]+$'),
+  journey: new RegExp('^[0-9]+$'),
 };
 
 export function validateUrlParam(key: string, param: string): boolean {

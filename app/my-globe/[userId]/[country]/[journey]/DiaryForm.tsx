@@ -166,6 +166,7 @@ export default function DiaryForm({
 
           <div className="form-control mt-2 w-full">
             <input
+              data-test-id="diary-form-title"
               placeholder="diary title"
               className="input input-bordered w-full text-center"
               required
@@ -181,6 +182,7 @@ export default function DiaryForm({
                   Date
                 </div>
                 <input
+                  data-test-id="diary-form-date"
                   type="date"
                   className="input input-bordered flex-grow"
                   required
@@ -195,6 +197,7 @@ export default function DiaryForm({
 
           <div className="form-control mt-2 w-full">
             <textarea
+              data-test-id="diary-form-thoughts"
               placeholder="your thoughts"
               className="textarea textarea-bordered min-h-40 w-full"
               required
@@ -204,12 +207,18 @@ export default function DiaryForm({
           </div>
 
           <div className="card-actions mt-8 w-full justify-end">
-            <button className="btn btn-primary w-full">save</button>
+            <button
+              className="btn btn-primary w-full"
+              data-test-id="diary-form-save-button"
+            >
+              save
+            </button>
           </div>
         </div>
       </form>
       {diary && (
         <DeleteButton
+          data-test-id="diary-form-delete-button"
           onClick={async () => {
             await deleteDiary(diary.id);
             if (onDelete) {
