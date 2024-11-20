@@ -92,7 +92,7 @@ export default function UserGlobe({
 
         {isLoading && (
           <div className="absolute left-0 top-0 z-[60] flex h-full w-full items-center justify-center bg-[#0f0f0f]">
-            <h1>Loading Interactive 3D Map ...</h1>
+            <h1 data-test-id="loading-map">Loading Interactive 3D Map ...</h1>
           </div>
         )}
       </div>

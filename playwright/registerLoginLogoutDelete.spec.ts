@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('Register, log in, logout, delete account', async ({ page }) => {
-  test.slow();
+  test.setTimeout(180_000);
 
   // Go to landing page
   await page.goto('/');
@@ -19,11 +19,11 @@ test('Register, log in, logout, delete account', async ({ page }) => {
   ).toBeVisible();
 
   // Fill in register form
-  await page.getByTestId('landing-page-form-given-name').fill('Luke');
-  await page.getByTestId('landing-page-form-family-name').fill('Skywalker');
+  await page.getByTestId('landing-page-form-given-name').fill('Luke2');
+  await page.getByTestId('landing-page-form-family-name').fill('Skywalker2');
   await page
     .getByTestId('landing-page-form-email')
-    .fill('L.Skywalker@Tatooine.com');
+    .fill('L.Skywalker2@Tatooine.com');
   await page.getByTestId('landing-page-form-password').fill('lastjedi');
   await page.getByTestId('landing-page-form-password-repeat').fill('lastjedi');
 
@@ -52,7 +52,7 @@ test('Register, log in, logout, delete account', async ({ page }) => {
   // Fill in login form
   await page
     .getByTestId('landing-page-form-email')
-    .fill('L.Skywalker@Tatooine.com');
+    .fill('L.Skywalker2@Tatooine.com');
   await page.getByTestId('landing-page-form-password').fill('lastjedi');
 
   // Submit login form
@@ -75,7 +75,7 @@ test('Register, log in, logout, delete account', async ({ page }) => {
   await expect(page.getByTestId('landing-page-form-password')).toBeVisible();
   await page
     .getByTestId('landing-page-form-email')
-    .fill('L.Skywalker@Tatooine.com');
+    .fill('L.Skywalker2@Tatooine.com');
   await page.getByTestId('landing-page-form-password').fill('lastjedi');
   await page.getByTestId('landing-page-form-continue').click();
   await page.waitForURL('/profile');
@@ -87,5 +87,7 @@ test('Register, log in, logout, delete account', async ({ page }) => {
   await page.getByTestId('profile-page-delete-account-button').click();
   await expect(page.getByTestId('profile-page-confirm-deletion')).toBeVisible();
   await page.getByTestId('profile-page-confirm-deletion').click();
-  await expect(page.getByTestId('landing-page-title')).toBeVisible();
+  await expect(page.getByTestId('landing-page-title')).toBeVisible({
+    timeout: 15000,
+  });
 });

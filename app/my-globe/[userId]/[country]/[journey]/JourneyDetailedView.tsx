@@ -77,13 +77,16 @@ export default function JourneyDetailedView({
             <div className="absolute left-0 top-0">
               <div className="pl-2">
                 <BackButton
+                  data-test-id="go-back-to-journey-button"
                   onClick={() =>
                     router.replace(`/my-globe/${globeUserId}/${country}`)
                   }
                 />
               </div>
             </div>
-            <h1 className="w-fit">{journey.title}</h1>
+            <h1 className="w-fit" data-test-id="journey-details-title">
+              {journey.title}
+            </h1>
           </div>
           <div className="relative z-10 flex justify-between bg-black bg-opacity-50 pt-2">
             <div className="pl-4">From: {journey.dateStart.toDateString()}</div>
@@ -101,6 +104,7 @@ export default function JourneyDetailedView({
           <HorizontalDivider />
           {personalGlobe && (
             <AddButton
+              data-test-id="add-diary-button"
               open={showDiaryForm.show}
               onClick={() =>
                 setShowDiaryForm((prev) => ({

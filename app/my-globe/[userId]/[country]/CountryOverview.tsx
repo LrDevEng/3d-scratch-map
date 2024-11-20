@@ -33,7 +33,10 @@ export default function CountryOverview({
   return (
     <div className="relative mx-8 w-full">
       <div className="fixed z-40 w-full bg-black pb-2 pl-2 pt-6">
-        <CloseButton onClick={() => router.push(`/my-globe/${userId}`)} />
+        <CloseButton
+          onClick={() => router.push(`/my-globe/${userId}`)}
+          data-test-id="close-country-view-button"
+        />
       </div>
       <div className="mt-24 w-full">
         <div className="flex items-center">
@@ -48,7 +51,9 @@ export default function CountryOverview({
               />
             )}
           </div>
-          <h1 className="ml-8">{selectedCountryName}</h1>
+          <h1 className="ml-8" data-test-id="country-overview-name">
+            {selectedCountryName}
+          </h1>
         </div>
         <CountryInfo countryIsoA2={selectedCountryIsoA2} />
         <Journeys

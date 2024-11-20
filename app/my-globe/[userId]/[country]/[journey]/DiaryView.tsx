@@ -88,7 +88,9 @@ export default function DiaryView({
             />
           </div>
           <div className="mr-8">
-            <h3>{diary.title}</h3>
+            <h3 data-test-id={`diary-view-title-${diary.title}`}>
+              {diary.title}
+            </h3>
             <div>Date: {diary.dateStart.toDateString()}</div>
             <hr className="border-2 border-white" />
             <div className="mt-4 text-justify">{diary.thoughts}</div>
@@ -96,7 +98,11 @@ export default function DiaryView({
 
           {personalGlobe && (
             <div className="absolute right-0 top-0 p-4">
-              <EditButton className="self-center" onClick={onEdit} />
+              <EditButton
+                className="self-center"
+                onClick={onEdit}
+                data-test-id="diary-view-edit-button"
+              />
             </div>
           )}
         </div>
