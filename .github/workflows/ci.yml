@@ -12,7 +12,9 @@ jobs:
       PGDATABASE: ci_workflow_test_3d_scratch_map
       PGUSERNAME: ci_workflow_test_3d_scratch_map
       PGPASSWORD: ci_workflow_test_3d_scratch_map
-    environment: ci
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
     steps:
       - name: Start preinstalled PostgreSQL on Ubuntu
         run: |
