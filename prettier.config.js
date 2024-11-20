@@ -1,10 +1,6 @@
 /** @type {import('prettier').Config} */
 const prettierConfig = {
-  plugins: [
-    'prettier-plugin-embed',
-    'prettier-plugin-sql',
-    'prettier-plugin-tailwindcss',
-  ],
+  plugins: ['prettier-plugin-embed', 'prettier-plugin-sql'],
   singleQuote: true,
   trailingComma: 'all',
 };
@@ -30,15 +26,10 @@ const prettierPluginSqlConfig = {
   expressionWidth: 30,
 };
 
-const prettierPluginTailwindConfig = {
-  tailwindConfig: './tailwind.config.ts',
-};
-
 const config = {
   ...prettierConfig,
   ...prettierPluginEmbedConfig,
   ...prettierPluginSqlConfig,
-  ...prettierPluginTailwindConfig,
 };
 
 export default config;
