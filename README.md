@@ -10,6 +10,8 @@ Bon voyage.
 
 ## Technologies
 
+- Next.js
+
 ### 3D Technologies
 
 - [three.js](https://threejs.org/)
