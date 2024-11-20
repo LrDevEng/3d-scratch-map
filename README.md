@@ -11,6 +11,8 @@ Bon voyage.
 ## Technologies
 
 - Next.js
+- Node.js
+- PostreSQL
 
 ### 3D Technologies
 
