@@ -13,6 +13,7 @@ Bon voyage.
 - Next.js
 - Node.js
 - PostreSQL
+- TypeScript
 
 ### 3D Technologies
 
