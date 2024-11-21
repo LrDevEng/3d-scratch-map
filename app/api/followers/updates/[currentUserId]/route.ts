@@ -30,6 +30,9 @@ const postgresClient = new Client({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD,
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false, // Use this for managed PostgreSQL services like AWS RDS, Heroku, etc.
+  },
 });
 
 // Connect to postgres client
