@@ -14,6 +14,7 @@ Bon voyage.
 - Node.js
 - PostreSQL
 - TypeScript
+- Tailwind
 
 ### 3D Technologies
 
