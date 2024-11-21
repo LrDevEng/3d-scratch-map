@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { Client } from 'pg';
 import { checkAuthentication } from '../../../../../util/auth';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'; // always run dynamically
+
 type FollowerNotificationParams = {
   params: Promise<{
     currentUserId: string;
