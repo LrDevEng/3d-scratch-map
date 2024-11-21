@@ -6,6 +6,7 @@ export const postgresConfig = {
     ...postgres.camel,
     undefined: null,
   },
+  ssl: true,
 };
 
 export function setEnvironmentVariables() {
