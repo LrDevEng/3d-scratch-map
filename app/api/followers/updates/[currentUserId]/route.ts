@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { Client } from 'pg';
 import { checkAuthentication } from '../../../../../util/auth';
+import { sslConfig } from '../../../../../util/config';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 export const dynamic = 'force-dynamic'; // always run dynamically
 
 type FollowerNotificationParams = {
@@ -33,7 +35,7 @@ const postgresClient = new Client({
   database: process.env.PGDATABASE,
   password: process.env.PGPASSWORD,
   port: 5432,
-  ssl: true,
+  ssl: sslConfig,
 });
 
 // Connect to postgres client
