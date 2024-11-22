@@ -1,7 +1,7 @@
 import { config } from 'dotenv-safe';
 import postgres from 'postgres';
 
-export const sslConfig = process.env.NODE_ENV === 'production' ? true : false;
+export const sslConfig = Boolean(process.env.POSTGRES_URL);
 
 export const postgresConfig = {
   transform: {
