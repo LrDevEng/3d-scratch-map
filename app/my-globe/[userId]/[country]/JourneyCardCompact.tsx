@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import type { Journey } from '../../../../migrations/00002-createTableJourneys';
 import EditButton from '../../../components/EditButton';
 import HorizontalDivider from '../../../components/HorizontalDivider';
@@ -25,15 +25,21 @@ export default function JourneyCardCompact({
   onEdit = () => {},
 }: Props) {
   const flexDirection = reverse ? 'flex-row-reverse' : 'flex-row';
+  const [linkHovered, setLinkHovered] = useState(false);
+  const hoveredBorder = linkHovered
+    ? 'border-2 border-[#66b14e]'
+    : 'border-2 border-transparent';
 
   return (
     <div className="w-full">
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
-        <div className="card-body flex-row p-4">
+        <div className={`card-body flex-row p-4 rounded-xl ${hoveredBorder}`}>
           <Link
             data-test-id={`journey-card-compact-${selectedCountryAdm0A3.toLowerCase()}-${journey.title}`}
             className={`flex flex-grow items-center ${flexDirection}`}
             href={`/my-globe/${userId}/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
+            onMouseOver={() => setLinkHovered(true)}
+            onMouseOut={() => setLinkHovered(false)}
           >
             <div className="relative mr-8 h-full w-1/2 rounded-xl border-2 border-white">
               {journey.imageUrl ? (
