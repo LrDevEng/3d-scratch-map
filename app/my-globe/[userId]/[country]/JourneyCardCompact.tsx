@@ -35,7 +35,7 @@ export default function JourneyCardCompact({
             className={`flex flex-grow items-center ${flexDirection}`}
             href={`/my-globe/${userId}/${selectedCountryAdm0A3.toLowerCase()}/${journey.id}`}
           >
-            <div className="relative mr-8 h-full w-1/2 rounded-2xl border-2 border-white">
+            <div className="relative mr-8 h-full w-1/2 rounded-xl border-2 border-white">
               {journey.imageUrl ? (
                 <Image
                   className="rounded-xl object-cover"

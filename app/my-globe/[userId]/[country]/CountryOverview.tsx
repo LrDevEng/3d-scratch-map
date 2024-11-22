@@ -59,6 +59,7 @@ export default function CountryOverview({
         <Journeys
           journeys={journeys}
           selectedCountryAdm0A3={selectedCountryAdm0A3}
+          selectedCountryName={selectedCountryName}
           userId={userId}
           personalGlobe={personalGlobe}
         />

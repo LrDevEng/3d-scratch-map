@@ -13,6 +13,7 @@ import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
 type Props = {
   selectedCountryAdm0A3: string;
+  selectedCountryName: string;
   journey: Journey | undefined;
   onSubmit?: () => void;
   onDelete?: () => void;
@@ -20,6 +21,7 @@ type Props = {
 
 export default function JourneyForm({
   selectedCountryAdm0A3,
+  selectedCountryName,
   journey,
   onSubmit,
   onDelete,
@@ -29,6 +31,8 @@ export default function JourneyForm({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
+  const [aiSupport, setAiSupport] = useState(false);
+  const [aiBuzzWords, setAiBuzzWords] = useState(selectedCountryName);
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -61,7 +65,7 @@ export default function JourneyForm({
   }
 
   return (
-    <div className="mb-8">
+    <div className="mx-auto mb-8 w-full">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -112,9 +116,10 @@ export default function JourneyForm({
           setLoading(false);
           router.refresh();
         }}
-        className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
+        className="card my-8 w-full min-w-32 max-w-[1000px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {!imgUrl && <div>Chose title image</div>}
           {imgUrl && (
             <div className="relative h-[150px] w-full">
               <Image
@@ -146,7 +151,6 @@ export default function JourneyForm({
               }}
             />
           </div>
-
           <div className="form-control mt-2 w-full">
             <input
               data-test-id="journey-form-title"
@@ -157,7 +161,6 @@ export default function JourneyForm({
               onChange={(event) => setTitle(event.currentTarget.value)}
             />
           </div>
-
           <div className="flex w-full">
             <div className="form-control mt-2 w-full">
               <label className="label flex">
@@ -197,6 +200,46 @@ export default function JourneyForm({
           </div>
 
           <div className="form-control mt-2 w-full">
+            <label className="label flex justify-start">
+              <div className="label-text mx-4 text-left text-neutral-content">
+                Get AI inpiration
+              </div>
+              <input
+                type="checkbox"
+                checked={aiSupport}
+                onChange={() => {
+                  setAiSupport(!aiSupport);
+                }}
+                className="checkbox checkbox-primary"
+              />
+            </label>
+          </div>
+
+          {aiSupport && (
+            <div className="form-control mt-2 w-full">
+              <div className="label flex items-center">
+                <div className="label-text mx-4 text-left text-neutral-content flex-1">
+                  Enter buzz words for the AI generator:
+                </div>
+                <button
+                  className="btn btn-primary mt-4 mb-4 flex-1"
+                  data-test-id="journey-form-save-button"
+                >
+                  generate summary
+                </button>
+              </div>
+              <textarea
+                data-test-id="journey-form-ai-buzz-words"
+                placeholder="buzz words"
+                className="textarea textarea-bordered min-h-40 w-full"
+                required
+                value={aiBuzzWords}
+                onChange={(event) => setAiBuzzWords(event.currentTarget.value)}
+              />
+            </div>
+          )}
+
+          <div className="form-control mt-2 w-full">
             <textarea
               data-test-id="journey-form-summary"
               placeholder="brief summary of the journey (max. 2000 characters)"
@@ -206,7 +249,6 @@ export default function JourneyForm({
               onChange={(event) => setSummary(event.currentTarget.value)}
             />
           </div>
-
           <div className="card-actions mt-8 w-full justify-end">
             <button
               className="btn btn-primary w-full"

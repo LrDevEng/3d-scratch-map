@@ -8,6 +8,7 @@ import JourneyForm from './JourneyForm';
 type Props = {
   journeys: Journey[];
   selectedCountryAdm0A3: string;
+  selectedCountryName: string;
   userId: string;
   personalGlobe: boolean;
 };
@@ -20,6 +21,7 @@ type ShowJourneyForm = {
 export default function Journeys({
   journeys,
   selectedCountryAdm0A3,
+  selectedCountryName,
   userId,
   personalGlobe,
 }: Props) {
@@ -48,9 +50,10 @@ export default function Journeys({
         <HorizontalDivider />
       </div>
       {showJourneyForm.show && personalGlobe && (
-        <div className="flex justify-center">
+        <div className="flex justify-center w-full">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
+            selectedCountryName={selectedCountryName}
             journey={showJourneyForm.journeyToEdit}
             onSubmit={() =>
               setShowJourneyForm((prev) => ({
