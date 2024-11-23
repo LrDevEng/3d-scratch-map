@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
+import { getUserCommentsInsecure } from '../../../../../database/comments';
 import {
   getDiaries,
   getDiariesByFollowingId,
@@ -16,6 +17,7 @@ import {
 import { getLikesInsecure } from '../../../../../database/likes';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
 import type { Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import type { UserComment } from '../../../../../migrations/00007-createTableComments';
 import { checkAuthentication } from '../../../../../util/auth';
 import { validateUrlParam } from '../../../../../util/validation';
 import JourneyDetailedView from './JourneyDetailedView';
@@ -73,10 +75,11 @@ export default async function JourneyDetailed(props: Props) {
     redirect(`/my-globe/${userId}/${country}`);
   }
 
-  // Get diaries, diary images and diary image likes
+  // Get diaries, diary images, diary image likes & diary comments
   let personalGlobe = true;
   let diaries;
   let diaryImages: DiaryImage[] = [];
+  let diaryComments: UserComment[] = [];
   let diaryImageLikes: Like[] = [];
   if (user.id === Number(userId)) {
     diaries = await getDiaries(sessionTokenCookie.value, specificJourney.id);
@@ -84,6 +87,10 @@ export default async function JourneyDetailed(props: Props) {
       diaryImages = [
         ...diaryImages,
         ...(await getDiaryImages(sessionTokenCookie.value, diary.id)),
+      ];
+      diaryComments = [
+        ...diaryComments,
+        ...(await getUserCommentsInsecure(diary.id)),
       ];
     }
     for (const diaryImage of diaryImages) {
@@ -108,6 +115,10 @@ export default async function JourneyDetailed(props: Props) {
           Number(userId),
         )),
       ];
+      diaryComments = [
+        ...diaryComments,
+        ...(await getUserCommentsInsecure(diary.id)),
+      ];
     }
     for (const diaryImage of diaryImages) {
       diaryImageLikes = [
@@ -124,6 +135,7 @@ export default async function JourneyDetailed(props: Props) {
         journey={specificJourney}
         diaries={diaries}
         diaryImages={diaryImages}
+        diaryComments={diaryComments}
         diaryImageLikes={diaryImageLikes}
         country={country}
         globeUserId={userId}

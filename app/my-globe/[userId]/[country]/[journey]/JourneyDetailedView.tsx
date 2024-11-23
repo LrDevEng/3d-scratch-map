@@ -7,6 +7,7 @@ import type { Journey } from '../../../../../migrations/00002-createTableJourney
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
 import type { Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import type { UserComment } from '../../../../../migrations/00007-createTableComments';
 import AddButton from '../../../../components/AddButton';
 import BackButton from '../../../../components/BackButton';
 import CloseButton from '../../../../components/CloseButton';
@@ -18,6 +19,7 @@ type Props = {
   journey: Journey;
   diaries: Diary[];
   diaryImages: DiaryImage[];
+  diaryComments: UserComment[];
   diaryImageLikes: Like[];
   country: string;
   globeUserId: string;
@@ -34,6 +36,7 @@ export default function JourneyDetailedView({
   journey,
   diaries,
   diaryImages,
+  diaryComments,
   diaryImageLikes,
   country,
   globeUserId,
@@ -153,6 +156,9 @@ export default function JourneyDetailedView({
                   diary={diary}
                   diaryImages={diaryImages.filter(
                     (diaryImage) => diaryImage.diaryId === diary.id,
+                  )}
+                  diaryComments={diaryComments.filter(
+                    (diaryComment) => diaryComment.diaryId === diary.id,
                   )}
                   diaryImageLikes={diaryImageLikes}
                   personalGlobe={personalGlobe}

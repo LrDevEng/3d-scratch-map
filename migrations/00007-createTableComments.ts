@@ -1,5 +1,6 @@
 import type { Sql } from 'postgres';
 import { z } from 'zod';
+import type { User } from './00000-createTableUsers';
 
 export const commentSchema = z.object({
   diaryId: z.number(),
@@ -13,6 +14,11 @@ export type Comment = {
   userId: number;
   post: string;
   createdAt: Date;
+};
+
+export type UserComment = Comment & {
+  givenName: User['givenName'];
+  imageUrl: User['imageUrl'];
 };
 
 export async function up(sql: Sql) {

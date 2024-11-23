@@ -1,7 +1,10 @@
 import { cache } from 'react';
 import { type User } from '../migrations/00000-createTableUsers';
 import type { Diary } from '../migrations/00003-createTableDiaries';
-import type { Comment } from '../migrations/00007-createTableComments';
+import type {
+  Comment,
+  UserComment,
+} from '../migrations/00007-createTableComments';
 import { sql } from './connect';
 
 export const createCommentInsecure = cache(
@@ -23,12 +26,19 @@ export const createCommentInsecure = cache(
   },
 );
 
-export const getCommentsInsecure = cache(async (diaryId: Diary['id']) => {
-  const comments = await sql<Comment[]>`
+export const getUserCommentsInsecure = cache(async (diaryId: Diary['id']) => {
+  const comments = await sql<UserComment[]>`
     SELECT
-      *
+      comments.id,
+      comments.diary_id,
+      comments.user_id,
+      comments.post,
+      comments.created_at,
+      users.given_name,
+      users.image_url
     FROM
       comments
+      JOIN users ON comments.user_id = users.id
     WHERE
       comments.diary_id = ${diaryId}
     ORDER BY

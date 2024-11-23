@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
 import { type Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import type { UserComment } from '../../../../../migrations/00007-createTableComments';
 import type { LikeResponseBodyCud } from '../../../../api/likes/[diaryImageId]/route';
 import EditButton from '../../../../components/EditButton';
 import ImageCarousel from '../../../../components/ImageCarousel';
@@ -16,6 +17,7 @@ type Props = {
   currentUserId: number;
   diary: Diary;
   diaryImages: DiaryImage[];
+  diaryComments: UserComment[];
   diaryImageLikes: Like[];
   personalGlobe: boolean;
   onEdit?: () => void;
@@ -26,6 +28,7 @@ export default function DiaryView({
   currentUserId,
   diary,
   diaryImages,
+  diaryComments,
   diaryImageLikes,
   personalGlobe,
   onEdit = () => {},
@@ -151,7 +154,7 @@ export default function DiaryView({
             </div>
           )}
         </button>
-        {showComments && <CommentsView />}
+        {showComments && <CommentsView diaryComments={diaryComments} />}
       </div>
     </div>
   );
