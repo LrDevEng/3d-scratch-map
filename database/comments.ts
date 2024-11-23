@@ -42,7 +42,7 @@ export const getUserCommentsInsecure = cache(async (diaryId: Diary['id']) => {
     WHERE
       comments.diary_id = ${diaryId}
     ORDER BY
-      comments.created_at DESC
+      comments.created_at ASC
   `;
 
   return comments;

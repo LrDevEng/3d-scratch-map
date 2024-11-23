@@ -9,7 +9,7 @@ import { checkAuthentication } from '../../../../util/auth';
 
 type CommentParams = {
   params: Promise<{
-    currentUserId: string;
+    journeyUserId: string;
   }>;
 };
 
@@ -29,7 +29,7 @@ export async function POST(
   const { user, sessionTokenCookie } = await checkAuthentication(undefined);
 
   // 2. Check user authorization for endpoint
-  const endpointUserId = await Number((await params).currentUserId);
+  const endpointUserId = Number((await params).journeyUserId);
   if (endpointUserId !== user.id) {
     const followingUser = await getFollowingUser(
       sessionTokenCookie.value,

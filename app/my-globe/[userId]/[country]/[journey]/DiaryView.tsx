@@ -36,6 +36,8 @@ export default function DiaryView({
   const router = useRouter();
   const [showComments, setShowComments] = useState(false);
 
+  // shadow-[0_0_10px_3px_#ffffffaa]
+
   return (
     <div className="w-full">
       <div className="card my-8 w-full min-w-32 bg-neutral text-neutral-content">
@@ -154,7 +156,14 @@ export default function DiaryView({
             </div>
           )}
         </button>
-        {showComments && <CommentsView diaryComments={diaryComments} />}
+        {showComments && (
+          <CommentsView
+            diaryId={diary.id}
+            diaryComments={diaryComments}
+            journeyUserId={journeyUserId}
+            currentUserId={currentUserId}
+          />
+        )}
       </div>
     </div>
   );
