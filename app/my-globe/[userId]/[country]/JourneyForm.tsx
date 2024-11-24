@@ -116,7 +116,7 @@ export default function JourneyForm({
           setLoading(false);
           router.refresh();
         }}
-        className="card my-8 w-full min-w-32 max-w-[1000px] bg-neutral text-neutral-content"
+        className="card mx-auto my-8 w-full min-w-32 max-w-[1000px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
           {!imgUrl && <div>Chose title image</div>}
@@ -219,7 +219,7 @@ export default function JourneyForm({
             <div className="form-control mt-2 w-full">
               <div className="label flex items-center">
                 <div className="label-text mx-4 text-left text-neutral-content flex-1">
-                  Enter buzz words for the AI generator:
+                  Enter buzz words for the AI generator (Google Gemini):
                 </div>
                 <button
                   className="btn btn-primary mt-4 mb-4 flex-1"
@@ -237,7 +237,7 @@ export default function JourneyForm({
               <textarea
                 data-test-id="journey-form-ai-buzz-words"
                 placeholder="buzz words"
-                className="textarea textarea-bordered min-h-40 w-full"
+                className="textarea textarea-bordered min-h-20 w-full"
                 required
                 value={aiBuzzWords}
                 onChange={(event) => setAiBuzzWords(event.currentTarget.value)}

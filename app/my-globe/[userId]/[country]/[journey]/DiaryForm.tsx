@@ -64,7 +64,7 @@ export default function DiaryForm({
   }
 
   return (
-    <div className="mb-8 flex w-full max-w-[600px] flex-col items-center">
+    <div className="mb-8 flex w-full max-w-[1000px] flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -123,9 +123,10 @@ export default function DiaryForm({
           setLoading(false);
           router.refresh();
         }}
-        className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
+        className="card my-8 w-full min-w-[400px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {(!imgUrls || imgUrls.length === 0) && <div>Chose image(s)</div>}
           {imgUrls && imgUrls.length > 0 && (
             <div className="relative h-[150px] w-full">
               <ImageCarousel
