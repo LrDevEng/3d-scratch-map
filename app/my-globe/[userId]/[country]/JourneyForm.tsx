@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { type Journey } from '../../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../../components/DeleteButton';
 import LoadingRing from '../../../components/LoadingRing';
-import { uploadImage } from './actions';
+import { askGemini, uploadImage } from './actions';
 import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
 type Props = {
@@ -223,7 +223,13 @@ export default function JourneyForm({
                 </div>
                 <button
                   className="btn btn-primary mt-4 mb-4 flex-1"
-                  data-test-id="journey-form-save-button"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    const prompt = aiBuzzWords;
+                    setAiBuzzWords(selectedCountryName);
+                    const aiSummary = await askGemini(prompt);
+                    setSummary((prev) => `${prev} ${aiSummary}`);
+                  }}
                 >
                   generate summary
                 </button>
