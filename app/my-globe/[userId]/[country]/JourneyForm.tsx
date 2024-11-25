@@ -36,6 +36,7 @@ export default function JourneyForm({
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [loadingAi, setLoadingAi] = useState(false);
 
   useEffect(() => {
     if (journey) {
@@ -222,26 +223,35 @@ export default function JourneyForm({
                   Enter buzz words for the AI generator:
                 </div>
                 <button
+                  disabled={loadingAi}
                   className="btn btn-primary mt-4 mb-4 flex-1"
                   onClick={async (event) => {
                     event.preventDefault();
+                    setLoadingAi(true);
                     const prompt = aiBuzzWords;
                     setAiBuzzWords(selectedCountryName);
                     const aiSummary = await askGemini(prompt);
                     setSummary((prev) => `${prev} ${aiSummary}`);
+                    setLoadingAi(false);
                   }}
                 >
                   Generate summary
                 </button>
               </div>
-              <textarea
-                data-test-id="journey-form-ai-buzz-words"
-                placeholder="buzz words"
-                className="textarea textarea-bordered min-h-20 w-full"
-                required
-                value={aiBuzzWords}
-                onChange={(event) => setAiBuzzWords(event.currentTarget.value)}
-              />
+              {!loadingAi && (
+                <textarea
+                  data-test-id="journey-form-ai-buzz-words"
+                  disabled={loadingAi}
+                  placeholder="Buzz words"
+                  className="textarea textarea-bordered min-h-20 w-full"
+                  required
+                  value={aiBuzzWords}
+                  onChange={(event) =>
+                    setAiBuzzWords(event.currentTarget.value)
+                  }
+                />
+              )}
+              {loadingAi && <LoadingRing className="min-h-20" />}
             </div>
           )}
 

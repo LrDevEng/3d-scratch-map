@@ -52,7 +52,7 @@ export default function JourneyDetailedView({
 
   return (
     <div className="relative mx-8 w-full">
-      <div className="fixed z-40 w-full pb-2 pl-2 pt-6">
+      <div className="sticky z-40 w-full pb-2 pl-2 pt-6">
         <CloseButton onClick={() => router.push(`/my-globe/${globeUserId}`)} />
       </div>
       <div className="mt-24 w-full">
