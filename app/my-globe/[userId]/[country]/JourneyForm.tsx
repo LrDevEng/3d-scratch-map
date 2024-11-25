@@ -1,5 +1,7 @@
 'use client';
 
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -37,6 +39,7 @@ export default function JourneyForm({
   const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [loadingAi, setLoadingAi] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (journey) {
@@ -255,7 +258,7 @@ export default function JourneyForm({
             </div>
           )}
 
-          <div className="form-control mt-2 w-full">
+          <div className="relative form-control mt-2 w-full">
             <textarea
               data-test-id="journey-form-summary"
               placeholder="Brief summary of the journey (max. 2000 characters)"
@@ -264,6 +267,28 @@ export default function JourneyForm({
               value={summary}
               onChange={(event) => setSummary(event.currentTarget.value)}
             />
+
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                setShowEmojiPicker((prev) => !prev);
+              }}
+              className="absolute left-[-1rem] top-[-1rem] text-xl"
+            >
+              🙂
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute left-[0.5rem] top-[-28rem] z-50">
+                <Picker
+                  data={data}
+                  onEmojiSelect={(emoji: { native: string }) => {
+                    setSummary((prev) => prev + emoji.native);
+                    setShowEmojiPicker(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
           <div className="card-actions mt-8 w-full justify-end">
             <button

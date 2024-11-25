@@ -1,5 +1,7 @@
 'use client';
 
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,6 +24,7 @@ export default function CommentsView({
 }: Props) {
   const router = useRouter();
   const [post, setPost] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   return (
     <div className="w-full p-4">
@@ -88,7 +91,7 @@ export default function CommentsView({
 
           router.refresh();
         }}
-        className="flex"
+        className="relative flex ml-3"
       >
         <input
           value={post}
@@ -113,6 +116,28 @@ export default function CommentsView({
             <path d="M16 12l-4-4-4 4M12 16V9" />
           </svg>
         </button>
+
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setShowEmojiPicker((prev) => !prev);
+          }}
+          className="absolute left-[-1rem] top-[-1rem] text-xl"
+        >
+          🙂
+        </button>
+
+        {showEmojiPicker && (
+          <div className="absolute left-[0.5rem] top-[-28rem] z-50">
+            <Picker
+              data={data}
+              onEmojiSelect={(emoji: { native: string }) => {
+                setPost((prev) => prev + emoji.native);
+                setShowEmojiPicker(false);
+              }}
+            />
+          </div>
+        )}
       </form>
     </div>
   );

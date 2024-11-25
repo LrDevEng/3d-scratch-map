@@ -1,5 +1,7 @@
 'use client';
 
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,6 +38,7 @@ export default function DiaryForm({
     undefined,
   );
   const [loading, setLoading] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (diary) {
@@ -196,7 +199,7 @@ export default function DiaryForm({
             </div>
           </div>
 
-          <div className="form-control mt-2 w-full">
+          <div className="relative form-control mt-2 w-full">
             <textarea
               data-test-id="diary-form-thoughts"
               placeholder="Your thoughts"
@@ -205,6 +208,28 @@ export default function DiaryForm({
               value={thoughts}
               onChange={(event) => setThoughts(event.currentTarget.value)}
             />
+
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                setShowEmojiPicker((prev) => !prev);
+              }}
+              className="absolute left-[-1rem] top-[-1rem] text-xl"
+            >
+              🙂
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute left-[0.5rem] top-[-28rem] z-50">
+                <Picker
+                  data={data}
+                  onEmojiSelect={(emoji: { native: string }) => {
+                    setThoughts((prev) => prev + emoji.native);
+                    setShowEmojiPicker(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="card-actions mt-8 w-full justify-end">
