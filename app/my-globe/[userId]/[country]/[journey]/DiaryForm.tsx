@@ -168,7 +168,7 @@ export default function DiaryForm({
           <div className="form-control mt-2 w-full">
             <input
               data-test-id="diary-form-title"
-              placeholder="diary title"
+              placeholder="Diary title"
               className="input input-bordered w-full text-center"
               required
               value={title}
@@ -199,7 +199,7 @@ export default function DiaryForm({
           <div className="form-control mt-2 w-full">
             <textarea
               data-test-id="diary-form-thoughts"
-              placeholder="your thoughts"
+              placeholder="Your thoughts"
               className="textarea textarea-bordered min-h-40 w-full"
               required
               value={thoughts}
@@ -212,7 +212,7 @@ export default function DiaryForm({
               className="btn btn-primary w-full"
               data-test-id="diary-form-save-button"
             >
-              save
+              Save
             </button>
           </div>
         </div>

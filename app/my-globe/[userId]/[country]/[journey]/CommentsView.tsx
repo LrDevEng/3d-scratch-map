@@ -93,7 +93,7 @@ export default function CommentsView({
         <input
           value={post}
           onChange={(event) => setPost(event.currentTarget.value)}
-          placeholder="type here"
+          placeholder="Type here"
           className="input input-bordered input-primary w-full mt-2"
         />
         <button className="group ml-4">

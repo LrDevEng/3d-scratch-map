@@ -30,7 +30,7 @@ export default async function Register({ searchParams }: Props) {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8">
+    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8 bg-[url('/images/bg-image.jpg')] bg-contain border-l-2 border-[#424242]">
       <RegisterLogIn returnTo={returnTo} />
     </div>
   );

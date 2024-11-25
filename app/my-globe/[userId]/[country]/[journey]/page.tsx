@@ -130,7 +130,14 @@ export default async function JourneyDetailed(props: Props) {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] w-full overflow-y-auto">
+    <div
+      className="flex h-[calc(100vh-5rem)] min-h-[300px] w-full overflow-y-auto"
+      style={{
+        backgroundImage: "url('/images/bg-image.jpg')",
+        backgroundSize: '700px 700px',
+        backgroundRepeat: 'repeat',
+      }}
+    >
       <JourneyDetailedView
         journey={specificJourney}
         diaries={diaries}

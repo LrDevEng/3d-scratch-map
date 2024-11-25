@@ -23,7 +23,7 @@ export default function FollowersAccepted({
     <div className="flex w-full flex-col">
       <div className="flex w-full items-center">
         <HorizontalDivider />
-        <h3 className="mx-4 text-nowrap">your followers</h3>
+        <h3 className="mx-4 text-nowrap">Your followers</h3>
         <HorizontalDivider />
       </div>
       <table>

@@ -19,7 +19,7 @@ export default function FollowingAccepted({ followingUsers }: Props) {
     <div className="flex w-full flex-col">
       <div className="flex w-full items-center">
         <HorizontalDivider />
-        <h3 className="mx-4 text-nowrap">you are following</h3>
+        <h3 className="mx-4 text-nowrap">You are following</h3>
         <HorizontalDivider />
       </div>
       <table>

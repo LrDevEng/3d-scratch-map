@@ -23,7 +23,7 @@ export default async function NavBar() {
   }
 
   return (
-    <nav className="flex h-20 w-screen items-center justify-between bg-black px-8">
+    <nav className="flex h-20 w-screen items-center justify-between bg-black px-8 border-b-2 border-[#424242]">
       <Link
         className="w-fit"
         href={`/my-globe/${user?.id}`}
@@ -44,7 +44,7 @@ export default async function NavBar() {
             href={`/my-globe/${user.id}`}
             data-test-id="nav-bar-my-globe"
           >
-            my globe
+            My Globe
           </Link>
         )}
         {user && <FollowerUpdates currentUserId={user.id} />}
@@ -54,7 +54,7 @@ export default async function NavBar() {
             href="/followers"
             data-test-id="nav-bar-followers"
           >
-            followers
+            Followers
             {followerUsersPending && followerUsersPending.length > 0 && (
               <div className="absolute right-0 top-0 flex h-7 w-7 items-center rounded-full bg-[#66b14e]">
                 <div className="m-auto w-fit text-base">
@@ -69,7 +69,7 @@ export default async function NavBar() {
           href="/"
           data-test-id="nav-bar-about"
         >
-          about
+          About
         </Link>
         {user ? (
           <div className="duration-250 relative h-[60px] w-[60px] rounded-full border-2 border-white transition-all hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.5)]">
@@ -89,7 +89,7 @@ export default async function NavBar() {
             href="/log-in"
             data-test-id="nav-bar-login"
           >
-            log in
+            Log In
           </Link>
         )}
       </div>

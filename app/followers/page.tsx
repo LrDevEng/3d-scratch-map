@@ -37,10 +37,17 @@ export default async function Followers() {
   );
 
   return (
-    <div className="relative mt-24 flex w-full flex-col items-center bg-black px-8">
+    <div
+      className="relative pt-24 flex w-full flex-col items-center px-8 min-h-full"
+      style={{
+        backgroundImage: "url('/images/bg-image.jpg')",
+        backgroundSize: '700px 700px',
+        backgroundRepeat: 'repeat',
+      }}
+    >
       {/* <FollowerUpdates currentUserId={user.id} /> */}
       <div className="mb-8">
-        <h2 className="mb-4 text-center">search friends</h2>
+        <h2 className="mb-4 text-center">Search friends</h2>
         <SearchFollowers
           followingIds={[
             ...followingUsers.map((followingUser) => followingUser.id),

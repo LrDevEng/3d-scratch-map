@@ -43,9 +43,7 @@ export default function ResizableLayout({
           followingUser={followingUser}
         />
       </Panel>
-      {selected && (
-        <PanelResizeHandle className="w-[4px] shadow shadow-white" />
-      )}
+      {selected && <PanelResizeHandle className="w-[2px] bg-[#424242]" />}
       {selected && (
         <Panel
           id="my-globe-panel-2"

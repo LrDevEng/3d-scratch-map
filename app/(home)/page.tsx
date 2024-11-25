@@ -17,9 +17,9 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8">
+    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8 bg-[url('/images/bg-image.jpg')] bg-contain border-l-2 border-[#424242]">
       <div className="flex flex-col items-center text-center">
-        <h3>welcome to</h3>
+        <h3>Welcome to</h3>
         <div className="my-8">
           <Image
             className="mb-2 ml-6"

@@ -154,7 +154,7 @@ export default function JourneyForm({
           <div className="form-control mt-2 w-full">
             <input
               data-test-id="journey-form-title"
-              placeholder="journey title"
+              placeholder="Journey title"
               className="input input-bordered w-full text-center"
               required
               value={title}
@@ -202,7 +202,7 @@ export default function JourneyForm({
           <div className="form-control mt-2 w-full">
             <label className="label flex justify-start">
               <div className="label-text mx-4 text-left text-neutral-content">
-                Get AI inpiration
+                Get AI inspiration
               </div>
               <input
                 type="checkbox"
@@ -219,7 +219,7 @@ export default function JourneyForm({
             <div className="form-control mt-2 w-full">
               <div className="label flex items-center">
                 <div className="label-text mx-4 text-left text-neutral-content flex-1">
-                  Enter buzz words for the AI generator (Google Gemini):
+                  Enter buzz words for the AI generator:
                 </div>
                 <button
                   className="btn btn-primary mt-4 mb-4 flex-1"
@@ -231,7 +231,7 @@ export default function JourneyForm({
                     setSummary((prev) => `${prev} ${aiSummary}`);
                   }}
                 >
-                  generate summary
+                  Generate summary
                 </button>
               </div>
               <textarea
@@ -248,7 +248,7 @@ export default function JourneyForm({
           <div className="form-control mt-2 w-full">
             <textarea
               data-test-id="journey-form-summary"
-              placeholder="brief summary of the journey (max. 2000 characters)"
+              placeholder="Brief summary of the journey (max. 2000 characters)"
               className="textarea textarea-bordered min-h-40 w-full"
               required
               value={summary}
@@ -260,7 +260,7 @@ export default function JourneyForm({
               className="btn btn-primary w-full"
               data-test-id="journey-form-save-button"
             >
-              save
+              Save
             </button>
           </div>
         </div>

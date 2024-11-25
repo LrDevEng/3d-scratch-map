@@ -135,7 +135,7 @@ export default function UserGlobe({
         <div className="mx-8 my-4 rounded-xl border border-white bg-base-100 px-4 py-4">
           <h3>Control Center</h3>
           <div className="mt-2 flex">
-            <div className="mr-4">zoom:</div>
+            <div className="mr-4">Zoom:</div>
             <input
               type="range"
               min="-15"
@@ -149,7 +149,7 @@ export default function UserGlobe({
             />
           </div>
           <div className="mt-2 flex w-full justify-between">
-            <div className="mr-4">auto rotate (globe):</div>
+            <div className="mr-4">Auto rotate (globe):</div>
             <input
               type="checkbox"
               checked={globeRotation}
@@ -158,7 +158,7 @@ export default function UserGlobe({
             />
           </div>
           <div className="mt-2 flex w-full justify-between">
-            <div className="mr-4">auto rotate (stars):</div>
+            <div className="mr-4">Auto rotate (stars):</div>
             <input
               type="checkbox"
               checked={starRotation}
