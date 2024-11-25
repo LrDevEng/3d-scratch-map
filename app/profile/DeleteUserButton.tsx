@@ -8,9 +8,9 @@ export default function DeleteUserButton() {
   const router = useRouter();
 
   return (
-    <form>
+    <form className="w-full">
       <button
-        className="btn btn-ghost"
+        className="btn btn-error w-full"
         data-test-id="profile-page-confirm-deletion"
         formAction={async () => {
           if (await deleteAccount()) {

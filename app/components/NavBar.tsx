@@ -66,7 +66,7 @@ export default async function NavBar() {
         )}
         <Link
           className="px-8 transition-all duration-500 hover:-translate-y-1 hover:underline"
-          href="/"
+          href="/about"
           data-test-id="nav-bar-about"
         >
           About

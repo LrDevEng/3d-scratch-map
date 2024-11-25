@@ -9,7 +9,7 @@ export default function LogoutButton() {
   return (
     <form>
       <button
-        className="btn btn-ghost"
+        className="btn btn-primary w-full"
         data-test-id="profile-logout-button"
         formAction={async () => {
           await logout();

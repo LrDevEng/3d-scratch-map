@@ -22,27 +22,29 @@ export default async function Profile() {
         backgroundRepeat: 'repeat',
       }}
     >
-      <div className="absolute right-0 top-0">
-        <LogoutButton />
-        <DeleteAccount />
-      </div>
       <ProfilePicture profileImgSrc={profileImgSrc} />
-      <table>
-        <tbody>
-          <tr>
-            <td className="pt-4">Email:</td>
-            <td className="pl-8 pt-4">{user.email}</td>
-          </tr>
-          <tr>
-            <td className="pt-4">Name:</td>
-            <td className="pl-8 pt-4">{user.givenName}</td>
-          </tr>
-          <tr>
-            <td className="pt-4">Surname:</td>
-            <td className="pl-8 pt-4">{user.familyName}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <td className="pt-4">Email:</td>
+              <td className="pl-8 pt-4">{user.email}</td>
+            </tr>
+            <tr>
+              <td className="pt-4">Name:</td>
+              <td className="pl-8 pt-4">{user.givenName}</td>
+            </tr>
+            <tr>
+              <td className="pt-4">Surname:</td>
+              <td className="pl-8 pt-4">{user.familyName}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="mt-8">
+          <LogoutButton />
+          <DeleteAccount />
+        </div>
+      </div>
     </div>
   );
 }
