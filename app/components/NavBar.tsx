@@ -26,7 +26,7 @@ export default async function NavBar() {
     <nav className="flex h-20 w-screen items-center justify-between bg-black px-8 border-b-2 border-[#424242]">
       <Link
         className="w-fit"
-        href={`/my-globe/${user?.id}`}
+        href={user ? `/my-globe/${user.id}` : '/'}
         data-test-id="nav-bar-home"
       >
         <Image

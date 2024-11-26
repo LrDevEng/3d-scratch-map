@@ -1,4 +1,5 @@
 import daisyui from 'daisyui';
+import { forest } from 'daisyui/src/theming/themes';
 import type { Config } from 'tailwindcss';
 import * as twAnimate from 'tailwindcss-animate';
 
@@ -24,7 +25,15 @@ const config: Config = {
   },
   plugins: [daisyui, twAnimate],
   daisyui: {
-    themes: ['forest'],
+    themes: [
+      {
+        forest: {
+          ...forest,
+          primary: '#66b14e',
+          neutral: '#313131',
+        },
+      },
+    ],
   },
 };
 export default config;
