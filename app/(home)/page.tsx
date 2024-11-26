@@ -64,13 +64,13 @@ export default async function Home() {
           />
         </div>
 
-        <div className="mt-24 px-12 w-full flex flex-col items-center">
+        <div className="mt-24 px-12 w-full flex flex-col items-center mb-8">
           <h2 className=" self-start">Share Your Adventures.</h2>
           <h2>Tell Your Story.</h2>
           <h2 className=" self-end">Follow Your Friends.</h2>
           <Image
             className="mb-2 ml-6 rounded-xl mt-8"
-            src="/images/terra.jpg"
+            src="/images/conversation.png"
             alt="example followers"
             width={400}
             height={400}

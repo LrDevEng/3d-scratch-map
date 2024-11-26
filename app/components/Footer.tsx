@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <div className="w-full bg-black px-8 py-4 border-t-2 border-[#424242]">
+    <div className="w-full bg-black px-8 py-4 border-t-2 border-[#424242] flex flex-col items-center">
       <div className="text-sm">Designed & Developed with 💚 by LrDevEng</div>
 
       <div className="w-fit">
