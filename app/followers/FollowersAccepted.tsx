@@ -56,7 +56,7 @@ export default function FollowersAccepted({
                     {followerUser.email}
                   </div>
                 </td>
-                <td className="w-48 px-4 py-2">
+                <td className="w-36 px-4 py-2">
                   <button
                     className="btn btn-ghost"
                     onClick={async () => {
@@ -82,7 +82,7 @@ export default function FollowersAccepted({
                     remove
                   </button>
                 </td>
-                <td className="w-48">
+                <td className="w-60 ">
                   {!followingUsers.some(
                     (followingUser) => followingUser.id === followerUser.id,
                   ) && (

@@ -63,6 +63,13 @@ export default async function Followers() {
             <FollowingPending followingUsers={followingUsersPending} />
           )}
 
+          {followingUsersAccepted.length === 0 &&
+            followingUsersPending.length === 0 && (
+              <div className="m-4">
+                Follow your friends to check out what they are up to.
+              </div>
+            )}
+
           <FollowersAccepted
             followerUsers={followerUsersAccepted}
             followingUsers={followingUsers}
