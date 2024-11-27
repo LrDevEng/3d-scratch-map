@@ -131,7 +131,7 @@ export default function DiaryForm({
         <div className="card-body items-center text-center">
           {(!imgUrls || imgUrls.length === 0) && <div>Chose image(s)</div>}
           {imgUrls && imgUrls.length > 0 && (
-            <div className="relative h-[150px] w-full">
+            <div className="relative h-[150px] w-[450px]">
               <ImageCarousel
                 currentUserId={undefined}
                 diaryImages={undefined}
