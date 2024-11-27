@@ -15,6 +15,9 @@ Bon voyage.
 - PostreSQL
 - TypeScript
 - Tailwind
+- Google Gemini
+- RESTful APIs
+- Cloudinary
 
 ### 3D Technologies
 
