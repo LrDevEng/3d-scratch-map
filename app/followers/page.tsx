@@ -38,7 +38,7 @@ export default async function Followers() {
   );
 
   return (
-    <div className="flex flex-col min-h-full mb-8">
+    <div className="flex flex-col h-full">
       <div
         className="relative pt-24 flex w-full flex-col items-center px-8 flex-grow"
         style={{

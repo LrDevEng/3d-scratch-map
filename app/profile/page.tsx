@@ -15,9 +15,9 @@ export default async function Profile() {
   const profileImgSrc = user.imageUrl ? user.imageUrl : '/icons/userIcon.svg';
 
   return (
-    <div className="flex flex-col min-h-full mb-8">
+    <div className="flex flex-col h-full">
       <div
-        className="relative px-8 pt-24 flex flex-col items-center min-h-full flex-grow"
+        className="relative px-8 pt-24 flex flex-col items-center flex-grow"
         style={{
           backgroundImage: "url('/images/bg-image.jpg')",
           backgroundSize: '700px 700px',
