@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type Journey } from '../../../../migrations/00002-createTableJourneys';
 import AddButton from '../../../components/AddButton';
 import HorizontalDivider from '../../../components/HorizontalDivider';
+import LoadingRing from '../../../components/LoadingRing';
 import JourneyCardCompact from './JourneyCardCompact';
 import JourneyForm from './JourneyForm';
 
@@ -29,6 +30,11 @@ export default function Journeys({
     show: false,
     journeyToEdit: undefined,
   });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [journeys]);
 
   return (
     <div className="text-center">
@@ -49,28 +55,37 @@ export default function Journeys({
         )}
         <HorizontalDivider />
       </div>
-      {showJourneyForm.show && personalGlobe && (
+
+      {loading && (
+        <div className="w-full flex justify-center">
+          <LoadingRing />
+        </div>
+      )}
+
+      {showJourneyForm.show && personalGlobe && !loading && (
         <div className="flex justify-center w-full">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
             selectedCountryName={selectedCountryName}
             journey={showJourneyForm.journeyToEdit}
-            onSubmit={() =>
+            onSubmit={() => {
+              setLoading(true);
               setShowJourneyForm((prev) => ({
                 show: !prev.show,
                 journeyToEdit: undefined,
-              }))
-            }
-            onDelete={() =>
+              }));
+            }}
+            onDelete={() => {
+              setLoading(true);
               setShowJourneyForm((prev) => ({
                 show: !prev.show,
                 journeyToEdit: undefined,
-              }))
-            }
+              }));
+            }}
           />
         </div>
       )}
-      {!showJourneyForm.show && journeys.length === 0 && (
+      {!showJourneyForm.show && journeys.length === 0 && !loading && (
         <div className="mt-4">
           <svg
             className="mx-auto"
@@ -92,6 +107,7 @@ export default function Journeys({
         </div>
       )}
       {!showJourneyForm.show &&
+        !loading &&
         journeys.map((journey, index) => {
           return (
             <div key={`journey-${journey.id}`}>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Journey } from '../../../../../migrations/00002-createTableJourneys';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
@@ -12,6 +12,7 @@ import AddButton from '../../../../components/AddButton';
 import BackButton from '../../../../components/BackButton';
 import CloseButton from '../../../../components/CloseButton';
 import HorizontalDivider from '../../../../components/HorizontalDivider';
+import LoadingRing from '../../../../components/LoadingRing';
 import DiaryForm from './DiaryForm';
 import DiaryView from './DiaryView';
 
@@ -49,6 +50,11 @@ export default function JourneyDetailedView({
     show: false,
     diaryToEdit: undefined,
   });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [diaries]);
 
   return (
     <div className="relative mx-8 w-full">
@@ -120,7 +126,13 @@ export default function JourneyDetailedView({
           <HorizontalDivider />
         </div>
 
-        {showDiaryForm.show && personalGlobe && (
+        {loading && (
+          <div className="w-full flex justify-center">
+            <LoadingRing />
+          </div>
+        )}
+
+        {showDiaryForm.show && personalGlobe && !loading && (
           <div className="flex justify-center">
             <DiaryForm
               journeyId={journey.id}
@@ -131,45 +143,51 @@ export default function JourneyDetailedView({
                     diaryImage.diaryId === showDiaryForm.diaryToEdit?.id,
                 )
                 .map((diaryImage) => diaryImage.imageUrl)}
-              onSubmit={() =>
+              onSubmit={() => {
+                setLoading(true);
                 setShowDiaryForm((prev) => ({
                   show: !prev.show,
                   diaryToEdit: undefined,
-                }))
-              }
-              onDelete={() =>
+                }));
+              }}
+              onDelete={() => {
+                setLoading(true);
                 setShowDiaryForm((prev) => ({
                   show: !prev.show,
                   diaryToEdit: undefined,
-                }))
-              }
+                }));
+              }}
             />
           </div>
         )}
 
-        {!showDiaryForm.show && personalGlobe && diaries.length === 0 && (
-          <div className="mt-4">
-            <svg
-              className="mx-auto"
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 19V6M5 12l7-7 7 7" />
-            </svg>
-            <h3 className="mt-2 text-center">
-              Create your first diary entry here.
-            </h3>
-          </div>
-        )}
+        {!showDiaryForm.show &&
+          personalGlobe &&
+          diaries.length === 0 &&
+          !loading && (
+            <div className="mt-4">
+              <svg
+                className="mx-auto"
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 19V6M5 12l7-7 7 7" />
+              </svg>
+              <h3 className="mt-2 text-center">
+                Create your first diary entry here.
+              </h3>
+            </div>
+          )}
 
         {!showDiaryForm.show &&
+          !loading &&
           diaries.map((diary) => {
             return (
               <div key={`diary-${diary.id}`}>
