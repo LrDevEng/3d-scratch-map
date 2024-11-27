@@ -45,6 +45,7 @@ export default function Journeys({
           <AddButton
             data-test-id="add-journey-button"
             open={showJourneyForm.show}
+            disabled={loading}
             onClick={() =>
               setShowJourneyForm((prev) => ({
                 show: !prev.show,

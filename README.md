@@ -12,12 +12,17 @@ Bon voyage.
 
 - Next.js
 - Node.js
-- PostreSQL
-- TypeScript
+- PostgreSQL
+- TypeScript/JavaScript
 - Tailwind
 - Google Gemini
 - RESTful APIs
-- Cloudinary
+- Cloudinary API
+- Server Sent Events (SSE)
+  - PostgreSQL's LISTEN/NOTIFY design pattern
+  - EventSource
+- Jest
+- Playwright
 
 ### 3D Technologies
 
@@ -28,6 +33,8 @@ Bon voyage.
 - [three-geojson-geometry](https://github.com/vasturiano/three-geojson-geometry)
 
 ## Impressions
+
+Check out the deployed version here: https://terra-scratch.vercel.app/
 
 ## Getting started (locally)
 

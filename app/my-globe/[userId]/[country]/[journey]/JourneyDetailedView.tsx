@@ -115,6 +115,7 @@ export default function JourneyDetailedView({
             <AddButton
               data-test-id="add-diary-button"
               open={showDiaryForm.show}
+              disabled={loading}
               onClick={() =>
                 setShowDiaryForm((prev) => ({
                   show: !prev.show,
