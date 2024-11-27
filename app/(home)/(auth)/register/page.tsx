@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getValidSessionToken } from '../../../../database/sessions';
 import { getUser } from '../../../../database/users';
 import { getSafeReturnToPath } from '../../../../util/validation';
+import Footer from '../../../components/Footer';
 import RegisterLogIn from '../../RegisterLogIn';
 
 type Props = {
@@ -30,8 +31,11 @@ export default async function Register({ searchParams }: Props) {
   }
 
   return (
-    <div className="flex h-[calc(100vh-5rem)] min-h-[300px] flex-grow flex-col items-center justify-evenly overflow-y-auto overflow-x-hidden px-8">
-      <RegisterLogIn returnTo={returnTo} />
+    <div className="flex flex-col overflow-y-auto overflow-x-hidden h-[calc(100vh-5rem)] min-h-[300px] border-l-2 border-[#424242] bg-[url('/images/bg-image.jpg')] bg-contain">
+      <div className="flex flex-grow flex-col items-center justify-evenly px-8 ">
+        <RegisterLogIn returnTo={returnTo} />
+      </div>
+      <Footer />
     </div>
   );
 }

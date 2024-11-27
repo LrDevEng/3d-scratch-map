@@ -1,5 +1,6 @@
 'use server';
 
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { UploadApiResponse, UploadStream } from 'cloudinary';
 import { v2 as cloudinary } from 'cloudinary';
 
@@ -55,4 +56,23 @@ export async function uploadImage(imgToUpload: File) {
     console.log('Cloudinary img upload error: ', error);
   }
   return url;
+}
+
+// Prompt Google Gemini AI
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+const model = genAI.getGenerativeModel({
+  model: 'gemini-1.5-flash',
+  generationConfig: {
+    candidateCount: 1,
+    maxOutputTokens: 250,
+    temperature: 1.5,
+  },
+});
+const promptBase =
+  'Please write me an informative summary about a personal journey using the following buzz words: ';
+
+export async function askGemini(prompt: string) {
+  const result = await model.generateContent(promptBase + prompt);
+
+  return result.response.text();
 }

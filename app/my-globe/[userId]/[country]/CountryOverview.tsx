@@ -32,7 +32,7 @@ export default function CountryOverview({
 
   return (
     <div className="relative mx-8 w-full">
-      <div className="fixed z-40 w-full bg-black pb-2 pl-2 pt-6">
+      <div className="sticky z-40 w-full pb-2 pl-2 pt-6">
         <CloseButton
           onClick={() => router.push(`/my-globe/${userId}`)}
           data-test-id="close-country-view-button"
@@ -59,6 +59,7 @@ export default function CountryOverview({
         <Journeys
           journeys={journeys}
           selectedCountryAdm0A3={selectedCountryAdm0A3}
+          selectedCountryName={selectedCountryName}
           userId={userId}
           personalGlobe={personalGlobe}
         />

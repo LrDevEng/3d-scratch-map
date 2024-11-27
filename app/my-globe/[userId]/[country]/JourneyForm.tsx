@@ -1,5 +1,7 @@
 'use client';
 
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -8,11 +10,12 @@ import toast from 'react-hot-toast';
 import { type Journey } from '../../../../migrations/00002-createTableJourneys';
 import DeleteButton from '../../../components/DeleteButton';
 import LoadingRing from '../../../components/LoadingRing';
-import { uploadImage } from './actions';
+import { askGemini, uploadImage } from './actions';
 import { createOrUpdateJourney, deleteJourney } from './journeyApiCalls';
 
 type Props = {
   selectedCountryAdm0A3: string;
+  selectedCountryName: string;
   journey: Journey | undefined;
   onSubmit?: () => void;
   onDelete?: () => void;
@@ -20,6 +23,7 @@ type Props = {
 
 export default function JourneyForm({
   selectedCountryAdm0A3,
+  selectedCountryName,
   journey,
   onSubmit,
   onDelete,
@@ -29,9 +33,13 @@ export default function JourneyForm({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [summary, setSummary] = useState('');
+  const [aiSupport, setAiSupport] = useState(false);
+  const [aiBuzzWords, setAiBuzzWords] = useState(selectedCountryName);
   const [imgUrl, setImgUrl] = useState<string | undefined>(undefined);
   const [imgToUpload, setImgToUpload] = useState<File | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [loadingAi, setLoadingAi] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (journey) {
@@ -61,7 +69,7 @@ export default function JourneyForm({
   }
 
   return (
-    <div className="mb-8">
+    <div className="mx-auto mb-8 w-full">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -112,9 +120,10 @@ export default function JourneyForm({
           setLoading(false);
           router.refresh();
         }}
-        className="card my-8 w-full min-w-32 max-w-[800px] bg-neutral text-neutral-content"
+        className="card mx-auto my-8 w-full min-w-32 max-w-[1000px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {!imgUrl && <div>Chose title image</div>}
           {imgUrl && (
             <div className="relative h-[150px] w-full">
               <Image
@@ -146,18 +155,16 @@ export default function JourneyForm({
               }}
             />
           </div>
-
           <div className="form-control mt-2 w-full">
             <input
               data-test-id="journey-form-title"
-              placeholder="journey title"
+              placeholder="Journey title"
               className="input input-bordered w-full text-center"
               required
               value={title}
               onChange={(event) => setTitle(event.currentTarget.value)}
             />
           </div>
-
           <div className="flex w-full">
             <div className="form-control mt-2 w-full">
               <label className="label flex">
@@ -197,22 +204,98 @@ export default function JourneyForm({
           </div>
 
           <div className="form-control mt-2 w-full">
+            <label className="label flex justify-start">
+              <div className="label-text mx-4 text-left text-neutral-content">
+                Get AI inspiration
+              </div>
+              <input
+                type="checkbox"
+                checked={aiSupport}
+                onChange={() => {
+                  setAiSupport(!aiSupport);
+                }}
+                className="checkbox checkbox-primary"
+              />
+            </label>
+          </div>
+
+          {aiSupport && (
+            <div className="form-control mt-2 w-full">
+              <div className="label flex items-center">
+                <div className="label-text mx-4 text-left text-neutral-content flex-1">
+                  Enter buzz words for the AI generator:
+                </div>
+                <button
+                  disabled={loadingAi}
+                  className="btn btn-primary mt-4 mb-4 flex-1"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    setLoadingAi(true);
+                    const prompt = aiBuzzWords;
+                    setAiBuzzWords(selectedCountryName);
+                    const aiSummary = await askGemini(prompt);
+                    setSummary((prev) => `${prev} ${aiSummary}`);
+                    setLoadingAi(false);
+                  }}
+                >
+                  Generate summary
+                </button>
+              </div>
+              {!loadingAi && (
+                <textarea
+                  data-test-id="journey-form-ai-buzz-words"
+                  disabled={loadingAi}
+                  placeholder="Buzz words"
+                  className="textarea textarea-bordered min-h-20 w-full"
+                  required
+                  value={aiBuzzWords}
+                  onChange={(event) =>
+                    setAiBuzzWords(event.currentTarget.value)
+                  }
+                />
+              )}
+              {loadingAi && <LoadingRing className="min-h-20" />}
+            </div>
+          )}
+
+          <div className="relative form-control mt-2 w-full">
             <textarea
               data-test-id="journey-form-summary"
-              placeholder="brief summary of the journey (max. 2000 characters)"
+              placeholder="Brief summary of the journey (max. 2000 characters)"
               className="textarea textarea-bordered min-h-40 w-full"
               required
               value={summary}
               onChange={(event) => setSummary(event.currentTarget.value)}
             />
-          </div>
 
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                setShowEmojiPicker((prev) => !prev);
+              }}
+              className="absolute left-[-1rem] top-[-1rem] text-xl"
+            >
+              🙂
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute left-[0.5rem] top-[-28rem] z-50">
+                <Picker
+                  data={data}
+                  onEmojiSelect={(emoji: { native: string }) => {
+                    setSummary((prev) => prev + emoji.native);
+                    setShowEmojiPicker(false);
+                  }}
+                />
+              </div>
+            )}
+          </div>
           <div className="card-actions mt-8 w-full justify-end">
             <button
               className="btn btn-primary w-full"
               data-test-id="journey-form-save-button"
             >
-              save
+              Save
             </button>
           </div>
         </div>

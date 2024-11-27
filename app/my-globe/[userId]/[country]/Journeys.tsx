@@ -8,6 +8,7 @@ import JourneyForm from './JourneyForm';
 type Props = {
   journeys: Journey[];
   selectedCountryAdm0A3: string;
+  selectedCountryName: string;
   userId: string;
   personalGlobe: boolean;
 };
@@ -20,6 +21,7 @@ type ShowJourneyForm = {
 export default function Journeys({
   journeys,
   selectedCountryAdm0A3,
+  selectedCountryName,
   userId,
   personalGlobe,
 }: Props) {
@@ -48,9 +50,10 @@ export default function Journeys({
         <HorizontalDivider />
       </div>
       {showJourneyForm.show && personalGlobe && (
-        <div className="flex justify-center">
+        <div className="flex justify-center w-full">
           <JourneyForm
             selectedCountryAdm0A3={selectedCountryAdm0A3}
+            selectedCountryName={selectedCountryName}
             journey={showJourneyForm.journeyToEdit}
             onSubmit={() =>
               setShowJourneyForm((prev) => ({
@@ -65,6 +68,27 @@ export default function Journeys({
               }))
             }
           />
+        </div>
+      )}
+      {!showJourneyForm.show && journeys.length === 0 && (
+        <div className="mt-4">
+          <svg
+            className="mx-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M12 19V6M5 12l7-7 7 7" />
+          </svg>
+          <h3 className="mt-2">
+            First time in {selectedCountryName}? Create your new journey here.
+          </h3>
         </div>
       )}
       {!showJourneyForm.show &&

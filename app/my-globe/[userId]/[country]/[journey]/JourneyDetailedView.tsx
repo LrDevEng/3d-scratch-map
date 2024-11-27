@@ -7,6 +7,7 @@ import type { Journey } from '../../../../../migrations/00002-createTableJourney
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
 import type { Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import type { UserComment } from '../../../../../migrations/00007-createTableComments';
 import AddButton from '../../../../components/AddButton';
 import BackButton from '../../../../components/BackButton';
 import CloseButton from '../../../../components/CloseButton';
@@ -18,6 +19,7 @@ type Props = {
   journey: Journey;
   diaries: Diary[];
   diaryImages: DiaryImage[];
+  diaryComments: UserComment[];
   diaryImageLikes: Like[];
   country: string;
   globeUserId: string;
@@ -34,6 +36,7 @@ export default function JourneyDetailedView({
   journey,
   diaries,
   diaryImages,
+  diaryComments,
   diaryImageLikes,
   country,
   globeUserId,
@@ -49,7 +52,7 @@ export default function JourneyDetailedView({
 
   return (
     <div className="relative mx-8 w-full">
-      <div className="fixed z-40 w-full bg-black pb-2 pl-2 pt-6">
+      <div className="sticky z-40 w-full pb-2 pl-2 pt-6">
         <CloseButton onClick={() => router.push(`/my-globe/${globeUserId}`)} />
       </div>
       <div className="mt-24 w-full">
@@ -143,6 +146,29 @@ export default function JourneyDetailedView({
             />
           </div>
         )}
+
+        {!showDiaryForm.show && personalGlobe && diaries.length === 0 && (
+          <div className="mt-4">
+            <svg
+              className="mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 19V6M5 12l7-7 7 7" />
+            </svg>
+            <h3 className="mt-2 text-center">
+              Create your first diary entry here.
+            </h3>
+          </div>
+        )}
+
         {!showDiaryForm.show &&
           diaries.map((diary) => {
             return (
@@ -153,6 +179,9 @@ export default function JourneyDetailedView({
                   diary={diary}
                   diaryImages={diaryImages.filter(
                     (diaryImage) => diaryImage.diaryId === diary.id,
+                  )}
+                  diaryComments={diaryComments.filter(
+                    (diaryComment) => diaryComment.diaryId === diary.id,
                   )}
                   diaryImageLikes={diaryImageLikes}
                   personalGlobe={personalGlobe}

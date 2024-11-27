@@ -1,5 +1,7 @@
 'use client';
 
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,6 +38,7 @@ export default function DiaryForm({
     undefined,
   );
   const [loading, setLoading] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     if (diary) {
@@ -64,7 +67,7 @@ export default function DiaryForm({
   }
 
   return (
-    <div className="mb-8 flex w-full max-w-[600px] flex-col items-center">
+    <div className="mb-8 flex w-full max-w-[1000px] flex-col items-center">
       <form
         onSubmit={async (event) => {
           event.preventDefault();
@@ -123,9 +126,10 @@ export default function DiaryForm({
           setLoading(false);
           router.refresh();
         }}
-        className="card my-8 w-full min-w-[400px] max-w-[800px] bg-neutral text-neutral-content"
+        className="card my-8 w-full min-w-[400px] bg-neutral text-neutral-content"
       >
         <div className="card-body items-center text-center">
+          {(!imgUrls || imgUrls.length === 0) && <div>Chose image(s)</div>}
           {imgUrls && imgUrls.length > 0 && (
             <div className="relative h-[150px] w-full">
               <ImageCarousel
@@ -167,7 +171,7 @@ export default function DiaryForm({
           <div className="form-control mt-2 w-full">
             <input
               data-test-id="diary-form-title"
-              placeholder="diary title"
+              placeholder="Diary title"
               className="input input-bordered w-full text-center"
               required
               value={title}
@@ -195,15 +199,37 @@ export default function DiaryForm({
             </div>
           </div>
 
-          <div className="form-control mt-2 w-full">
+          <div className="relative form-control mt-2 w-full">
             <textarea
               data-test-id="diary-form-thoughts"
-              placeholder="your thoughts"
+              placeholder="Your thoughts"
               className="textarea textarea-bordered min-h-40 w-full"
               required
               value={thoughts}
               onChange={(event) => setThoughts(event.currentTarget.value)}
             />
+
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                setShowEmojiPicker((prev) => !prev);
+              }}
+              className="absolute left-[-1rem] top-[-1rem] text-xl"
+            >
+              🙂
+            </button>
+
+            {showEmojiPicker && (
+              <div className="absolute left-[0.5rem] top-[-28rem] z-50">
+                <Picker
+                  data={data}
+                  onEmojiSelect={(emoji: { native: string }) => {
+                    setThoughts((prev) => prev + emoji.native);
+                    setShowEmojiPicker(false);
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="card-actions mt-8 w-full justify-end">
@@ -211,7 +237,7 @@ export default function DiaryForm({
               className="btn btn-primary w-full"
               data-test-id="diary-form-save-button"
             >
-              save
+              Save
             </button>
           </div>
         </div>

@@ -1,19 +1,23 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import type { Diary } from '../../../../../migrations/00003-createTableDiaries';
 import type { DiaryImage } from '../../../../../migrations/00004-createTableDiaryImages';
 import { type Like } from '../../../../../migrations/00006-createTableDiaryImageLikes';
+import type { UserComment } from '../../../../../migrations/00007-createTableComments';
 import type { LikeResponseBodyCud } from '../../../../api/likes/[diaryImageId]/route';
 import EditButton from '../../../../components/EditButton';
 import ImageCarousel from '../../../../components/ImageCarousel';
+import CommentsView from './CommentsView';
 
 type Props = {
   journeyUserId: number;
   currentUserId: number;
   diary: Diary;
   diaryImages: DiaryImage[];
+  diaryComments: UserComment[];
   diaryImageLikes: Like[];
   personalGlobe: boolean;
   onEdit?: () => void;
@@ -24,11 +28,15 @@ export default function DiaryView({
   currentUserId,
   diary,
   diaryImages,
+  diaryComments,
   diaryImageLikes,
   personalGlobe,
   onEdit = () => {},
 }: Props) {
   const router = useRouter();
+  const [showComments, setShowComments] = useState(false);
+
+  // shadow-[0_0_10px_3px_#ffffffaa]
 
   return (
     <div className="w-full">
@@ -106,6 +114,56 @@ export default function DiaryView({
             </div>
           )}
         </div>
+        <button
+          className="group hover:text-[#66b14e]"
+          onClick={() => setShowComments((prev) => !prev)}
+        >
+          {showComments ? (
+            <div className="flex justify-center">
+              <svg
+                className="group-hover:stroke-[#66b14e]"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 15l-6-6-6 6" />
+              </svg>
+              <div className="ml-2 mb-4">hide comments</div>
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <svg
+                className="group-hover:stroke-[#66b14e]"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+              <div className="ml-2 mb-4">show comments</div>
+            </div>
+          )}
+        </button>
+        {showComments && (
+          <CommentsView
+            diaryId={diary.id}
+            diaryComments={diaryComments}
+            journeyUserId={journeyUserId}
+            currentUserId={currentUserId}
+          />
+        )}
       </div>
     </div>
   );

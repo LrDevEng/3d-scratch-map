@@ -23,7 +23,7 @@ export default function FollowersAccepted({
     <div className="flex w-full flex-col">
       <div className="flex w-full items-center">
         <HorizontalDivider />
-        <h3 className="mx-4 text-nowrap">your followers</h3>
+        <h3 className="mx-4 text-nowrap">Your followers</h3>
         <HorizontalDivider />
       </div>
       <table>
@@ -56,7 +56,7 @@ export default function FollowersAccepted({
                     {followerUser.email}
                   </div>
                 </td>
-                <td className="w-48 px-4 py-2">
+                <td className="w-36 px-4 py-2">
                   <button
                     className="btn btn-ghost"
                     onClick={async () => {
@@ -82,7 +82,7 @@ export default function FollowersAccepted({
                     remove
                   </button>
                 </td>
-                <td className="w-48">
+                <td className="w-60 ">
                   {!followingUsers.some(
                     (followingUser) => followingUser.id === followerUser.id,
                   ) && (

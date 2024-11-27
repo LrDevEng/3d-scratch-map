@@ -11,7 +11,7 @@ export default async function HomeLayout({
   return (
     <div className="flex h-full w-full">
       <HomeSpace countryData={countryData} />
-      {children}
+      <div className="w-3/12">{children}</div>
     </div>
   );
 }

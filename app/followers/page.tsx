@@ -1,5 +1,6 @@
 import { getFollowerUsers, getFollowingUsers } from '../../database/followers';
 import { checkAuthentication } from '../../util/auth';
+import Footer from '../components/Footer';
 import FollowersAccepted from './FollowersAccepted';
 import FollowersPending from './FollowersPending';
 import FollowingAccepted from './FollowingAccepted';
@@ -37,31 +38,48 @@ export default async function Followers() {
   );
 
   return (
-    <div className="relative mt-24 flex w-full flex-col items-center bg-black px-8">
-      {/* <FollowerUpdates currentUserId={user.id} /> */}
-      <div className="mb-8">
-        <h2 className="mb-4 text-center">search friends</h2>
-        <SearchFollowers
-          followingIds={[
-            ...followingUsers.map((followingUser) => followingUser.id),
-            user.id,
-          ]}
-        />
-      </div>
-      <div>
-        <FollowingAccepted followingUsers={followingUsersAccepted} />
-        {followingUsersPending.length > 0 && (
-          <FollowingPending followingUsers={followingUsersPending} />
-        )}
+    <div className="flex flex-col min-h-full mb-8">
+      <div
+        className="relative pt-24 flex w-full flex-col items-center px-8 flex-grow"
+        style={{
+          backgroundImage: "url('/images/bg-image.jpg')",
+          backgroundSize: '700px 700px',
+          backgroundRepeat: 'repeat',
+        }}
+      >
+        {/* <FollowerUpdates currentUserId={user.id} /> */}
+        <div className="mb-8">
+          <h2 className="mb-4 text-center">Search friends</h2>
+          <SearchFollowers
+            followingIds={[
+              ...followingUsers.map((followingUser) => followingUser.id),
+              user.id,
+            ]}
+          />
+        </div>
+        <div>
+          <FollowingAccepted followingUsers={followingUsersAccepted} />
+          {followingUsersPending.length > 0 && (
+            <FollowingPending followingUsers={followingUsersPending} />
+          )}
 
-        <FollowersAccepted
-          followerUsers={followerUsersAccepted}
-          followingUsers={followingUsers}
-        />
-        {followerUsersPending.length > 0 && (
-          <FollowersPending followerUsers={followerUsersPending} />
-        )}
+          {followingUsersAccepted.length === 0 &&
+            followingUsersPending.length === 0 && (
+              <div className="m-4">
+                Follow your friends to check out what they are up to.
+              </div>
+            )}
+
+          <FollowersAccepted
+            followerUsers={followerUsersAccepted}
+            followingUsers={followingUsers}
+          />
+          {followerUsersPending.length > 0 && (
+            <FollowersPending followerUsers={followerUsersPending} />
+          )}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 }
