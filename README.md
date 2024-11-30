@@ -35,6 +35,7 @@ Bon voyage.
 ## Impressions
 
 Check out the deployed version here: https://terra-scratch.vercel.app/
+
 Database design: https://drawsql.app/teams/myteam-1160/diagrams/finalproject
 
 ### Landing page
