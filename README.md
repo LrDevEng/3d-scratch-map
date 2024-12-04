@@ -14,7 +14,8 @@ Bon voyage.
 - Node.js
 - PostgreSQL
 - TypeScript/JavaScript
-- Tailwind
+- HTML/CSS
+- Tailwind CSS
 - Google Gemini
 - RESTful APIs
 - Cloudinary API
