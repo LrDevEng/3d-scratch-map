@@ -71,9 +71,10 @@ export type DiaryResponseBodyGet = {
   diaries: Diary[];
 };
 
-export async function GET({
-  params,
-}: GetDiariesParams): Promise<NextResponse<DiaryResponseBodyGet>> {
+export async function GET(
+  request: Request,
+  { params }: GetDiariesParams,
+): Promise<NextResponse<DiaryResponseBodyGet>> {
   // 1. Get the token from the cookie
   const { sessionTokenCookie } = await checkAuthentication(undefined);
 
