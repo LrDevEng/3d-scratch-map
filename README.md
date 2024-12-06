@@ -24,6 +24,7 @@ Bon voyage.
   - EventSource
 - Jest
 - Playwright
+- drawSQL
 
 ### 3D Technologies
 
@@ -40,26 +41,32 @@ Check out the deployed version here: https://terra-scratch.vercel.app/
 Database design: https://drawsql.app/teams/myteam-1160/diagrams/finalproject
 
 ### Landing page
+
 ![final-project-screenshot-07](https://github.com/user-attachments/assets/5d1ae419-a14c-42ba-874b-227ccd5c33f8)
 
 ### Interactive 3D globe
+
 ![final-project-screenshot-01](https://github.com/user-attachments/assets/18d2575a-7028-4b77-9656-91887811c8fc)
 
 ### Journey form
+
 ![final-project-screenshot-04](https://github.com/user-attachments/assets/b42bad19-c8aa-4d2c-9e4b-5aa134e322b9)
 
 ### Created journey
+
 ![final-project-screenshot-02](https://github.com/user-attachments/assets/2625dca8-d901-4a82-87ff-5be8cbdb2dc9)
 
 ### Created diary
+
 ![final-project-screenshot-03](https://github.com/user-attachments/assets/ddbacd29-c48e-4296-a4a8-8c36c365967a)
 
 ### Follower overview
+
 ![final-project-screenshot-06](https://github.com/user-attachments/assets/8e284845-809d-4a3c-9bb4-b0ebc5cf0b3e)
 
 ### User profile
-![final-project-screenshot-05](https://github.com/user-attachments/assets/a99c01bf-21ee-4331-81e3-4c1c90638755)
 
+![final-project-screenshot-05](https://github.com/user-attachments/assets/a99c01bf-21ee-4331-81e3-4c1c90638755)
 
 ## Getting started (locally)
 

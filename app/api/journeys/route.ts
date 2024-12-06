@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createJourney } from '../../../database/journeys';
+import { createJourney, getJourneys } from '../../../database/journeys';
 import type { Journey } from '../../../migrations/00002-createTableJourneys';
 import { journeySchema } from '../../../migrations/00002-createTableJourneys';
+import { checkAuthentication } from '../../../util/auth';
 import { getCookie } from '../../../util/cookies';
 
 export type JourneyResponseBodyCud =
@@ -60,4 +61,19 @@ export async function POST(
 
   // 6. Return the new journey
   return NextResponse.json({ journey: newJourney });
+}
+
+export type JourneyResponseBodyGet = {
+  journeys: Journey[];
+};
+
+export async function GET(): Promise<NextResponse<JourneyResponseBodyGet>> {
+  // 1. Get the token from the cookie
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
+
+  // 2. Get journeys
+  const journeys = await getJourneys(sessionTokenCookie.value);
+
+  // 3. Return journeys
+  return NextResponse.json({ journeys: journeys });
 }

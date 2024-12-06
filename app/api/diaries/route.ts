@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createDiary } from '../../../database/diaries';
+import { createDiary, getDiaries } from '../../../database/diaries';
 import type { Diary } from '../../../migrations/00003-createTableDiaries';
 import { diarySchema } from '../../../migrations/00003-createTableDiaries';
+import { checkAuthentication } from '../../../util/auth';
 import { getCookie } from '../../../util/cookies';
 
 export type DiaryResponseBodyCud =
@@ -58,4 +59,31 @@ export async function POST(
 
   // 6. Return the new diary
   return NextResponse.json({ diary: newDiary });
+}
+
+type GetDiariesParams = {
+  params: Promise<{
+    journeyId: string;
+  }>;
+};
+
+export type DiaryResponseBodyGet = {
+  diaries: Diary[];
+};
+
+export async function GET(
+  request: Request,
+  { params }: GetDiariesParams,
+): Promise<NextResponse<DiaryResponseBodyGet>> {
+  // 1. Get the token from the cookie
+  const { sessionTokenCookie } = await checkAuthentication(undefined);
+
+  // 2. Get diaries
+  const diaries = await getDiaries(
+    sessionTokenCookie.value,
+    Number((await params).journeyId),
+  );
+
+  // 3. Return diaries
+  return NextResponse.json({ diaries: diaries });
 }
