@@ -66,7 +66,7 @@ export default function About() {
         </div>
         <div className="text-xl mt-8">Disclaimer:</div>
         <div className="text-xl">
-          This is not a real website. Sole purpose of this project is to
+          This is not a commercial website. Purpose of this project is to
           showcase the development and setup of a full stack web application.
         </div>
         <div className="text-xs mt-auto mb-8">
