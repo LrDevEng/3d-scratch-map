@@ -9,6 +9,12 @@ export const userSchemaRegister = z.object({
   familyName: z.string().min(1),
 });
 
+export const userSchemaUpdate = z.object({
+  email: z.string().min(3).max(100),
+  givenName: z.string().min(1),
+  familyName: z.string().min(1),
+});
+
 export const userSchemaProfilePicture = z.object({
   imageUrl: z.string(),
 });

@@ -56,6 +56,33 @@ export const updateUser = cache(
   },
 );
 
+export const updateUserInfo = cache(
+  async (
+    sessionToken: Session['token'],
+    updatedUser: Omit<User, 'imageUrl'>,
+  ) => {
+    const [user] = await sql<User[]>`
+      UPDATE users
+      SET
+        email = ${updatedUser.email} given_name = ${updatedUser.givenName} family_name = ${updatedUser.familyName}
+      FROM
+        sessions
+      WHERE
+        sessions.token = ${sessionToken}
+        AND sessions.expiry_timestamp > now()
+        AND users.id = ${updatedUser.id}
+      RETURNING
+        users.id,
+        users.email,
+        users.given_name,
+        users.family_name,
+        users.image_url
+    `;
+
+    return user;
+  },
+);
+
 export const searchUsersInsecure = cache(async (searchTerm: string) => {
   const users = await sql<Omit<User, 'familyName'>[]>`
     SELECT
