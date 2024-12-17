@@ -64,7 +64,9 @@ export const updateUserInfo = cache(
     const [user] = await sql<User[]>`
       UPDATE users
       SET
-        email = ${updatedUser.email} given_name = ${updatedUser.givenName} family_name = ${updatedUser.familyName}
+        email = ${updatedUser.email},
+        given_name = ${updatedUser.givenName},
+        family_name = ${updatedUser.familyName}
       FROM
         sessions
       WHERE
